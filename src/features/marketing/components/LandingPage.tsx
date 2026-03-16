@@ -32,14 +32,124 @@ const ctaMsgs = [
   "92% daily retention among builders",
 ];
 
+const howWorkflows = [
+  {
+    id: "roadmap",
+    tab: "Roadmap Engine",
+    caption: "PDS to milestones",
+    promptTitle: "Product Development Strategy uploaded",
+    promptBody:
+      "Build CroFlux as a startup execution system for indie hackers. Start with roadmap generation, milestone tracking, boss battles, streaks, and a weekly leaderboard.",
+    promptTags: ["Builder workflow", "MVP scope", "Execution system"],
+    steps: [
+      {
+        label: "Reading PDS",
+        title: "AI analyzes the strategy",
+        subtitle: "CroFlux maps product intent, launch scope, and build order.",
+        metricLabel: "Strategy parsed",
+        metricValue: "24%",
+      },
+      {
+        label: "Generating milestones",
+        title: "Milestones appear automatically",
+        subtitle: "4 launch phases are drafted in the right sequence for the builder.",
+        metricLabel: "Milestones drafted",
+        metricValue: "4/4",
+      },
+      {
+        label: "Expanding tasks",
+        title: "Tasks are attached to each milestone",
+        subtitle: "Every phase gets focused actions instead of vague planning notes.",
+        metricLabel: "Tasks generated",
+        metricValue: "16",
+      },
+      {
+        label: "Assigning bosses",
+        title: "Major phases become boss milestones",
+        subtitle: "CroFlux turns critical launch stages into boss battles to keep momentum high.",
+        metricLabel: "Bosses tagged",
+        metricValue: "2",
+      },
+    ],
+  },
+  {
+    id: "execution",
+    tab: "Execution Loop",
+    caption: "Tasks to momentum",
+    promptTitle: "Daily execution is underway",
+    promptBody:
+      "The builder is checking off tasks every day, maintaining streaks, and pushing toward the next milestone while rank updates live.",
+    promptTags: ["Task completions", "Streak tracking", "Leaderboard climb"],
+    steps: [
+      {
+        label: "Completing tasks",
+        title: "Tasks get checked off live",
+        subtitle: "Daily work turns into visible progress instead of staying buried in a to-do list.",
+        metricLabel: "Tasks shipped today",
+        metricValue: "5",
+      },
+      {
+        label: "Closing milestones",
+        title: "Milestones close as work stacks up",
+        subtitle: "Completed tasks roll into milestone completion and unlock the next stage.",
+        metricLabel: "Milestone progress",
+        metricValue: "75%",
+      },
+      {
+        label: "Earning momentum",
+        title: "Builders gain points, streaks, and rank",
+        subtitle: "Each completion feeds streaks, leaderboard movement, and momentum messages.",
+        metricLabel: "Leaderboard rank",
+        metricValue: "#8",
+      },
+    ],
+  },
+  {
+    id: "boss",
+    tab: "Boss & Launch",
+    caption: "Bosses to launch",
+    promptTitle: "Launch push is active",
+    promptBody:
+      "The builder is draining a boss milestone, clearing final blockers, and moving from beta prep to launch with public momentum.",
+    promptTags: ["Boss battle", "Launch prep", "Leaderboard gain"],
+    steps: [
+      {
+        label: "Draining boss HP",
+        title: "Boss milestone health drops with every completed task",
+        subtitle: "CroFlux frames the hard phase as a visible challenge instead of a boring checklist.",
+        metricLabel: "Boss HP",
+        metricValue: "62%",
+      },
+      {
+        label: "Defeating the boss",
+        title: "The milestone is defeated and launch unlocks",
+        subtitle: "One last push clears the blocker and opens the final launch checklist.",
+        metricLabel: "Boss defeated",
+        metricValue: "Unlocked",
+      },
+      {
+        label: "Shipping the product",
+        title: "The builder launches and climbs ahead",
+        subtitle: "Product launched. Rank improves. Momentum spills into the next build cycle.",
+        metricLabel: "Launch status",
+        metricValue: "Live",
+      },
+    ],
+  },
+] as const;
+
 export function LandingPage() {
   const [taskCount, setTaskCount] = useState(1284);
   const [ctaIndex, setCtaIndex] = useState(0);
   const [heroEntered, setHeroEntered] = useState(false);
   const [previewProgress, setPreviewProgress] = useState(0);
   const [featureProgress, setFeatureProgress] = useState(20);
+  const [activeWorkflow, setActiveWorkflow] = useState(0);
+  const [activeWorkflowStep, setActiveWorkflowStep] = useState(0);
+  const [workflowSceneVisible, setWorkflowSceneVisible] = useState(true);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const featureProgressRef = useRef<HTMLDivElement | null>(null);
+  const workflowTransitionRef = useRef<number | null>(null);
 
   useEffect(() => {
     let frameId = 0;
@@ -115,6 +225,14 @@ export function LandingPage() {
   }, []);
 
   useEffect(() => {
+    return () => {
+      if (workflowTransitionRef.current !== null) {
+        window.clearTimeout(workflowTransitionRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const getScrollProgress = (element: HTMLDivElement | null, min: number, max: number) => {
       if (!element) {
         return min;
@@ -144,7 +262,36 @@ export function LandingPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const workflow = howWorkflows[activeWorkflow];
+    const loop = window.setTimeout(() => {
+      setWorkflowSceneVisible(false);
+
+      workflowTransitionRef.current = window.setTimeout(() => {
+        if (activeWorkflowStep >= workflow.steps.length - 1) {
+          setActiveWorkflow((current) => (current + 1) % howWorkflows.length);
+          setActiveWorkflowStep(0);
+          setWorkflowSceneVisible(true);
+          return;
+        }
+
+        setActiveWorkflowStep((current) => current + 1);
+        setWorkflowSceneVisible(true);
+      }, 180);
+    }, 2400);
+
+    return () => {
+      window.clearTimeout(loop);
+      if (workflowTransitionRef.current !== null) {
+        window.clearTimeout(workflowTransitionRef.current);
+        workflowTransitionRef.current = null;
+      }
+    };
+  }, [activeWorkflow, activeWorkflowStep]);
+
   const tickerItems = [...tickerMsgs, ...tickerMsgs];
+  const currentWorkflow = howWorkflows[activeWorkflow];
+  const currentWorkflowStep = currentWorkflow.steps[activeWorkflowStep];
 
   return (
     <>
@@ -189,6 +336,7 @@ export function LandingPage() {
           </Link>
         </div>
       </nav>
+...
 
       <div className="ticker">
         <div className="ticker-inner">
@@ -538,63 +686,242 @@ export function LandingPage() {
         <div className="section-full-inner">
           <div className="section-eyebrow">How it works</div>
           <h2 className="section-h">
-            Three steps.
+            Watch the workflow.
             <br />
-            From idea to <span className="purple">execution.</span>
+            From strategy to <span className="purple">execution.</span>
           </h2>
-          <div className="how-grid">
-            <div className="how-step">
-              <div className="how-step-num">Step 01</div>
-              <div className="how-step-title">Describe your startup</div>
-              <p className="how-step-desc">
-                Paste your product development strategy in plain language. No
-                special format — just describe how you&apos;re going to build it.
-              </p>
-              <div className="how-step-example">
-                <span className="hl">→</span> Build AI debugging CLI
-                <br />
-                <span className="hl">→</span> Detect bugs in code
-                <br />
-                <span className="hl">→</span> Generate patch suggestions
-                <br />
-                <span className="hl">→</span> GitHub integration
-                <br />
-                <span className="hl">→</span> Launch beta
+          <p className="section-sub" style={{ maxWidth: 760 }}>
+            Click any tab to restart the workflow. CroFlux keeps looping through
+            the product journey so builders can instantly understand how the system
+            turns a PDS into shipped progress.
+          </p>
+          <div className="how-flow">
+            <div className="how-flow-sidebar">
+              <div className="how-flow-sidebar-head">
+                <div className="how-flow-dot-row">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <div className="how-flow-sidebar-title">CroFlux Architect</div>
+              </div>
+              <div className="how-flow-prompt-title">{currentWorkflow.promptTitle}</div>
+              <p className="how-flow-prompt-body">{currentWorkflow.promptBody}</p>
+              <div className="how-flow-tags">
+                {currentWorkflow.promptTags.map((tag) => (
+                  <span key={tag} className="how-flow-tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div className="how-flow-stage-list">
+                {currentWorkflow.steps.map((step, index) => {
+                  const state =
+                    index < activeWorkflowStep
+                      ? "done"
+                      : index === activeWorkflowStep
+                        ? "active"
+                        : "idle";
+
+                  return (
+                    <div key={step.label} className={`how-flow-stage ${state}`}>
+                      <div className="how-flow-stage-icon">
+                        {state === "done" ? "✓" : index + 1}
+                      </div>
+                      <div>
+                        <div className="how-flow-stage-label">{step.label}</div>
+                        <div className="how-flow-stage-meta">{step.metricLabel}</div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-            <div className="how-step">
-              <div className="how-step-num">Step 02</div>
-              <div className="how-step-title">CroFlux builds your roadmap</div>
-              <p className="how-step-desc">
-                AI converts your strategy into structured milestones and tasks in
-                seconds. Edit, add, or remove anything. Fully in your control.
-              </p>
-              <div className="how-step-example">
-                <span className="hl">Milestone 1</span> · CLI Foundation
-                <br />
-                <span style={{ color: "var(--text4)" }}>— Setup repository</span>
-                <br />
-                <span style={{ color: "var(--text4)" }}>— Initialize framework</span>
-                <br />
-                <br />
-                <span className="hl">Milestone 2</span> · Bug Detection
-                <br />
-                <span style={{ color: "var(--text4)" }}>— Code scanning</span>
+
+            <div className="how-flow-main">
+              <div className="how-flow-tabs" role="tablist" aria-label="CroFlux workflows">
+                {howWorkflows.map((workflow, index) => (
+                  <button
+                    key={workflow.id}
+                    type="button"
+                    className={`how-flow-tab ${index === activeWorkflow ? "active" : ""}`}
+                    onClick={() => {
+                      if (workflowTransitionRef.current !== null) {
+                        window.clearTimeout(workflowTransitionRef.current);
+                      }
+
+                      setWorkflowSceneVisible(false);
+                      workflowTransitionRef.current = window.setTimeout(() => {
+                        setActiveWorkflow(index);
+                        setActiveWorkflowStep(0);
+                        setWorkflowSceneVisible(true);
+                        workflowTransitionRef.current = null;
+                      }, 180);
+                    }}
+                  >
+                    <span className="how-flow-tab-index">{String(index + 1).padStart(2, "0")}</span>
+                    <span>
+                      <span className="how-flow-tab-title">{workflow.tab}</span>
+                      <span className="how-flow-tab-caption">{workflow.caption}</span>
+                    </span>
+                  </button>
+                ))}
               </div>
-            </div>
-            <div className="how-step">
-              <div className="how-step-num">Step 03</div>
-              <div className="how-step-title">Execute and track progress</div>
-              <p className="how-step-desc">
-                Your dashboard tracks every task. Progress updates live. Boss
-                milestones challenge you. Streaks keep you consistent.
-              </p>
-              <div className="how-step-example">
-                <span className="hl">Progress</span> ████████░░░░ 45%
-                <br />
-                <span className="hl">Streak</span> ★ 6 day streak
-                <br />
-                <span className="hl">Rank</span> #12 this week
+
+              <div className="how-flow-canvas">
+                <div
+                  className={`how-flow-scene ${workflowSceneVisible ? "is-visible" : "is-hidden"}`}
+                >
+                  <div className="how-flow-canvas-head">
+                    <div>
+                      <div className="how-flow-canvas-kicker">{currentWorkflowStep.label}</div>
+                      <div className="how-flow-canvas-title">{currentWorkflowStep.title}</div>
+                    </div>
+                    <div className="how-flow-metric">
+                      <span>{currentWorkflowStep.metricLabel}</span>
+                      <strong>{currentWorkflowStep.metricValue}</strong>
+                    </div>
+                  </div>
+                  <p className="how-flow-canvas-sub">{currentWorkflowStep.subtitle}</p>
+
+                  {currentWorkflow.id === "roadmap" ? (
+                    <div className="how-roadmap-board">
+                    <div className="how-roadmap-column">
+                      <div className={`how-roadmap-card ${activeWorkflowStep >= 0 ? "active" : ""}`}>
+                        <div className="how-roadmap-card-head">
+                          <span>Milestone 1</span>
+                          <span>Done</span>
+                        </div>
+                        <div className="how-roadmap-card-title">CLI Foundation</div>
+                        <div className="how-roadmap-task done">Setup repository</div>
+                        <div className="how-roadmap-task done">Initialize framework</div>
+                        <div className="how-roadmap-task done">Ship first command</div>
+                      </div>
+                      <div className={`how-roadmap-card ${activeWorkflowStep >= 1 ? "active" : ""}`}>
+                        <div className="how-roadmap-card-head">
+                          <span>Milestone 2</span>
+                          <span>Active</span>
+                        </div>
+                        <div className="how-roadmap-card-title">Bug Detection Engine</div>
+                        <div className="how-roadmap-task done">Code scanning</div>
+                        <div className={`how-roadmap-task ${activeWorkflowStep >= 2 ? "active" : ""}`}>
+                          Pattern detection
+                        </div>
+                        <div className={`how-roadmap-task ${activeWorkflowStep >= 2 ? "active" : ""}`}>
+                          Error classification
+                        </div>
+                      </div>
+                    </div>
+                    <div className="how-roadmap-column">
+                      <div className={`how-boss-card ${activeWorkflowStep >= 3 ? "active" : ""}`}>
+                        <div className="how-boss-head">
+                          <span>Boss milestone</span>
+                          <span>BOSS</span>
+                        </div>
+                        <div className="how-boss-title">MVP Launch</div>
+                        <div className="how-boss-bar">
+                          <div
+                            className="how-boss-bar-fill"
+                            style={{ width: activeWorkflowStep >= 3 ? "72%" : "36%" }}
+                          />
+                        </div>
+                        <div className="how-boss-meta">Complete milestone tasks to drain HP.</div>
+                      </div>
+                      <div className="how-roadmap-summary">
+                        <div>4 milestones generated</div>
+                        <div>16 tasks drafted</div>
+                        <div>2 boss milestones tagged</div>
+                      </div>
+                    </div>
+                    </div>
+                  ) : null}
+
+                  {currentWorkflow.id === "execution" ? (
+                    <div className="how-execution-board">
+                    <div className="how-execution-list">
+                      <div className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}>
+                        <span>✓</span>
+                        Finish landing page copy
+                      </div>
+                      <div className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}>
+                        <span>✓</span>
+                        Wire Supabase auth
+                      </div>
+                      <div className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}>
+                        <span>✓</span>
+                        Confirm roadmap
+                      </div>
+                      <div className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}>
+                        <span>✓</span>
+                        Defeat CLI Foundation
+                      </div>
+                      <div className={`how-execution-item ${activeWorkflowStep >= 2 ? "active" : ""}`}>
+                        <span>{activeWorkflowStep >= 2 ? "★" : "•"}</span>
+                        Climb the weekly leaderboard
+                      </div>
+                    </div>
+                    <div className="how-execution-stats">
+                      <div className="how-execution-stat">
+                        <span>Progress</span>
+                        <strong>{activeWorkflowStep === 0 ? "38%" : activeWorkflowStep === 1 ? "64%" : "81%"}</strong>
+                      </div>
+                      <div className="how-execution-stat">
+                        <span>Streak</span>
+                        <strong>{activeWorkflowStep === 0 ? "4d" : activeWorkflowStep === 1 ? "6d" : "8d"}</strong>
+                      </div>
+                      <div className="how-execution-stat">
+                        <span>Leaderboard</span>
+                        <strong>{activeWorkflowStep === 0 ? "#14" : activeWorkflowStep === 1 ? "#10" : "#8"}</strong>
+                      </div>
+                    </div>
+                    </div>
+                  ) : null}
+
+                  {currentWorkflow.id === "boss" ? (
+                    <div className="how-launch-board">
+                    <div className="how-launch-boss">
+                      <div className="how-boss-head">
+                        <span>MVP Launch Boss</span>
+                        <span>
+                          {activeWorkflowStep === 0 ? "HP 62%" : activeWorkflowStep === 1 ? "HP 0%" : "Defeated"}
+                        </span>
+                      </div>
+                      <div className="how-boss-bar large">
+                        <div
+                          className="how-boss-bar-fill"
+                          style={{
+                            width:
+                              activeWorkflowStep === 0
+                                ? "62%"
+                                : activeWorkflowStep === 1
+                                  ? "12%"
+                                  : "100%",
+                          }}
+                        />
+                      </div>
+                      <div className="how-launch-checks">
+                        <div className={activeWorkflowStep >= 0 ? "done" : ""}>QA checklist locked in</div>
+                        <div className={activeWorkflowStep >= 1 ? "done" : ""}>Launch blocker resolved</div>
+                        <div className={activeWorkflowStep >= 2 ? "done" : ""}>Product live to users</div>
+                      </div>
+                    </div>
+                    <div className="how-launch-side">
+                      <div className="how-launch-card">
+                        <span>Rank</span>
+                        <strong>{activeWorkflowStep === 0 ? "#7" : activeWorkflowStep === 1 ? "#5" : "#3"}</strong>
+                      </div>
+                      <div className="how-launch-card">
+                        <span>Status</span>
+                        <strong>{activeWorkflowStep === 2 ? "Launched" : "Final push"}</strong>
+                      </div>
+                      <div className="how-launch-card accent">
+                        <span>Momentum</span>
+                        <strong>{activeWorkflowStep === 0 ? "+120" : activeWorkflowStep === 1 ? "+240" : "+400"}</strong>
+                      </div>
+                    </div>
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
