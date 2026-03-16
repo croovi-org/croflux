@@ -786,139 +786,159 @@ export function LandingPage() {
 
                   {currentWorkflow.id === "roadmap" ? (
                     <div className="how-roadmap-board">
-                    <div className="how-roadmap-column">
-                      <div className={`how-roadmap-card ${activeWorkflowStep >= 0 ? "active" : ""}`}>
-                        <div className="how-roadmap-card-head">
-                          <span>Milestone 1</span>
-                          <span>Done</span>
+                      <div className="how-roadmap-column">
+                        <div className={`how-roadmap-card ${activeWorkflowStep >= 0 ? "active" : ""}`}>
+                          <div className="how-roadmap-card-head">
+                            <span>Milestone 1</span>
+                            <span>Done</span>
+                          </div>
+                          <div className="how-roadmap-card-title">CLI Foundation</div>
+                          <div className="how-roadmap-task done">Setup repository</div>
+                          <div className="how-roadmap-task done">Initialize framework</div>
+                          <div className="how-roadmap-task done">Ship first command</div>
                         </div>
-                        <div className="how-roadmap-card-title">CLI Foundation</div>
-                        <div className="how-roadmap-task done">Setup repository</div>
-                        <div className="how-roadmap-task done">Initialize framework</div>
-                        <div className="how-roadmap-task done">Ship first command</div>
-                      </div>
-                      <div className={`how-roadmap-card ${activeWorkflowStep >= 1 ? "active" : ""}`}>
-                        <div className="how-roadmap-card-head">
-                          <span>Milestone 2</span>
-                          <span>Active</span>
-                        </div>
-                        <div className="how-roadmap-card-title">Bug Detection Engine</div>
-                        <div className="how-roadmap-task done">Code scanning</div>
-                        <div className={`how-roadmap-task ${activeWorkflowStep >= 2 ? "active" : ""}`}>
-                          Pattern detection
-                        </div>
-                        <div className={`how-roadmap-task ${activeWorkflowStep >= 2 ? "active" : ""}`}>
-                          Error classification
-                        </div>
-                      </div>
-                    </div>
-                    <div className="how-roadmap-column">
-                      <div className={`how-boss-card ${activeWorkflowStep >= 3 ? "active" : ""}`}>
-                        <div className="how-boss-head">
-                          <span>Boss milestone</span>
-                          <span>BOSS</span>
-                        </div>
-                        <div className="how-boss-title">MVP Launch</div>
-                        <div className="how-boss-bar">
+                        <div className={`how-roadmap-card ${activeWorkflowStep >= 1 ? "active" : ""}`}>
+                          <div className="how-roadmap-card-head">
+                            <span>Milestone 2</span>
+                            <span>Active</span>
+                          </div>
+                          <div className="how-roadmap-card-title">Bug Detection Engine</div>
+                          <div className="how-roadmap-task done">Code scanning</div>
                           <div
-                            className="how-boss-bar-fill"
-                            style={{ width: activeWorkflowStep >= 3 ? "72%" : "36%" }}
-                          />
+                            className={`how-roadmap-task ${activeWorkflowStep >= 2 ? "active" : ""}`}
+                          >
+                            Pattern detection
+                          </div>
+                          <div
+                            className={`how-roadmap-task ${activeWorkflowStep >= 2 ? "active" : ""}`}
+                          >
+                            Error classification
+                          </div>
                         </div>
-                        <div className="how-boss-meta">Complete milestone tasks to drain HP.</div>
                       </div>
-                      <div className="how-roadmap-summary">
-                        <div>4 milestones generated</div>
-                        <div>16 tasks drafted</div>
-                        <div>2 boss milestones tagged</div>
+                      <div className="how-roadmap-column">
+                        <div className={`how-boss-card ${activeWorkflowStep >= 3 ? "active" : ""}`}>
+                          <div className="how-boss-head">
+                            <span>Boss milestone</span>
+                            <span>BOSS</span>
+                          </div>
+                          <div className="how-boss-title">MVP Launch</div>
+                          <div className="how-boss-bar">
+                            <div
+                              className="how-boss-bar-fill"
+                              style={{ width: activeWorkflowStep >= 3 ? "72%" : "36%" }}
+                            />
+                          </div>
+                          <div className="how-boss-meta">
+                            Complete milestone tasks to drain HP.
+                          </div>
+                        </div>
+                        <div className="how-roadmap-summary">
+                          <div>4 milestones generated</div>
+                          <div>16 tasks drafted</div>
+                          <div>2 boss milestones tagged</div>
+                        </div>
                       </div>
-                    </div>
                     </div>
                   ) : null}
 
                   {currentWorkflow.id === "execution" ? (
                     <div className="how-execution-board">
-                    <div className="how-execution-list">
-                      <div className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}>
-                        <span>✓</span>
-                        Finish landing page copy
+                      <div className="how-execution-list">
+                        <div className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}>
+                          <span>✓</span>
+                          Finish landing page copy
+                        </div>
+                        <div className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}>
+                          <span>✓</span>
+                          Wire Supabase auth
+                        </div>
+                        <div className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}>
+                          <span>✓</span>
+                          Confirm roadmap
+                        </div>
+                        <div className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}>
+                          <span>✓</span>
+                          Defeat CLI Foundation
+                        </div>
+                        <div className={`how-execution-item ${activeWorkflowStep >= 2 ? "active" : ""}`}>
+                          <span>{activeWorkflowStep >= 2 ? "★" : "•"}</span>
+                          Climb the weekly leaderboard
+                        </div>
                       </div>
-                      <div className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}>
-                        <span>✓</span>
-                        Wire Supabase auth
+                      <div className="how-execution-stats">
+                        <div className="how-execution-stat">
+                          <span>Progress</span>
+                          <strong>
+                            {activeWorkflowStep === 0 ? "38%" : activeWorkflowStep === 1 ? "64%" : "81%"}
+                          </strong>
+                        </div>
+                        <div className="how-execution-stat">
+                          <span>Streak</span>
+                          <strong>
+                            {activeWorkflowStep === 0 ? "4d" : activeWorkflowStep === 1 ? "6d" : "8d"}
+                          </strong>
+                        </div>
+                        <div className="how-execution-stat">
+                          <span>Leaderboard</span>
+                          <strong>
+                            {activeWorkflowStep === 0 ? "#14" : activeWorkflowStep === 1 ? "#10" : "#8"}
+                          </strong>
+                        </div>
                       </div>
-                      <div className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}>
-                        <span>✓</span>
-                        Confirm roadmap
-                      </div>
-                      <div className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}>
-                        <span>✓</span>
-                        Defeat CLI Foundation
-                      </div>
-                      <div className={`how-execution-item ${activeWorkflowStep >= 2 ? "active" : ""}`}>
-                        <span>{activeWorkflowStep >= 2 ? "★" : "•"}</span>
-                        Climb the weekly leaderboard
-                      </div>
-                    </div>
-                    <div className="how-execution-stats">
-                      <div className="how-execution-stat">
-                        <span>Progress</span>
-                        <strong>{activeWorkflowStep === 0 ? "38%" : activeWorkflowStep === 1 ? "64%" : "81%"}</strong>
-                      </div>
-                      <div className="how-execution-stat">
-                        <span>Streak</span>
-                        <strong>{activeWorkflowStep === 0 ? "4d" : activeWorkflowStep === 1 ? "6d" : "8d"}</strong>
-                      </div>
-                      <div className="how-execution-stat">
-                        <span>Leaderboard</span>
-                        <strong>{activeWorkflowStep === 0 ? "#14" : activeWorkflowStep === 1 ? "#10" : "#8"}</strong>
-                      </div>
-                    </div>
                     </div>
                   ) : null}
 
                   {currentWorkflow.id === "boss" ? (
                     <div className="how-launch-board">
-                    <div className="how-launch-boss">
-                      <div className="how-boss-head">
-                        <span>MVP Launch Boss</span>
-                        <span>
-                          {activeWorkflowStep === 0 ? "HP 62%" : activeWorkflowStep === 1 ? "HP 0%" : "Defeated"}
-                        </span>
+                      <div className="how-launch-boss">
+                        <div className="how-boss-head">
+                          <span>MVP Launch Boss</span>
+                          <span>
+                            {activeWorkflowStep === 0
+                              ? "HP 62%"
+                              : activeWorkflowStep === 1
+                                ? "HP 0%"
+                                : "Defeated"}
+                          </span>
+                        </div>
+                        <div className="how-boss-bar large">
+                          <div
+                            className="how-boss-bar-fill"
+                            style={{
+                              width:
+                                activeWorkflowStep === 0
+                                  ? "62%"
+                                  : activeWorkflowStep === 1
+                                    ? "12%"
+                                    : "100%",
+                            }}
+                          />
+                        </div>
+                        <div className="how-launch-checks">
+                          <div className={activeWorkflowStep >= 0 ? "done" : ""}>QA checklist locked in</div>
+                          <div className={activeWorkflowStep >= 1 ? "done" : ""}>Launch blocker resolved</div>
+                          <div className={activeWorkflowStep >= 2 ? "done" : ""}>Product live to users</div>
+                        </div>
                       </div>
-                      <div className="how-boss-bar large">
-                        <div
-                          className="how-boss-bar-fill"
-                          style={{
-                            width:
-                              activeWorkflowStep === 0
-                                ? "62%"
-                                : activeWorkflowStep === 1
-                                  ? "12%"
-                                  : "100%",
-                          }}
-                        />
+                      <div className="how-launch-side">
+                        <div className="how-launch-card">
+                          <span>Rank</span>
+                          <strong>
+                            {activeWorkflowStep === 0 ? "#7" : activeWorkflowStep === 1 ? "#5" : "#3"}
+                          </strong>
+                        </div>
+                        <div className="how-launch-card">
+                          <span>Status</span>
+                          <strong>{activeWorkflowStep === 2 ? "Launched" : "Final push"}</strong>
+                        </div>
+                        <div className="how-launch-card accent">
+                          <span>Momentum</span>
+                          <strong>
+                            {activeWorkflowStep === 0 ? "+120" : activeWorkflowStep === 1 ? "+240" : "+400"}
+                          </strong>
+                        </div>
                       </div>
-                      <div className="how-launch-checks">
-                        <div className={activeWorkflowStep >= 0 ? "done" : ""}>QA checklist locked in</div>
-                        <div className={activeWorkflowStep >= 1 ? "done" : ""}>Launch blocker resolved</div>
-                        <div className={activeWorkflowStep >= 2 ? "done" : ""}>Product live to users</div>
-                      </div>
-                    </div>
-                    <div className="how-launch-side">
-                      <div className="how-launch-card">
-                        <span>Rank</span>
-                        <strong>{activeWorkflowStep === 0 ? "#7" : activeWorkflowStep === 1 ? "#5" : "#3"}</strong>
-                      </div>
-                      <div className="how-launch-card">
-                        <span>Status</span>
-                        <strong>{activeWorkflowStep === 2 ? "Launched" : "Final push"}</strong>
-                      </div>
-                      <div className="how-launch-card accent">
-                        <span>Momentum</span>
-                        <strong>{activeWorkflowStep === 0 ? "+120" : activeWorkflowStep === 1 ? "+240" : "+400"}</strong>
-                      </div>
-                    </div>
                     </div>
                   ) : null}
                 </div>
