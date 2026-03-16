@@ -721,6 +721,10 @@ export function LandingPage() {
                 Launching SaaS products solo. You need execution clarity, not
                 another generic project manager.
               </p>
+              <div className="for-tags">
+                <div className="for-tag">Side projects → real products</div>
+                <div className="for-tag">Ship fast, iterate faster</div>
+              </div>
             </div>
             <div className="for-card">
               <div className="for-avatar">▲</div>
@@ -729,6 +733,10 @@ export function LandingPage() {
                 Building your startup alone. You need a system that keeps you
                 accountable and on track every single day.
               </p>
+              <div className="for-tags">
+                <div className="for-tag">Pre-seed or self-funded</div>
+                <div className="for-tag">Idea → launch solo</div>
+              </div>
             </div>
             <div className="for-card">
               <div className="for-avatar">◆</div>
@@ -737,6 +745,10 @@ export function LandingPage() {
                 Working on side projects from a dorm room. You have the energy —
                 this gives you the structure to ship.
               </p>
+              <div className="for-tags">
+                <div className="for-tag">First startup experience</div>
+                <div className="for-tag">Compete with peers</div>
+              </div>
             </div>
             <div className="for-card">
               <div className="for-avatar">□</div>
@@ -745,6 +757,10 @@ export function LandingPage() {
                 Shipping tools and apps. Stop hacking in circles — turn your
                 technical skills into a real product.
               </p>
+              <div className="for-tags">
+                <div className="for-tag">SaaS &amp; AI tools</div>
+                <div className="for-tag">Product discipline</div>
+              </div>
             </div>
           </div>
         </div>
