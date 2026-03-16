@@ -167,6 +167,20 @@ select:focus {
   }
 }
 
+@keyframes boss-hp-swing {
+  0% {
+    width: 78%;
+  }
+
+  50% {
+    width: 28%;
+  }
+
+  100% {
+    width: 78%;
+  }
+}
+
 .glass-nav {
   background: rgba(15, 15, 17, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
@@ -847,6 +861,50 @@ nav {
   border: 1px solid var(--border);
 }
 
+.pv-task-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0 4px 25px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pv-task-row:last-child {
+  border-bottom: none;
+}
+
+.pv-task-cb {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 8px;
+}
+
+.pv-task-cb.done {
+  background: var(--purple);
+  border-color: var(--purple);
+  color: #fff;
+}
+
+.pv-task-txt {
+  font-size: 11px;
+  color: var(--text2);
+}
+
+.pv-task-txt.done {
+  color: var(--text4);
+  text-decoration: line-through;
+}
+
+.pv-task-txt.pulse {
+  animation: pulse-soft 2.5s ease-in-out infinite;
+}
+
 .pv-right {
   padding: 16px;
   border-left: 1px solid var(--border);
@@ -1259,6 +1317,22 @@ nav {
   font-size: 17px;
 }
 
+.how-step-example {
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  line-height: 1.8;
+}
+
+.how-step-example .hl {
+  color: var(--purple2);
+}
+
 .feat-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1299,6 +1373,156 @@ nav {
   background: var(--purple-dim);
   color: var(--purple2);
   border: 1px solid var(--purple-mid);
+}
+
+.feat-preview {
+  margin-top: 14px;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.boss-row,
+.streak-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boss-row {
+  margin-bottom: 8px;
+}
+
+.boss-tag {
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.boss-hp-track {
+  flex: 1;
+  height: 4px;
+}
+
+.boss-hp-fill {
+  width: 78%;
+  background: linear-gradient(90deg, var(--amber), #fbbf24);
+  animation: boss-hp-swing 4s ease-in-out infinite;
+}
+
+.streak-header {
+  margin-bottom: 10px;
+}
+
+.streak-fire {
+  font-size: 15px;
+}
+
+.streak-count {
+  color: var(--amber);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.streak-lbl {
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.streak-days {
+  display: flex;
+  gap: 5px;
+}
+
+.streak-day {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-family: var(--mono);
+}
+
+.streak-day.done {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: var(--amber);
+}
+
+.streak-day.today {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #000;
+  font-weight: 600;
+}
+
+.lb-mini-row {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.lb-mini-row:last-child {
+  border-bottom: none;
+}
+
+.prog-row {
+  margin-bottom: 6px;
+  align-items: baseline;
+}
+
+.prog-lbl {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--mono);
+}
+
+.prog-val {
+  color: var(--purple2);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.prog-fill {
+  width: 63%;
+  position: relative;
+  background: linear-gradient(90deg, var(--purple3), var(--purple2));
+}
+
+.prog-fill::after {
+  border-color: var(--bg);
+}
+
+.msg-preview {
+  padding: 12px;
+  background: var(--purple-dim);
+  border: 1px solid var(--purple-mid);
+  border-radius: var(--radius);
+}
+
+.msg-head {
+  margin-bottom: 3px;
+  color: rgba(157, 152, 255, 0.6);
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.msg-body {
+  color: var(--text);
+  font-size: 12px;
 }
 
 .for-grid {

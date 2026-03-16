@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { AuthSidePanel } from "@/components/shared/auth-side-panel";
 import { Logo } from "@/components/shared/logo";
+import { AuthSidePanel } from "@/features/auth/components/AuthSidePanel";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
