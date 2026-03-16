@@ -133,16 +133,6 @@ select:focus {
   }
 }
 
-@keyframes dashboard-fill {
-  from {
-    width: 0%;
-  }
-
-  to {
-    width: 45%;
-  }
-}
-
 @keyframes pulse-soft {
   0%,
   100% {
@@ -181,6 +171,16 @@ select:focus {
   }
 }
 
+@keyframes progress-fill-in {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: var(--target-width);
+  }
+}
+
 .glass-nav {
   background: rgba(15, 15, 17, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
@@ -188,10 +188,6 @@ select:focus {
 
 .marquee-track {
   animation: marquee 34s linear infinite;
-}
-
-.dashboard-progress-fill {
-  animation: dashboard-fill 1.2s ease forwards;
 }
 
 .pulse-soft {
@@ -716,9 +712,13 @@ nav {
 .prog-track,
 .problem-phase-bar,
 .boss-hp-track {
-  overflow: hidden;
   background: var(--bg5);
   border-radius: 2px;
+}
+
+.problem-phase-bar,
+.boss-hp-track {
+  overflow: hidden;
 }
 
 .pv-track,
@@ -736,9 +736,11 @@ nav {
 }
 
 .pv-fill {
-  width: 45%;
+  width: 0;
+  --target-width: 50%;
   position: relative;
   background: linear-gradient(90deg, var(--purple3), var(--purple2));
+  transition: width 0.18s ease-out;
 }
 
 .pv-fill::after,
@@ -746,13 +748,14 @@ nav {
   content: "";
   position: absolute;
   right: 0;
-  top: -4px;
-  width: 10px;
-  height: 10px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
   background: var(--purple2);
   border-radius: 50%;
-  border: 2px solid var(--bg2);
-  transform: translateX(50%);
+  border: none;
+  box-shadow: 0 0 0 1px rgba(157, 152, 255, 0.16);
+  transform: translate(50%, -50%);
 }
 
 .pv-ms-lbl,
@@ -1558,9 +1561,11 @@ nav {
 }
 
 .prog-fill {
-  width: 63%;
+  width: 0;
+  --target-width: 63%;
   position: relative;
   background: linear-gradient(90deg, var(--purple3), var(--purple2));
+  transition: width 0.18s ease-out;
 }
 
 .prog-fill::after {
@@ -1934,6 +1939,17 @@ nav {
 .cta-inner {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cta-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
 }
 
 .cta-h {
@@ -1956,9 +1972,11 @@ nav {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 20px;
+  justify-content: center;
   font-size: 12px;
   color: var(--text3);
+  max-width: calc(100vw - 64px);
+  white-space: nowrap;
 }
 
 .cta-live-dot {
@@ -1967,6 +1985,7 @@ nav {
   background: var(--green);
   border-radius: 50%;
   animation: live-blink 2s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 footer {
@@ -2106,5 +2125,10 @@ footer {
 
   .hero-stats {
     display: grid;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+    gap: 16px;
   }
 }
