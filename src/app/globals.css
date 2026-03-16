@@ -1030,11 +1030,18 @@ nav {
 }
 
 .sp-builder {
+  display: flex;
   align-items: center;
   gap: 9px;
   padding: 6px 20px;
   border-right: 1px solid var(--border);
   flex-shrink: 0;
+  border-radius: 10px;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease;
 }
 
 .sp-av,
@@ -1160,6 +1167,11 @@ nav {
   flex: 1;
   padding: 28px 24px;
   border-right: 1px solid var(--border);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease;
 }
 
 .problem-phase:last-child {
@@ -1247,8 +1259,16 @@ nav {
 .compare-card,
 .price-card,
 .testi-card,
-.feat-card {
+.feat-card,
+.how-step,
+.pv-stat-card,
+.lb-tr {
   border-radius: var(--radius2);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease;
 }
 
 .pillar-card,
@@ -1257,6 +1277,25 @@ nav {
 .compare-card,
 .for-card {
   padding: 28px;
+}
+
+.pillar-card:hover,
+.feat-card:hover,
+.for-card:hover,
+.compare-card:hover,
+.price-card:hover,
+.testi-card:hover,
+.pv-stat-card:hover,
+.problem-phase:hover,
+.how-step:hover,
+.sp-builder:hover,
+.lb-tr:hover {
+  transform: translateY(-2px);
+  border-color: var(--border3);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(124, 111, 247, 0.08),
+    0 0 32px rgba(124, 111, 247, 0.08);
 }
 
 .pillar-icon,
@@ -1282,6 +1321,30 @@ nav {
 .for-title {
   margin-bottom: 8px;
   font-size: 16px;
+}
+
+.for-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.for-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.for-tag::before {
+  content: "";
+  width: 3px;
+  height: 3px;
+  background: var(--purple);
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .pillar-desc,
@@ -1575,6 +1638,7 @@ nav {
 .lb-tr {
   padding: 12px 16px;
   border-bottom: 1px solid var(--border);
+  border-radius: 10px;
 }
 
 .lb-tr:last-child {
