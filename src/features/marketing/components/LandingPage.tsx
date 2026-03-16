@@ -165,53 +165,52 @@ export function LandingPage() {
       </div>
 
       <div className="hero">
-        <div className="hero-inner">
-          <div className="hero-badge">
-            <div className="hero-badge-dot">
-              <svg viewBox="0 0 8 8" fill="none">
-                <circle cx="4" cy="4" r="3" fill="white" />
-              </svg>
-            </div>
-            Now in beta · 247 builders shipping daily
-          </div>
-          <h1 className="hero-h">
-            Track your startup
-            <br />
-            from idea to <span className="gradient">launch.</span>
-          </h1>
-          <p className="hero-sub">
-            Turn your Product Development Strategy into milestones, tasks, and
-            real progress. Ship daily. Beat the bosses. Climb the board.
-          </p>
-          <div className="hero-btns">
-            <Link href="/signup" className="btn-primary">
-              Start Building with CroFlux →
-            </Link>
-            <Link href="#how" className="btn-ghost">
-              See how it works
-            </Link>
-          </div>
-          <div className="hero-stats">
-            <div className="hero-stat">
-              <div className="hero-stat-val purple">247</div>
-              <div className="hero-stat-lbl">Active builders</div>
-            </div>
-            <div className="hero-stat">
-              <div className="hero-stat-val amber">
-                {(taskCount / 1000).toFixed(1)}k
+        <div className="hero-shell">
+          <div className="hero-inner">
+            <div className="hero-badge">
+              <div className="hero-badge-dot">
+                <svg viewBox="0 0 8 8" fill="none">
+                  <circle cx="4" cy="4" r="3" fill="white" />
+                </svg>
               </div>
-              <div className="hero-stat-lbl">Tasks shipped / week</div>
+              Now in beta · 247 builders shipping daily
             </div>
-            <div className="hero-stat">
-              <div className="hero-stat-val purple">92%</div>
-              <div className="hero-stat-lbl">Daily retention</div>
+            <h1 className="hero-h">
+              Track your startup
+              <br />
+              from idea to <span className="gradient">launch.</span>
+            </h1>
+            <p className="hero-sub">
+              Turn your Product Development Strategy into milestones, tasks, and
+              real progress. Ship daily. Beat the bosses. Climb the board.
+            </p>
+            <div className="hero-btns">
+              <Link href="/signup" className="btn-primary">
+                Start Building with CroFlux →
+              </Link>
+              <Link href="#how" className="btn-ghost">
+                See how it works
+              </Link>
+            </div>
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <div className="hero-stat-val purple">247</div>
+                <div className="hero-stat-lbl">Active builders</div>
+              </div>
+              <div className="hero-stat">
+                <div className="hero-stat-val amber">
+                  {(taskCount / 1000).toFixed(1)}k
+                </div>
+                <div className="hero-stat-lbl">Tasks shipped / week</div>
+              </div>
+              <div className="hero-stat">
+                <div className="hero-stat-val purple">92%</div>
+                <div className="hero-stat-lbl">Daily retention</div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="preview-outer">
-        <div ref={previewRef} className="preview-wrap reveal">
+          <div ref={previewRef} className="preview-wrap hero-preview reveal">
           <div className="preview-bar">
             <div className="preview-dots">
               <div className="pv-dot" />
@@ -362,6 +361,7 @@ export function LandingPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       <div className="social-proof">

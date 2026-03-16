@@ -343,10 +343,9 @@ nav {
 
 .hero {
   position: relative;
-  max-width: 1140px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 88px 40px 80px;
-  text-align: center;
+  padding: 72px 40px 92px;
 }
 
 .hero::before {
@@ -366,9 +365,20 @@ nav {
   z-index: 0;
 }
 
-.hero-inner {
+.hero-shell {
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 56px;
+}
+
+.hero-inner {
+  position: relative;
+  flex: 0 1 560px;
+  max-width: 560px;
+  min-width: 0;
 }
 
 .hero-badge {
@@ -402,6 +412,7 @@ nav {
   font-weight: 600;
   line-height: 1.03;
   letter-spacing: -0.04em;
+  text-align: left;
 }
 
 .hero-h .gradient,
@@ -413,17 +424,18 @@ nav {
 }
 
 .hero-sub {
-  max-width: 560px;
-  margin: 0 auto 36px;
+  max-width: 520px;
+  margin: 0 0 36px;
   font-size: clamp(16px, 2vw, 19px);
   color: var(--text2);
   line-height: 1.7;
   letter-spacing: -0.01em;
+  text-align: left;
 }
 
 .hero-btns {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 44px;
@@ -469,10 +481,12 @@ nav {
 }
 
 .hero-stats {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  max-width: 520px;
 }
 
 .hero-stat {
@@ -505,10 +519,12 @@ nav {
   color: var(--text3);
 }
 
-.preview-outer {
-  max-width: 1000px;
-  margin: 60px auto 0;
-  padding: 0 40px;
+.hero-preview {
+  flex: 1 1 720px;
+  width: min(100%, 720px);
+  max-width: 720px;
+  min-width: 0;
+  margin-top: 8px;
 }
 
 .preview-wrap {
@@ -2087,8 +2103,9 @@ footer {
     padding-bottom: 60px;
   }
 
-  .preview-outer {
-    padding: 0 20px;
+  .hero-shell {
+    flex-direction: column;
+    gap: 36px;
   }
 
   .preview-layout,
@@ -2114,6 +2131,31 @@ footer {
     flex-direction: column;
   }
 
+  .hero-inner {
+    max-width: none;
+  }
+
+  .hero-badge,
+  .hero-h,
+  .hero-sub {
+    text-align: center;
+  }
+
+  .hero-sub {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-btns {
+    justify-content: center;
+  }
+
+  .hero-preview {
+    max-width: none;
+    width: 100%;
+    margin-top: 0;
+  }
+
   .problem-phase,
   .how-step,
   .for-card,
@@ -2125,6 +2167,7 @@ footer {
 
   .hero-stats {
     display: grid;
+    max-width: none;
   }
 
   .cta-actions {
