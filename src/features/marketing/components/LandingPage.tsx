@@ -183,18 +183,61 @@ export function LandingPage() {
           </div>
           <div className="preview-layout">
             <div className="pv-sidebar">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "4px 8px",
+                  marginBottom: 8,
+                }}
+              >
+                <div
+                  style={{
+                    width: 20,
+                    height: 20,
+                    background: "var(--purple)",
+                    borderRadius: 5,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M2 12L7 2L12 12"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3.5 9H10.5"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text)" }}>
+                  CroFlux
+                </span>
+              </div>
               <div className="pv-sb-section">Workspace</div>
               <div className="pv-sb-item active">Dashboard</div>
               <div className="pv-sb-item">Milestones</div>
-              <div className="pv-sb-item">Tasks</div>
+              <div className="pv-sb-item">Activity</div>
+              <div className="pv-sb-section">Community</div>
               <div className="pv-sb-item">Leaderboard</div>
-              <div className="pv-sb-item">Settings</div>
             </div>
             <div className="pv-main">
               <div className="pv-header">
                 <div>
-                  <div className="pv-project-name">Croofx — AI debugging CLI</div>
-                  <div className="pv-project-sub">Solo founder workspace</div>
+                  <div className="pv-project-name">AI Debugger</div>
+                  <div className="pv-project-sub">
+                    CLI tool for developers · Building in public
+                  </div>
                 </div>
                 <div className="pv-status">
                   <svg width="6" height="6" viewBox="0 0 6 6">
@@ -216,19 +259,36 @@ export function LandingPage() {
                 <span className="pv-ms-name done">CLI Foundation</span>
                 <span className="pv-pill done">Done</span>
               </div>
+              <div className="pv-task-row">
+                <div className="pv-task-cb done">✓</div>
+                <span className="pv-task-txt done">Setup repository</span>
+              </div>
+              <div className="pv-task-row">
+                <div className="pv-task-cb done">✓</div>
+                <span className="pv-task-txt done">Initialize CLI framework</span>
+              </div>
               <div className="pv-ms-row">
                 <div className="pv-ms-icon active">⚡</div>
                 <span className="pv-ms-name">Bug Detection Engine</span>
                 <span className="pv-pill boss">BOSS</span>
               </div>
-              <div className="pv-ms-row">
-                <div className="pv-ms-icon locked">🔒</div>
-                <span className="pv-ms-name locked">Patch Generator</span>
-                <span className="pv-pill locked">Locked</span>
+              <div className="pv-task-row">
+                <div className="pv-task-cb done">✓</div>
+                <span className="pv-task-txt done">Code scanning</span>
+              </div>
+              <div className="pv-task-row">
+                <div className="pv-task-cb" />
+                <span className="pv-task-txt pulse">Pattern detection...</span>
+              </div>
+              <div className="pv-task-row">
+                <div className="pv-task-cb" />
+                <span className="pv-task-txt" style={{ color: "var(--text4)" }}>
+                  Error classification
+                </span>
               </div>
               <div className="pv-ms-row">
                 <div className="pv-ms-icon locked">🔒</div>
-                <span className="pv-ms-name locked">GitHub Integration</span>
+                <span className="pv-ms-name locked">Patch Generator</span>
                 <span className="pv-pill locked">Locked</span>
               </div>
             </div>
@@ -413,6 +473,17 @@ export function LandingPage() {
                 Paste your product development strategy in plain language. No
                 special format — just describe how you&apos;re going to build it.
               </p>
+              <div className="how-step-example">
+                <span className="hl">→</span> Build AI debugging CLI
+                <br />
+                <span className="hl">→</span> Detect bugs in code
+                <br />
+                <span className="hl">→</span> Generate patch suggestions
+                <br />
+                <span className="hl">→</span> GitHub integration
+                <br />
+                <span className="hl">→</span> Launch beta
+              </div>
             </div>
             <div className="how-step">
               <div className="how-step-num">Step 02</div>
@@ -421,6 +492,18 @@ export function LandingPage() {
                 AI converts your strategy into structured milestones and tasks in
                 seconds. Edit, add, or remove anything. Fully in your control.
               </p>
+              <div className="how-step-example">
+                <span className="hl">Milestone 1</span> · CLI Foundation
+                <br />
+                <span style={{ color: "var(--text4)" }}>— Setup repository</span>
+                <br />
+                <span style={{ color: "var(--text4)" }}>— Initialize framework</span>
+                <br />
+                <br />
+                <span className="hl">Milestone 2</span> · Bug Detection
+                <br />
+                <span style={{ color: "var(--text4)" }}>— Code scanning</span>
+              </div>
             </div>
             <div className="how-step">
               <div className="how-step-num">Step 03</div>
@@ -429,6 +512,13 @@ export function LandingPage() {
                 Your dashboard tracks every task. Progress updates live. Boss
                 milestones challenge you. Streaks keep you consistent.
               </p>
+              <div className="how-step-example">
+                <span className="hl">Progress</span> ████████░░░░ 45%
+                <br />
+                <span className="hl">Streak</span> ★ 6 day streak
+                <br />
+                <span className="hl">Rank</span> #12 this week
+              </div>
             </div>
           </div>
         </div>
@@ -441,74 +531,178 @@ export function LandingPage() {
           <br />
           <span className="purple">actually needs.</span>
         </h2>
-        <div className="feat-grid">
-          <div className="feat-card">
-            <div className="feat-icon-row">
-              <div className="feat-icon">⚔</div>
-              <span className="feat-badge amber">Gamification</span>
+          <div className="feat-grid">
+            <div className="feat-card">
+              <div className="feat-icon-row">
+                <div className="feat-icon">⚔</div>
+                <span className="feat-badge amber">Gamification</span>
             </div>
             <div className="feat-title">Boss Milestones</div>
-            <p className="feat-desc">
-              Major milestones become boss battles. Complete tasks to drain the
-              boss&apos;s HP. Defeat it to unlock the next stage.
-            </p>
-          </div>
-          <div className="feat-card">
-            <div className="feat-icon-row">
-              <div className="feat-icon">★</div>
-              <span className="feat-badge purple">Momentum</span>
+              <p className="feat-desc">
+                Major milestones become boss battles. Complete tasks to drain the
+                boss&apos;s HP. Defeat it to unlock the next stage.
+              </p>
+              <div className="feat-preview">
+                <div className="boss-row">
+                  <span style={{ fontSize: 11, color: "var(--text2)", flex: 1 }}>
+                    Launch MVP
+                  </span>
+                  <span className="boss-tag">BOSS</span>
+                </div>
+                <div className="boss-row">
+                  <span
+                    style={{
+                      fontSize: 10,
+                      color: "var(--amber)",
+                      minWidth: 20,
+                      fontFamily: "var(--mono)",
+                    }}
+                  >
+                    HP
+                  </span>
+                  <div className="boss-hp-track">
+                    <div className="boss-hp-fill" />
+                  </div>
+                </div>
+                <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "var(--mono)" }}>
+                  4/6 tasks completed
+                </div>
+              </div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-icon-row">
+                <div className="feat-icon">★</div>
+                <span className="feat-badge purple">Momentum</span>
             </div>
             <div className="feat-title">Builder Streak</div>
-            <p className="feat-desc">
-              Ship at least one task per day to keep your streak alive. Miss a
-              day and it resets. Simple accountability that works.
-            </p>
-          </div>
-          <div className="feat-card">
-            <div className="feat-icon-row">
-              <div className="feat-icon">◈</div>
-              <span className="feat-badge purple">AI-Powered</span>
+              <p className="feat-desc">
+                Ship at least one task per day to keep your streak alive. Miss a
+                day and it resets. Simple accountability that works.
+              </p>
+              <div className="feat-preview">
+                <div className="streak-header">
+                  <span className="streak-fire">★</span>
+                  <span className="streak-count">6</span>
+                  <span className="streak-lbl">day streak</span>
+                </div>
+                <div className="streak-days">
+                  <div className="streak-day done">M</div>
+                  <div className="streak-day done">T</div>
+                  <div className="streak-day done">W</div>
+                  <div className="streak-day done">T</div>
+                  <div className="streak-day done">F</div>
+                  <div className="streak-day done">S</div>
+                  <div className="streak-day today">S</div>
+                </div>
+              </div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-icon-row">
+                <div className="feat-icon">◈</div>
+                <span className="feat-badge purple">AI-Powered</span>
             </div>
             <div className="feat-title">AI Roadmap Generator</div>
-            <p className="feat-desc">
-              Paste your product strategy. GPT converts it into 4–6 milestones
-              with 3–5 actionable tasks each in seconds.
-            </p>
-          </div>
-          <div className="feat-card">
-            <div className="feat-icon-row">
-              <div className="feat-icon">◎</div>
-              <span className="feat-badge amber">Competition</span>
+              <p className="feat-desc">
+                Paste your product strategy. GPT converts it into 4–6 milestones
+                with 3–5 actionable tasks each in seconds.
+              </p>
+              <div className="feat-preview" style={{ fontSize: 11, fontFamily: "var(--mono)", lineHeight: 1.8, color: "var(--text3)" }}>
+                <span style={{ color: "var(--purple2)" }}>→</span> CLI Foundation (4 tasks)
+                <br />
+                <span style={{ color: "var(--text2)" }}>→</span> Bug Detection (5 tasks)
+                <br />
+                <span style={{ color: "var(--text4)" }}>→</span> Patch Generator (3 tasks)
+                <br />
+                <span style={{ color: "var(--text4)" }}>→</span> GitHub Integration (4 tasks)
+              </div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-icon-row">
+                <div className="feat-icon">◎</div>
+                <span className="feat-badge amber">Competition</span>
             </div>
             <div className="feat-title">Weekly Leaderboard</div>
-            <p className="feat-desc">
-              Ranked by weekly tasks completed. Resets every Monday. Your rank
-              updates live as you ship.
-            </p>
-          </div>
-          <div className="feat-card">
-            <div className="feat-icon-row">
-              <div className="feat-icon">▓</div>
-              <span className="feat-badge purple">Tracking</span>
+              <p className="feat-desc">
+                Ranked by weekly tasks completed. Resets every Monday. Your rank
+                updates live as you ship.
+              </p>
+              <div className="feat-preview">
+                <div className="lb-mini-row">
+                  <div className="lb-mini-rank g">1</div>
+                  <div className="lb-mini-av">RK</div>
+                  <div className="lb-mini-name">Riya K.</div>
+                  <div className="lb-mini-score">34</div>
+                </div>
+                <div className="lb-mini-row">
+                  <div className="lb-mini-rank g">2</div>
+                  <div className="lb-mini-av">DM</div>
+                  <div className="lb-mini-name">Dev M.</div>
+                  <div className="lb-mini-score">28</div>
+                </div>
+                <div
+                  className="lb-mini-row"
+                  style={{
+                    background: "var(--purple-dim)",
+                    border: "1px solid var(--purple-mid)",
+                    borderRadius: 4,
+                    padding: "5px 4px",
+                    margin: "2px -4px",
+                  }}
+                >
+                  <div className="lb-mini-rank" style={{ color: "var(--purple2)" }}>
+                    —
+                  </div>
+                  <div
+                    className="lb-mini-av"
+                    style={{ borderColor: "var(--purple)", color: "var(--purple2)" }}
+                  >
+                    YO
+                  </div>
+                  <div className="lb-mini-name" style={{ color: "var(--purple2)" }}>
+                    You
+                  </div>
+                  <div className="lb-mini-score">0</div>
+                </div>
+              </div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-icon-row">
+                <div className="feat-icon">▓</div>
+                <span className="feat-badge purple">Tracking</span>
             </div>
             <div className="feat-title">Progress Bar System</div>
-            <p className="feat-desc">
-              Progress calculated automatically: completed tasks / total tasks.
-              Always know how close you are to launch.
-            </p>
-          </div>
-          <div className="feat-card">
-            <div className="feat-icon-row">
-              <div className="feat-icon">⚡</div>
-              <span className="feat-badge purple">Motivation</span>
+              <p className="feat-desc">
+                Progress calculated automatically: completed tasks / total tasks.
+                Always know how close you are to launch.
+              </p>
+              <div className="feat-preview">
+                <div className="prog-row">
+                  <span className="prog-lbl">Startup progress</span>
+                  <span className="prog-val">63%</span>
+                </div>
+                <div className="prog-track">
+                  <div className="prog-fill" />
+                </div>
+              </div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-icon-row">
+                <div className="feat-icon">⚡</div>
+                <span className="feat-badge purple">Motivation</span>
             </div>
             <div className="feat-title">Completion Messages</div>
-            <p className="feat-desc">
-              Every completed task fires a motivational message. Random from a
-              curated set — keeps energy high.
-            </p>
+              <p className="feat-desc">
+                Every completed task fires a motivational message. Random from a
+                curated set — keeps energy high.
+              </p>
+              <div className="msg-preview">
+                <div className="msg-head">Momentum unlocked</div>
+                <div className="msg-body">
+                  You&apos;re 63% closer to launch. Keep shipping.
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
       </section>
 
       <div className="section-full reveal" id="for-builders">
