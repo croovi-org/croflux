@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const tickerMsgs = [
   "Riya K. just completed: Launch landing page",
@@ -35,6 +35,10 @@ const ctaMsgs = [
 export function LandingPage() {
   const [taskCount, setTaskCount] = useState(1284);
   const [ctaIndex, setCtaIndex] = useState(0);
+  const [previewProgress, setPreviewProgress] = useState(20);
+  const [featureProgress, setFeatureProgress] = useState(20);
+  const previewRef = useRef<HTMLDivElement | null>(null);
+  const featureProgressRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const counter = window.setInterval(() => {
@@ -65,6 +69,41 @@ export function LandingPage() {
       window.clearInterval(counter);
       window.clearInterval(cta);
       observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const getScrollProgress = (
+      element: HTMLDivElement | null,
+      min: number,
+      max: number,
+    ) => {
+      if (!element) {
+        return min;
+      }
+
+      const rect = element.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const start = viewportHeight * 0.9;
+      const end = viewportHeight * 0.22;
+      const ratio = (start - rect.top) / (start - end);
+      const clamped = Math.min(1, Math.max(0, ratio));
+
+      return Math.round(min + (max - min) * clamped);
+    };
+
+    const updateProgress = () => {
+      setPreviewProgress(getScrollProgress(previewRef.current, 20, 50));
+      setFeatureProgress(getScrollProgress(featureProgressRef.current, 20, 63));
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+
+    return () => {
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
     };
   }, []);
 
@@ -172,7 +211,7 @@ export function LandingPage() {
       </div>
 
       <div className="preview-outer">
-        <div className="preview-wrap reveal">
+        <div ref={previewRef} className="preview-wrap reveal">
           <div className="preview-bar">
             <div className="preview-dots">
               <div className="pv-dot" />
@@ -248,10 +287,10 @@ export function LandingPage() {
               </div>
               <div className="pv-prog-row">
                 <span className="pv-prog-lbl">Progress</span>
-                <span className="pv-prog-val">45%</span>
+                <span className="pv-prog-val">{previewProgress}%</span>
               </div>
               <div className="pv-track">
-                <div className="pv-fill" />
+                <div className="pv-fill" style={{ width: `${previewProgress}%` }} />
               </div>
               <div className="pv-ms-lbl">Milestones</div>
               <div className="pv-ms-row">
@@ -294,16 +333,12 @@ export function LandingPage() {
             </div>
             <div className="pv-right">
               <div className="pv-stat-card">
+                <div className="pv-stat-val p">{previewProgress}%</div>
+                <div className="pv-stat-lbl">progress</div>
+              </div>
+              <div className="pv-stat-card">
                 <div className="pv-stat-val a">6d</div>
                 <div className="pv-stat-lbl">streak</div>
-              </div>
-              <div className="pv-stat-card">
-                <div className="pv-stat-val p">#12</div>
-                <div className="pv-stat-lbl">rank</div>
-              </div>
-              <div className="pv-stat-card">
-                <div className="pv-stat-val">18</div>
-                <div className="pv-stat-lbl">tasks</div>
               </div>
               <div className="pv-lb-head">Top Builders</div>
               <div className="pv-lb-row">
@@ -532,7 +567,7 @@ export function LandingPage() {
           <span className="purple">actually needs.</span>
         </h2>
           <div className="feat-grid">
-            <div className="feat-card">
+            <div ref={featureProgressRef} className="feat-card">
               <div className="feat-icon-row">
                 <div className="feat-icon">⚔</div>
                 <span className="feat-badge amber">Gamification</span>
@@ -678,10 +713,10 @@ export function LandingPage() {
               <div className="feat-preview">
                 <div className="prog-row">
                   <span className="prog-lbl">Startup progress</span>
-                  <span className="prog-val">63%</span>
+                  <span className="prog-val">{featureProgress}%</span>
                 </div>
                 <div className="prog-track">
-                  <div className="prog-fill" />
+                  <div className="prog-fill" style={{ width: `${featureProgress}%` }} />
                 </div>
               </div>
             </div>
@@ -1009,12 +1044,14 @@ export function LandingPage() {
             Turn your startup idea into an execution roadmap. Join 247 builders
             shipping daily.
           </p>
-          <Link href="/signup" className="btn-primary" style={{ fontSize: 15, padding: "13px 32px" }}>
-            Start Building with CroFlux →
-          </Link>
-          <div className="cta-live">
-            <div className="cta-live-dot" />
-            <span>{ctaMsgs[ctaIndex]}</span>
+          <div className="cta-actions">
+            <Link href="/signup" className="btn-primary" style={{ fontSize: 15, padding: "13px 32px" }}>
+              Start Building with CroFlux →
+            </Link>
+            <div className="cta-live">
+              <div className="cta-live-dot" />
+              <span>{ctaMsgs[ctaIndex]}</span>
+            </div>
           </div>
         </div>
       </div>
