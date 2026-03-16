@@ -35,10 +35,23 @@ const ctaMsgs = [
 export function LandingPage() {
   const [taskCount, setTaskCount] = useState(1284);
   const [ctaIndex, setCtaIndex] = useState(0);
-  const [previewProgress, setPreviewProgress] = useState(20);
+  const [heroEntered, setHeroEntered] = useState(false);
+  const [previewProgress, setPreviewProgress] = useState(0);
   const [featureProgress, setFeatureProgress] = useState(20);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const featureProgressRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    let frameId = 0;
+
+    frameId = window.requestAnimationFrame(() => {
+      setHeroEntered(true);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, []);
 
   useEffect(() => {
     const counter = window.setInterval(() => {
@@ -73,11 +86,36 @@ export function LandingPage() {
   }, []);
 
   useEffect(() => {
-    const getScrollProgress = (
-      element: HTMLDivElement | null,
-      min: number,
-      max: number,
-    ) => {
+    const target = 48;
+    let frameId = 0;
+    let startTime = 0;
+
+    const animatePreview = (timestamp: number) => {
+      if (!startTime) {
+        startTime = timestamp;
+      }
+
+      const elapsed = timestamp - startTime;
+      const duration = 900;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - (1 - progress) * (1 - progress);
+
+      setPreviewProgress(Math.round(target * eased));
+
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(animatePreview);
+      }
+    };
+
+    frameId = window.requestAnimationFrame(animatePreview);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, []);
+
+  useEffect(() => {
+    const getScrollProgress = (element: HTMLDivElement | null, min: number, max: number) => {
       if (!element) {
         return min;
       }
@@ -93,7 +131,6 @@ export function LandingPage() {
     };
 
     const updateProgress = () => {
-      setPreviewProgress(getScrollProgress(previewRef.current, 20, 50));
       setFeatureProgress(getScrollProgress(featureProgressRef.current, 20, 63));
     };
 
@@ -165,7 +202,7 @@ export function LandingPage() {
       </div>
 
       <div className="hero">
-        <div className="hero-shell">
+        <div className={`hero-shell ${heroEntered ? "hero-entered" : ""}`}>
           <div className="hero-inner">
             <div className="hero-badge">
               <div className="hero-badge-dot">
@@ -176,9 +213,14 @@ export function LandingPage() {
               Now in beta · 247 builders shipping daily
             </div>
             <h1 className="hero-h">
-              Track your startup
-              <br />
-              from idea to <span className="gradient">launch.</span>
+              <span className="hero-line">
+                <span className="hero-line-text">Track your startup</span>
+              </span>
+              <span className="hero-line">
+                <span className="hero-line-text">
+                  from idea to <span className="gradient">launch.</span>
+                </span>
+              </span>
             </h1>
             <p className="hero-sub">
               Turn your Product Development Strategy into milestones, tasks, and
@@ -944,40 +986,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      <div className="section-full reveal">
-        <div className="section-full-inner">
-          <div className="section-eyebrow">Why CroFlux</div>
-          <h2 className="section-h">
-            Not another
-            <br />
-            task manager.
-          </h2>
-          <p className="section-sub">
-            Every other tool tracks tasks. CroFlux tracks startup execution —
-            the real distance between where you are and where you&apos;re
-            launching.
-          </p>
-          <div className="compare-grid">
-            <div className="compare-card">
-              <div className="compare-tool">Notion</div>
-              <div className="compare-type">notes &amp; docs</div>
-            </div>
-            <div className="compare-card">
-              <div className="compare-tool">Trello</div>
-              <div className="compare-type">task boards</div>
-            </div>
-            <div className="compare-card">
-              <div className="compare-tool">ClickUp</div>
-              <div className="compare-type">project management</div>
-            </div>
-            <div className="compare-card hl">
-              <div className="compare-tool p">CroFlux</div>
-              <div className="compare-type p">startup execution</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <section className="section reveal" id="pricing" style={{ textAlign: "center" }}>
         <div className="section-eyebrow" style={{ justifyContent: "center" }}>
           Pricing
@@ -1033,16 +1041,16 @@ export function LandingPage() {
       </section>
 
       <div className="cta-section">
-        <div className="cta-bg-word">SHIP</div>
+        <div className="cta-bg-word">BUILD</div>
         <div className="cta-inner reveal">
           <h2 className="cta-h">
-            Stop planning.
+            Your next milestone
             <br />
-            <span className="gradient">Start shipping.</span>
+            is <span className="cta-accent">waiting.</span>
           </h2>
           <p className="cta-sub">
-            Turn your startup idea into an execution roadmap. Join 247 builders
-            shipping daily.
+            Join 247 builders shipping daily. Generate your roadmap in 90
+            seconds. Your startup deserves a progress engine.
           </p>
           <div className="cta-actions">
             <Link href="/signup" className="btn-primary" style={{ fontSize: 15, padding: "13px 32px" }}>
