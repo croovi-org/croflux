@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -22,6 +22,11 @@ export const metadata: Metadata = {
     shortcut: "/croflux-mark.png",
     apple: "/croflux-mark.png",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
