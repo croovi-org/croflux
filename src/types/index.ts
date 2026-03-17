@@ -40,3 +40,9 @@ export interface ActivityLog {
   task_completed: boolean;
   timestamp: string;
 }
+
+export interface WaitlistEntry {
+  id: string;
+  email: string;
+  created_at: string;
+}
