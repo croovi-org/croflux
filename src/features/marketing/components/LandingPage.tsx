@@ -141,6 +141,13 @@ const howWorkflows = [
 ] as const;
 
 export function LandingPage() {
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof document === "undefined") {
+      return "dark";
+    }
+
+    return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  });
   const [taskCount, setTaskCount] = useState(1284);
   const [ctaIndex, setCtaIndex] = useState(0);
   const [heroEntered, setHeroEntered] = useState(false);
@@ -157,6 +164,23 @@ export function LandingPage() {
   const previewRef = useRef<HTMLDivElement | null>(null);
   const featureProgressRef = useRef<HTMLDivElement | null>(null);
   const workflowTransitionRef = useRef<number | null>(null);
+
+  const applyTheme = (nextTheme: "dark" | "light") => {
+    setTheme(nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+    localStorage.setItem("croflux-theme", nextTheme);
+
+    const href = "/croflux-mark.png";
+    ["icon", "shortcut icon", "apple-touch-icon"].forEach((rel) => {
+      let link = document.querySelector(`link[rel="${rel}"]`) as HTMLLinkElement | null;
+      if (!link) {
+        link = document.createElement("link");
+        link.rel = rel;
+        document.head.appendChild(link);
+      }
+      link.href = href;
+    });
+  };
 
   useEffect(() => {
     let frameId = 0;
@@ -356,6 +380,36 @@ export function LandingPage() {
             </Link>
           </div>
           <div className="nav-right">
+            <button
+              type="button"
+              className="nav-theme-toggle"
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              onClick={() => applyTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? (
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <circle cx="10" cy="10" r="3.6" stroke="currentColor" strokeWidth="1.6" />
+                  <path d="M10 1.8V4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <path d="M10 16V18.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <path d="M18.2 10H16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <path d="M4 10H1.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <path d="M15.8 4.2L14.2 5.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <path d="M5.8 14.2L4.2 15.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <path d="M15.8 15.8L14.2 14.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <path d="M5.8 5.8L4.2 4.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path
+                    d="M15.9 12.9A6.9 6.9 0 0 1 7.1 4.1 7.4 7.4 0 1 0 15.9 12.9Z"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </button>
             <Link href={waitlistHref} className="nav-login">
               Waitlist
             </Link>
@@ -444,15 +498,15 @@ export function LandingPage() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 8,
+                  gap: 4,
                   padding: "4px 8px",
                   marginBottom: 8,
                 }}
               >
                 <div
                   style={{
-                    width: 26,
-                    height: 26,
+                    width: 58,
+                    height: 28,
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
@@ -461,15 +515,16 @@ export function LandingPage() {
                   }}
                 >
                   <Image
-                    src="/croflux-logo.png"
+                    src="/croflux-mark.png"
                     alt=""
                     fill
-                    sizes="26px"
+                    sizes="92px"
                     style={{ objectFit: "contain" }}
                   />
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text)" }}>
-                  CroFlux
+                <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: "-0.02em" }}>
+                  <span style={{ color: "var(--text)" }}>Cro</span>
+                  <span style={{ color: "var(--brand-accent)" }}>Flux</span>
                 </span>
               </div>
               <div className="pv-sb-section">Workspace</div>

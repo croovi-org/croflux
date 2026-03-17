@@ -4,7 +4,6 @@ import Link from "next/link";
 type LogoProps = {
   href?: string;
   className?: string;
-  textClassName?: string;
   markClassName?: string;
   showText?: boolean;
 };
@@ -12,28 +11,32 @@ type LogoProps = {
 export function Logo({
   href = "/",
   className = "",
-  textClassName = "",
   markClassName = "",
   showText = true,
 }: LogoProps) {
   return (
     <Link
       href={href}
-      className={`inline-flex items-center gap-2 text-[15px] font-semibold tracking-[-0.02em] text-[var(--text)] ${className}`}
+      className={`logo-lockup ${className}`}
     >
       <span
-        className={`relative flex h-9 w-9 items-center justify-center ${markClassName}`}
+        className={`relative flex h-10 w-[84px] items-center justify-center ${markClassName}`}
         aria-hidden="true"
       >
         <Image
-          src="/croflux-logo.png"
+          src="/croflux-mark.png"
           alt=""
           fill
-          sizes="36px"
+          sizes="120px"
           className="object-contain"
         />
       </span>
-      {showText ? <span className={textClassName}>CroFlux</span> : null}
+      {showText ? (
+        <span className="logo-wordmark">
+          <span className="logo-wordmark-cro">Cro</span>
+          <span className="logo-wordmark-flux">Flux</span>
+        </span>
+      ) : null}
     </Link>
   );
 }
