@@ -73,11 +73,11 @@ html {
 
 html[data-theme="light"] {
   --brand-accent: #a99dfe;
-  --bg: #f6f7fb;
-  --bg2: #ffffff;
-  --bg3: #f1f2f8;
-  --bg4: #e8eaf4;
-  --bg5: #d8ddeb;
+  --bg: #f8fafa;
+  --bg2: #f8fafa;
+  --bg3: #eef2f5;
+  --bg4: #e5ebf0;
+  --bg5: #d7dee5;
   --purple: var(--brand-accent);
   --purple2: var(--brand-accent);
   --purple3: var(--brand-accent);
@@ -90,10 +90,10 @@ html[data-theme="light"] {
   --border: rgba(15, 23, 42, 0.08);
   --border2: rgba(15, 23, 42, 0.12);
   --border3: rgba(15, 23, 42, 0.18);
-  --text: #12131a;
-  --text2: rgba(18, 19, 26, 0.68);
-  --text3: rgba(18, 19, 26, 0.44);
-  --text4: rgba(18, 19, 26, 0.24);
+  --text: #0d1117;
+  --text2: rgba(13, 17, 23, 0.82);
+  --text3: rgba(13, 17, 23, 0.62);
+  --text4: rgba(13, 17, 23, 0.4);
   --nav-bg: rgba(255, 255, 255, 0.88);
   --ticker-bg: rgba(169, 157, 254, 0.08);
   --hero-glow: radial-gradient(
@@ -1315,7 +1315,7 @@ nav {
 
 .section-full,
 .lb-section-bg {
-  background: #1a1a1f;
+  background: var(--bg2);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
@@ -2778,6 +2778,57 @@ nav {
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+html[data-theme="light"] .how-flow-sidebar,
+html[data-theme="light"] .how-flow-canvas,
+html[data-theme="light"] .how-flow-tab,
+html[data-theme="light"] .how-flow-stage {
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="light"] .how-flow-stage.active,
+html[data-theme="light"] .how-flow-tab.active,
+html[data-theme="light"] .how-flow-tab:hover {
+  background: rgba(169, 157, 254, 0.12);
+}
+
+html[data-theme="light"] .waitlist-form {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.62)),
+    rgba(255, 255, 255, 0.66);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.24),
+    0 20px 48px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="light"] .waitlist-input {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+html[data-theme="light"] .hero-h .gradient,
+html[data-theme="light"] .cta-h .gradient,
+html[data-theme="light"] .purple {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: currentColor;
+  background-clip: initial;
+  color: var(--purple);
+}
+
+html[data-theme="light"] .ticker-item,
+html[data-theme="light"] .hero-badge,
+html[data-theme="light"] .section-eyebrow,
+html[data-theme="light"] .how-step-num,
+html[data-theme="light"] .sp-score,
+html[data-theme="light"] .pv-lb-score,
+html[data-theme="light"] .lb-mini-score,
+html[data-theme="light"] .price-amount-featured,
+html[data-theme="light"] .cta-accent {
+  color: var(--purple);
 }
 
 .waitlist-input::placeholder {

@@ -141,13 +141,8 @@ const howWorkflows = [
 ] as const;
 
 export function LandingPage() {
-  const [theme, setTheme] = useState<"dark" | "light">(() => {
-    if (typeof document === "undefined") {
-      return "dark";
-    }
-
-    return document.documentElement.dataset.theme === "light" ? "light" : "dark";
-  });
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [themeReady, setThemeReady] = useState(false);
   const [taskCount, setTaskCount] = useState(1284);
   const [ctaIndex, setCtaIndex] = useState(0);
   const [heroEntered, setHeroEntered] = useState(false);
@@ -181,6 +176,18 @@ export function LandingPage() {
       link.href = href;
     });
   };
+
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(() => {
+      const currentTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+      setTheme(currentTheme);
+      setThemeReady(true);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, []);
 
   useEffect(() => {
     let frameId = 0;
@@ -383,7 +390,13 @@ export function LandingPage() {
             <button
               type="button"
               className="nav-theme-toggle"
-              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label={
+                themeReady
+                  ? theme === "dark"
+                    ? "Switch to light mode"
+                    : "Switch to dark mode"
+                  : "Toggle theme"
+              }
               onClick={() => applyTheme(theme === "dark" ? "light" : "dark")}
             >
               {theme === "dark" ? (
