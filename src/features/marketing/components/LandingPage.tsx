@@ -1342,57 +1342,31 @@ export function LandingPage() {
         </div>
       </div>
 
-      <section className="section reveal">
-        <div className="section-eyebrow">From builders</div>
-        <h2 className="section-h">
-          They shipped.
-          <br />
-          You <span className="purple">can too.</span>
-        </h2>
-        <div className="testi-grid">
-          <div className="testi-card">
-            <div className="testi-quote">&quot;</div>
-            <p className="testi-text">
-              I went from idea to first user in 18 days. The boss milestone
-              system kept me honest when I wanted to skip steps. Nothing else
-              gave me this kind of clarity.
-            </p>
-          </div>
-          <div className="testi-card">
-            <div className="testi-quote">&quot;</div>
-            <p className="testi-text">
-              The streak system is ruthless. Miss one day and you feel it. That
-              pressure is exactly what I needed. I shipped more in 3 weeks than
-              in 3 months before.
-            </p>
-          </div>
-          <div className="testi-card">
-            <div className="testi-quote">&quot;</div>
-            <p className="testi-text">
-              I&apos;m a student founder with no team. The AI roadmap gave me a
-              plan in seconds. I knew exactly what to build next every single
-              day. Complete game changer.
-            </p>
-          </div>
-        </div>
-      </section>
-
       <section className="section reveal" id="pricing" style={{ textAlign: "center" }}>
         <div className="section-eyebrow" style={{ justifyContent: "center" }}>
           Pricing
         </div>
         <h2 className="section-h">
-          Simple. <span className="purple">Honest.</span>
+          Free for <span className="purple">early builders.</span>
         </h2>
         <p className="section-sub" style={{ margin: "0 auto" }}>
-          Start free. Upgrade when you need more. No hidden fees, no surprise
-          charges.
+          CroFlux is free during early access. Pricing will be introduced after
+          launch.
+        </p>
+        <p
+          style={{
+            margin: "18px auto 0",
+            color: "var(--text3)",
+            fontSize: 13,
+          }}
+        >
+          Built in public. Early users shape the product.
         </p>
         <div className="pricing-grid">
           <div className="price-card">
-            <div className="price-tier">Free</div>
+            <div className="price-tier">Early Access</div>
             <div className="price-amount">$0</div>
-            <div className="price-period">Forever free · No credit card</div>
+            <div className="price-period">Free during beta</div>
             <ul className="price-feats">
               <li className="price-feat">1 startup project</li>
               <li className="price-feat">AI roadmap generation</li>
@@ -1404,16 +1378,44 @@ export function LandingPage() {
               <li className="price-feat no">Multiple projects</li>
             </ul>
             <Link href={waitlistHref} className="btn-plan-ghost">
-              Join waitlist
+              Get early access →
             </Link>
           </div>
           <div className="price-card featured">
-            <div className="price-badge-tag">Most popular</div>
+            <div className="price-badge-tag">Limited early access</div>
             <div className="price-tier">Builder</div>
             <div className="price-amount" style={{ color: "var(--purple2)" }}>
-              $9
+              Coming soon
             </div>
-            <div className="price-period">Per month · Cancel anytime</div>
+            <div className="price-period">Planned pricing after launch</div>
+            <div
+              style={{
+                marginTop: 10,
+                marginBottom: 18,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "7px 12px",
+                borderRadius: 999,
+                background: "rgba(124, 111, 247, 0.06)",
+                border: "1px solid rgba(124, 111, 247, 0.14)",
+                color: "var(--text3)",
+                fontSize: 11,
+                fontFamily: "var(--mono)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "999px",
+                  background: "var(--purple2)",
+                  flexShrink: 0,
+                }}
+              />
+              First 20 builders get priority access
+            </div>
             <ul className="price-feats">
               <li className="price-feat">Unlimited projects</li>
               <li className="price-feat">AI roadmap generation</li>
@@ -1423,6 +1425,7 @@ export function LandingPage() {
               <li className="price-feat">Weekly leaderboard</li>
               <li className="price-feat">Boss milestone battles</li>
               <li className="price-feat">Activity analytics</li>
+              <li className="price-feat">Advanced features (coming soon)</li>
             </ul>
             <Link href={waitlistHref} className="btn-plan-primary">
               Join waitlist →
