@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: "CroFlux",
   description:
     "CroFlux helps indie hackers and solo founders turn product strategy into milestones, tasks, and real startup progress.",
+  icons: {
+    icon: "/croflux-logo.png",
+    shortcut: "/croflux-logo.png",
+    apple: "/croflux-logo.png",
+  },
 };
 
 export default function RootLayout({

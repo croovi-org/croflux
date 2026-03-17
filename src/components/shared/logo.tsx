@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type LogoProps = {
@@ -5,6 +6,7 @@ type LogoProps = {
   className?: string;
   textClassName?: string;
   markClassName?: string;
+  showText?: boolean;
 };
 
 export function Logo({
@@ -12,6 +14,7 @@ export function Logo({
   className = "",
   textClassName = "",
   markClassName = "",
+  showText = true,
 }: LogoProps) {
   return (
     <Link
@@ -19,25 +22,18 @@ export function Logo({
       className={`inline-flex items-center gap-2 text-[15px] font-semibold tracking-[-0.02em] text-[var(--text)] ${className}`}
     >
       <span
-        className={`flex h-6 w-6 items-center justify-center rounded-[6px] bg-[var(--purple)] ${markClassName}`}
+        className={`relative flex h-9 w-9 items-center justify-center ${markClassName}`}
+        aria-hidden="true"
       >
-        <svg viewBox="0 0 14 14" className="h-[13px] w-[13px]" fill="none">
-          <path
-            d="M2 12L7 2L12 12"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M3.5 9H10.5"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
+        <Image
+          src="/croflux-logo.png"
+          alt=""
+          fill
+          sizes="36px"
+          className="object-contain"
+        />
       </span>
-      <span className={textClassName}>CroFlux</span>
+      {showText ? <span className={textClassName}>CroFlux</span> : null}
     </Link>
   );
 }
