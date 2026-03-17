@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 const tickerMsgs = [
   "Riya K. just completed: Launch landing page",
@@ -144,6 +144,11 @@ export function LandingPage() {
   const [heroEntered, setHeroEntered] = useState(false);
   const [previewProgress, setPreviewProgress] = useState(0);
   const [featureProgress, setFeatureProgress] = useState(20);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistState, setWaitlistState] = useState<"idle" | "loading" | "success" | "error">(
+    "idle",
+  );
+  const [waitlistMessage, setWaitlistMessage] = useState("");
   const [activeWorkflow, setActiveWorkflow] = useState(0);
   const [activeWorkflowStep, setActiveWorkflowStep] = useState(0);
   const [workflowSceneVisible, setWorkflowSceneVisible] = useState(true);
@@ -292,6 +297,45 @@ export function LandingPage() {
   const tickerItems = [...tickerMsgs, ...tickerMsgs];
   const currentWorkflow = howWorkflows[activeWorkflow];
   const currentWorkflowStep = currentWorkflow.steps[activeWorkflowStep];
+  const waitlistHref = "#waitlist";
+
+  const handleWaitlistSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!waitlistEmail.trim()) {
+      setWaitlistState("error");
+      setWaitlistMessage("Enter your email to join the waitlist.");
+      return;
+    }
+
+    setWaitlistState("loading");
+    setWaitlistMessage("");
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: waitlistEmail.trim() }),
+      });
+
+      const payload = (await response.json()) as { error?: string; message?: string };
+
+      if (!response.ok) {
+        setWaitlistState("error");
+        setWaitlistMessage(payload.error ?? "Unable to join the waitlist right now.");
+        return;
+      }
+
+      setWaitlistState("success");
+      setWaitlistMessage(payload.message ?? "You’re on the waitlist.");
+      setWaitlistEmail("");
+    } catch {
+      setWaitlistState("error");
+      setWaitlistMessage("Unable to join the waitlist right now.");
+    }
+  };
 
   return (
     <>
@@ -328,11 +372,11 @@ export function LandingPage() {
           </Link>
         </div>
         <div className="nav-right">
-          <Link href="/login" className="nav-login">
-            Log in
+          <Link href={waitlistHref} className="nav-login">
+            Waitlist
           </Link>
-          <Link href="/signup" className="nav-cta">
-            Start Building →
+          <Link href={waitlistHref} className="nav-cta">
+            Join Waitlist →
           </Link>
         </div>
       </nav>
@@ -375,8 +419,8 @@ export function LandingPage() {
               real progress. Ship daily. Beat the bosses. Climb the board.
             </p>
             <div className="hero-btns">
-              <Link href="/signup" className="btn-primary">
-                Start Building with CroFlux →
+              <Link href={waitlistHref} className="btn-primary">
+                Join the Waitlist →
               </Link>
               <Link href="#how" className="btn-ghost">
                 See how it works
@@ -1359,8 +1403,8 @@ export function LandingPage() {
               <li className="price-feat no">Boss milestone battles</li>
               <li className="price-feat no">Multiple projects</li>
             </ul>
-            <Link href="/signup" className="btn-plan-ghost">
-              Get started free
+            <Link href={waitlistHref} className="btn-plan-ghost">
+              Join waitlist
             </Link>
           </div>
           <div className="price-card featured">
@@ -1380,14 +1424,14 @@ export function LandingPage() {
               <li className="price-feat">Boss milestone battles</li>
               <li className="price-feat">Activity analytics</li>
             </ul>
-            <Link href="/signup" className="btn-plan-primary">
-              Start building →
+            <Link href={waitlistHref} className="btn-plan-primary">
+              Join waitlist →
             </Link>
           </div>
         </div>
       </section>
 
-      <div className="cta-section">
+      <div className="cta-section" id="waitlist">
         <div className="cta-bg-word">BUILD</div>
         <div className="cta-inner reveal">
           <h2 className="cta-h">
@@ -1399,10 +1443,37 @@ export function LandingPage() {
             Join 247 builders shipping daily. Generate your roadmap in 90
             seconds. Your startup deserves a progress engine.
           </p>
+          <div className="waitlist-panel">
+            <form className="waitlist-form" onSubmit={handleWaitlistSubmit}>
+              <input
+                type="email"
+                value={waitlistEmail}
+                onChange={(event) => {
+                  setWaitlistEmail(event.target.value);
+                  if (waitlistState !== "idle") {
+                    setWaitlistState("idle");
+                    setWaitlistMessage("");
+                  }
+                }}
+                placeholder="Enter your work email"
+                className="waitlist-input"
+                aria-label="Email address"
+                autoComplete="email"
+              />
+              <button
+                type="submit"
+                className="btn-primary waitlist-submit"
+                disabled={waitlistState === "loading"}
+              >
+                {waitlistState === "loading" ? "Joining..." : "Join Waitlist →"}
+              </button>
+            </form>
+            <div className={`waitlist-feedback ${waitlistState}`}>
+              {waitlistMessage ||
+                "Get early access before public signups open. Company and professional emails are welcome."}
+            </div>
+          </div>
           <div className="cta-actions">
-            <Link href="/signup" className="btn-primary" style={{ fontSize: 15, padding: "13px 32px" }}>
-              Start Building with CroFlux →
-            </Link>
             <div className="cta-live">
               <div className="cta-live-dot" />
               <span>{ctaMsgs[ctaIndex]}</span>
