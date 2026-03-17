@@ -2753,31 +2753,20 @@ nav {
 }
 
 .waitlist-form {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015)),
-    rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border2);
-  border-radius: 18px;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.02),
-    0 20px 48px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .waitlist-input {
-  flex: 1;
+  width: 100%;
   min-width: 0;
-  height: 56px;
-  padding: 0 18px;
-  border-radius: 12px;
+  height: 72px;
+  padding: 0 214px 0 24px;
+  border-radius: 20px;
   font-size: 18px;
   letter-spacing: -0.02em;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 html[data-theme="light"] .how-flow-sidebar,
@@ -2795,18 +2784,14 @@ html[data-theme="light"] .how-flow-tab:hover {
 }
 
 html[data-theme="light"] .waitlist-form {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.62)),
-    rgba(255, 255, 255, 0.66);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.24),
-    0 20px 48px rgba(15, 23, 42, 0.08);
+  background: transparent;
+  box-shadow: none;
 }
 
 html[data-theme="light"] .waitlist-input {
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 html[data-theme="light"] .hero-h .gradient,
@@ -2836,12 +2821,20 @@ html[data-theme="light"] .cta-accent {
 }
 
 .waitlist-submit {
-  height: 56px;
-  padding-inline: 28px;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  bottom: auto;
+  transform: translateY(-50%);
+  height: 54px;
+  min-width: 186px;
+  padding-inline: 24px;
   border: none;
   cursor: pointer;
   flex-shrink: 0;
-  font-size: 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
 }
 
 .waitlist-submit:disabled {
@@ -3086,13 +3079,17 @@ footer {
     gap: 16px;
   }
 
-  .waitlist-form {
-    flex-direction: column;
+  .waitlist-input {
+    height: 68px;
+    padding-right: 152px;
+    font-size: 16px;
   }
 
-  .waitlist-input,
   .waitlist-submit {
-    width: 100%;
+    min-width: 136px;
+    height: 50px;
+    padding-inline: 18px;
+    font-size: 14px;
   }
 
 }
