@@ -3122,6 +3122,10 @@ footer {
     margin-top: 0;
   }
 
+  .hero-preview .preview-wrap {
+    max-height: 560px;
+  }
+
   .preview-layout {
     grid-template-columns: 170px 1fr 160px;
   }
@@ -3343,7 +3347,7 @@ footer {
   }
 
   .nav-mobile-menu.open {
-    max-height: 260px;
+    max-height: 420px;
     padding-top: 12px;
     padding-bottom: 14px;
     border-color: var(--border);
@@ -3434,6 +3438,11 @@ footer {
     border-radius: 16px;
   }
 
+  .hero-preview .preview-wrap {
+    height: auto;
+    max-height: none;
+  }
+
   .preview-bar {
     padding: 10px 12px;
   }
@@ -3444,8 +3453,10 @@ footer {
   }
 
   .preview-layout {
-    grid-template-columns: 1fr;
-    min-height: auto;
+    display: block;
+    grid-template-columns: none;
+    min-height: 0;
+    height: auto;
   }
 
   .pv-sidebar,
@@ -3455,6 +3466,7 @@ footer {
 
   .pv-main {
     padding: 18px 16px;
+    height: auto;
   }
 
   .pv-project-name {
@@ -3463,6 +3475,14 @@ footer {
 
   .pv-prog-val {
     font-size: 18px;
+  }
+
+  .pv-ms-row {
+    padding: 5px 0;
+  }
+
+  .pv-task-row {
+    padding: 3px 0 3px 22px;
   }
 
   .feat-grid,
@@ -3622,8 +3642,22 @@ footer {
     padding-inline: 8px;
   }
 
+  .hero-preview .preview-wrap {
+    height: auto;
+    max-height: none;
+  }
+
   .pv-main {
     padding: 16px 14px;
+    height: auto;
+  }
+
+  .pv-ms-row {
+    padding: 4px 0;
+  }
+
+  .pv-task-row {
+    padding: 2px 0 2px 20px;
   }
 
   .pv-header {
