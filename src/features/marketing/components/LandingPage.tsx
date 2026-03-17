@@ -153,6 +153,7 @@ export function LandingPage() {
     "idle",
   );
   const [waitlistMessage, setWaitlistMessage] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeWorkflow, setActiveWorkflow] = useState(0);
   const [activeWorkflowStep, setActiveWorkflowStep] = useState(0);
   const [workflowSceneVisible, setWorkflowSceneVisible] = useState(true);
@@ -423,6 +424,26 @@ export function LandingPage() {
                 </svg>
               )}
             </button>
+            <button
+              type="button"
+              className="nav-menu-toggle"
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((open) => !open)}
+            >
+              {mobileMenuOpen ? (
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M5 5L15 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M15 5L5 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M3.5 5.5H16.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M3.5 10H16.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path d="M3.5 14.5H16.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              )}
+            </button>
             <Link href={waitlistHref} className="nav-login">
               Waitlist
             </Link>
@@ -430,6 +451,23 @@ export function LandingPage() {
               Join Waitlist →
             </Link>
           </div>
+        </div>
+        <div className={`nav-mobile-menu ${mobileMenuOpen ? "open" : ""}`}>
+          <Link href="#features" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            Features
+          </Link>
+          <Link href="#how" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            How it works
+          </Link>
+          <Link href="#pricing" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            Pricing
+          </Link>
+          <Link href={waitlistHref} className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            Waitlist
+          </Link>
+          <Link href={waitlistHref} className="nav-mobile-cta" onClick={() => setMobileMenuOpen(false)}>
+            Join Waitlist →
+          </Link>
         </div>
       </nav>
 ...
