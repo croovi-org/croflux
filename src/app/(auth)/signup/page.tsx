@@ -62,20 +62,6 @@ export default function SignupPage() {
       return;
     }
 
-    if (data.user?.id) {
-      const { error: insertError } = await supabase.from("users").insert({
-        id: data.user.id,
-        email,
-        name: "",
-      });
-
-      if (insertError) {
-        setError(insertError.message);
-        setLoading(false);
-        return;
-      }
-    }
-
     router.push("/onboarding");
   }
 
@@ -180,7 +166,10 @@ export default function SignupPage() {
 
             <p className="mt-6 text-[14px] text-[var(--text3)]">
               Already building?{" "}
-              <Link href="/login" className="text-[var(--purple2)] hover:text-white">
+              <Link
+                href="/login"
+                className="text-[var(--purple2)] hover:text-white"
+              >
                 Sign in
               </Link>
             </p>
