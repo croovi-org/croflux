@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Logo } from "@/components/shared/logo";
 
 const tickerMsgs = [
   "Riya K. just completed: Launch landing page",
@@ -340,44 +342,27 @@ export function LandingPage() {
   return (
     <>
       <nav>
-        <Link href="/" className="nav-logo">
-          <div className="nav-logo-mark">
-            <svg viewBox="0 0 14 14" fill="none">
-              <path
-                d="M2 12L7 2L12 12"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M3.5 9H10.5"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
+        <div className="nav-inner">
+          <Logo href="/" className="nav-logo" markClassName="nav-logo-mark" />
+          <div className="nav-links">
+            <Link href="#features" className="nav-link">
+              Features
+            </Link>
+            <Link href="#how" className="nav-link">
+              How it works
+            </Link>
+            <Link href="#pricing" className="nav-link">
+              Pricing
+            </Link>
           </div>
-          CroFlux
-        </Link>
-        <div className="nav-links">
-          <Link href="#features" className="nav-link">
-            Features
-          </Link>
-          <Link href="#how" className="nav-link">
-            How it works
-          </Link>
-          <Link href="#pricing" className="nav-link">
-            Pricing
-          </Link>
-        </div>
-        <div className="nav-right">
-          <Link href={waitlistHref} className="nav-login">
-            Waitlist
-          </Link>
-          <Link href={waitlistHref} className="nav-cta">
-            Join Waitlist →
-          </Link>
+          <div className="nav-right">
+            <Link href={waitlistHref} className="nav-login">
+              Waitlist
+            </Link>
+            <Link href={waitlistHref} className="nav-cta">
+              Join Waitlist →
+            </Link>
+          </div>
         </div>
       </nav>
 ...
@@ -466,31 +451,22 @@ export function LandingPage() {
               >
                 <div
                   style={{
-                    width: 20,
-                    height: 20,
-                    background: "var(--purple)",
-                    borderRadius: 5,
+                    width: 26,
+                    height: 26,
+                    position: "relative",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     flexShrink: 0,
                   }}
                 >
-                  <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M2 12L7 2L12 12"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3.5 9H10.5"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
+                  <Image
+                    src="/croflux-logo.png"
+                    alt=""
+                    fill
+                    sizes="26px"
+                    style={{ objectFit: "contain" }}
+                  />
                 </div>
                 <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text)" }}>
                   CroFlux
@@ -1364,9 +1340,11 @@ export function LandingPage() {
         </p>
         <div className="pricing-grid">
           <div className="price-card">
-            <div className="price-tier">Early Access</div>
-            <div className="price-amount">$0</div>
-            <div className="price-period">Free during beta</div>
+            <div className="price-head">
+              <div className="price-tier">Early Access</div>
+              <div className="price-amount">$0</div>
+              <div className="price-period">Free during beta</div>
+            </div>
             <ul className="price-feats">
               <li className="price-feat">1 startup project</li>
               <li className="price-feat">AI roadmap generation</li>
@@ -1383,28 +1361,13 @@ export function LandingPage() {
           </div>
           <div className="price-card featured">
             <div className="price-badge-tag">Limited early access</div>
-            <div className="price-tier">Builder</div>
-            <div className="price-amount" style={{ color: "var(--purple2)" }}>
-              Coming soon
+            <div className="price-head price-head-featured">
+              <div className="price-amount price-amount-featured" style={{ color: "var(--purple2)" }}>
+                Coming soon
+              </div>
+              <div className="price-period">Planned pricing after launch</div>
             </div>
-            <div className="price-period">Planned pricing after launch</div>
-            <div
-              style={{
-                marginTop: 10,
-                marginBottom: 18,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "7px 12px",
-                borderRadius: 999,
-                background: "rgba(124, 111, 247, 0.06)",
-                border: "1px solid rgba(124, 111, 247, 0.14)",
-                color: "var(--text3)",
-                fontSize: 11,
-                fontFamily: "var(--mono)",
-                letterSpacing: "0.04em",
-              }}
-            >
+            <div className="price-priority-note">
               <span
                 style={{
                   width: 6,
@@ -1489,26 +1452,11 @@ export function LandingPage() {
         <div className="footer-inner">
           <div className="footer-top">
             <div>
-              <div className="footer-logo">
-                <div className="footer-logo-mark">
-                  <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M2 12L7 2L12 12"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3.5 9H10.5"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
-                CroFlux
-              </div>
+              <Logo
+                href="/"
+                className="footer-logo"
+                markClassName="footer-logo-mark"
+              />
               <p className="footer-desc">
                 The startup execution platform for solo builders. From idea to
                 launch with full clarity.
