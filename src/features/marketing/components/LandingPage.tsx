@@ -1582,39 +1582,36 @@ export function LandingPage() {
               <Link href="#pricing" className="footer-link">
                 Pricing
               </Link>
-              <Link href="/" className="footer-link">
-                Changelog
-              </Link>
-              <Link href="/" className="footer-link">
-                Docs
-              </Link>
             </div>
             <div>
               <div className="footer-col-head">Community</div>
-              <Link href="/" className="footer-link">
-                Top builders
-              </Link>
-              <Link href="/" className="footer-link">
-                Builder stories
-              </Link>
-              <Link href="/" className="footer-link">
+              <Link
+                href="https://discord.com/invite/6j37AVAcSH"
+                className="footer-link"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Discord
               </Link>
-              <Link href="/" className="footer-link">
+              <Link
+                href="https://x.com/CrooviOfficial"
+                className="footer-link"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Twitter / X
               </Link>
-              <Link href="/" className="footer-link">
+              <Link
+                href="https://github.com/croovi-org"
+                className="footer-link"
+                target="_blank"
+                rel="noreferrer"
+              >
                 GitHub
               </Link>
             </div>
             <div>
               <div className="footer-col-head">Company</div>
-              <Link href="/" className="footer-link">
-                About
-              </Link>
-              <Link href="/" className="footer-link">
-                Blog
-              </Link>
               <Link href="/" className="footer-link">
                 Contact
               </Link>
@@ -1629,13 +1626,28 @@ export function LandingPage() {
           <div className="footer-bottom">
             <div className="footer-copy">© 2025 CroFlux. All rights reserved.</div>
             <div className="footer-socials">
-              <Link href="/" className="footer-social">
+              <Link
+                href="https://x.com/CrooviOfficial"
+                className="footer-social"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Twitter
               </Link>
-              <Link href="/" className="footer-social">
+              <Link
+                href="https://github.com/croovi-org"
+                className="footer-social"
+                target="_blank"
+                rel="noreferrer"
+              >
                 GitHub
               </Link>
-              <Link href="/" className="footer-social">
+              <Link
+                href="https://discord.com/invite/6j37AVAcSH"
+                className="footer-social"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Discord
               </Link>
             </div>
