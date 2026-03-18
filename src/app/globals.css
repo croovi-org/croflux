@@ -3302,8 +3302,38 @@ footer {
 
   .lb-right {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .lb-right-stat {
+    margin-bottom: 0;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--border2);
+    width: 100%;
+  }
+
+  .lb-right-stat:first-child {
+    padding-top: 0;
+  }
+
+  .lb-right-stat:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .lb-right-val {
+    margin-bottom: 14px;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  .lb-right-lbl {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.8;
+    color: var(--text3);
   }
 
   .lb-table {
@@ -3596,6 +3626,10 @@ footer {
     grid-column: 1 / -1;
   }
 
+  .lb-right {
+    gap: 18px;
+  }
+
   .feat-card,
   .for-card,
   .testi-card,
@@ -3698,8 +3732,24 @@ footer {
     bottom: auto;
     transform: translate(-50%, -50%);
     /* Ensure "BUILD" fits within viewport width (no clipping) */
-    font-size: 35vw;
+    font-size: 32vw;
     letter-spacing: -0.02em;
+  }
+
+  .cta-section {
+    padding-top: 96px;
+    padding-bottom: 88px;
+  }
+
+  .cta-h {
+    margin-bottom: 12px;
+    font-size: clamp(32px, 7vw, 40px);
+    line-height: 1.08;
+  }
+
+  .cta-sub {
+    font-size: 16px;
+    max-width: 640px;
   }
 }
 
