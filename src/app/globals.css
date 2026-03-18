@@ -2882,6 +2882,20 @@ html[data-theme="light"] .cta-accent {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
 }
 
+.waitlist-submit:hover:not(:disabled) {
+  transform: translateY(calc(-50% - 2px));
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.22),
+    0 10px 34px rgba(169, 157, 254, 0.24);
+  filter: brightness(0.98);
+}
+
+.waitlist-submit:active:not(:disabled) {
+  transform: translateY(calc(-50% + 1px));
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+  filter: brightness(0.96);
+}
+
 .waitlist-submit:disabled {
   opacity: 0.72;
   cursor: wait;
