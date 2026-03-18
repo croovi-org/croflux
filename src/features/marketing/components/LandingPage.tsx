@@ -822,6 +822,39 @@ export function LandingPage() {
             turns a PDS into shipped progress.
           </p>
           <div className="how-flow">
+            <div
+              className="how-flow-tabs how-flow-tabs-mobile"
+              role="tablist"
+              aria-label="CroFlux workflows"
+            >
+              {howWorkflows.map((workflow, index) => (
+                <button
+                  key={workflow.id}
+                  type="button"
+                  className={`how-flow-tab ${index === activeWorkflow ? "active" : ""}`}
+                  onClick={() => {
+                    if (workflowTransitionRef.current !== null) {
+                      window.clearTimeout(workflowTransitionRef.current);
+                    }
+
+                    setWorkflowSceneVisible(false);
+                    workflowTransitionRef.current = window.setTimeout(() => {
+                      setActiveWorkflow(index);
+                      setActiveWorkflowStep(0);
+                      setWorkflowSceneVisible(true);
+                      workflowTransitionRef.current = null;
+                    }, 180);
+                  }}
+                >
+                  <span className="how-flow-tab-index">{String(index + 1).padStart(2, "0")}</span>
+                  <span>
+                    <span className="how-flow-tab-title">{workflow.tab}</span>
+                    <span className="how-flow-tab-caption">{workflow.caption}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+
             <div className="how-flow-sidebar">
               <div className="how-flow-sidebar-head">
                 <div className="how-flow-dot-row">

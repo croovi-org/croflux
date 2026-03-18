@@ -1674,6 +1674,15 @@ nav {
   overflow: hidden;
 }
 
+.how-flow-tabs.how-flow-tabs-mobile {
+  display: none;
+}
+
+.how-flow-main {
+  min-width: 0;
+  overflow: hidden;
+}
+
 .how-flow-sidebar,
 .how-flow-canvas {
   background: rgba(255, 255, 255, 0.02);
@@ -1853,11 +1862,6 @@ nav {
   font-family: var(--mono);
 }
 
-.how-flow-main {
-  min-width: 0;
-  overflow: hidden;
-}
-
 .how-flow-tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1890,6 +1894,36 @@ nav {
   background: rgba(169, 157, 254, 0.07);
   box-shadow: 0 0 0 1px rgba(169, 157, 254, 0.08);
   transform: translateY(-2px);
+}
+
+@media (min-width: 1024px) {
+  .how-flow {
+    grid-template-columns: 300px minmax(0, 1fr) !important;
+    gap: 18px !important;
+  }
+
+  .how-flow-tabs.how-flow-tabs-mobile {
+    display: none !important;
+  }
+
+  .how-flow-sidebar {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+
+  .how-flow-main {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .how-flow-main > .how-flow-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 14px;
+  }
 }
 
 .how-flow-tab span {
@@ -3271,17 +3305,37 @@ footer {
 
   .how-flow {
     gap: 16px;
+    grid-template-columns: 1fr;
+  }
+
+  .how-flow-tabs.how-flow-tabs-mobile {
+    display: grid;
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
   }
 
   .how-flow-sidebar {
-    order: 1;
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .how-flow-main {
-    order: 2;
+    grid-column: 1;
+    grid-row: 3;
   }
 
-  .how-flow-tabs {
+  .how-flow-main > .how-flow-tabs {
+    display: none;
+  }
+
+  .how-flow-tabs-mobile,
+  .how-flow-main > .how-flow-tabs {
+    grid-column: 1;
+    grid-row: 1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     overflow-x: auto;
     overflow-y: hidden;
@@ -3567,9 +3621,15 @@ footer {
     border-radius: 16px;
   }
 
+  .hero-preview {
+    align-self: flex-start;
+  }
+
   .hero-preview .preview-wrap {
     height: auto;
     max-height: none;
+    min-height: 0;
+    display: block;
   }
 
   .preview-bar {
@@ -3596,6 +3656,7 @@ footer {
   .pv-main {
     padding: 18px 16px;
     height: auto;
+    min-height: 0;
   }
 
   .pv-project-name {
@@ -3656,6 +3717,16 @@ footer {
   .problem-resolution {
     margin-top: 22px;
     padding: 18px 20px;
+  }
+
+  .how-flow-tabs.how-flow-tabs-mobile {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
   }
 
   .how-flow-tabs {
@@ -3817,11 +3888,14 @@ footer {
   .hero-preview .preview-wrap {
     height: auto;
     max-height: none;
+    min-height: 0;
+    display: block;
   }
 
   .pv-main {
     padding: 16px 14px;
     height: auto;
+    min-height: 0;
   }
 
   .pv-ms-row {
