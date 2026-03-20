@@ -327,9 +327,45 @@ export function OnboardingFlow() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--bg)] px-4 py-4 sm:px-6 sm:py-6">
-      <div className="mx-auto max-w-[1280px]">
-        <div className="mb-4 flex items-center justify-between px-1">
+    <main className="relative min-h-screen overflow-hidden bg-[var(--bg)] px-4 pt-4 pb-6 sm:px-6 sm:pt-6 sm:pb-8 lg:px-8 lg:pt-8 lg:pb-12">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[44px] h-[980px] w-[1520px] -translate-x-1/2 opacity-100"
+        style={{ background: "var(--hero-glow)" }}
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[120px] h-[760px] w-[1180px] -translate-x-1/2 rounded-full opacity-55 blur-3xl"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(169,157,254,0.32) 0%, rgba(169,157,254,0.16) 42%, rgba(169,157,254,0) 78%)",
+        }}
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+          maskImage:
+            "radial-gradient(circle at top center, black 28%, rgba(0,0,0,0.45) 58%, transparent 88%)",
+        }}
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 18% 22%, rgba(169,157,254,0.12), transparent 26%), radial-gradient(circle at 82% 18%, rgba(169,157,254,0.08), transparent 22%), linear-gradient(180deg, rgba(255,255,255,0.015), transparent 18%)",
+        }}
+      />
+
+      <div className="relative z-[1] mx-auto max-w-[1280px]">
+        <div className="mb-10 flex items-center justify-between px-1 lg:mb-14">
           <Logo />
           <Link
             href="/"
@@ -339,7 +375,47 @@ export function OnboardingFlow() {
           </Link>
         </div>
 
-        <div className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--bg2)] shadow-[0_24px_80px_rgba(0,0,0,0.24)] lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
+        <div className="relative overflow-visible rounded-[24px] lg:-translate-y-3 lg:[transform:perspective(1800px)_rotateX(3.8deg)_translateY(-6px)]">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-[-42px] rounded-[52px] opacity-100 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 14%, rgba(169,157,254,0.2) 0%, rgba(169,157,254,0.09) 28%, rgba(169,157,254,0.04) 48%, rgba(169,157,254,0) 76%), radial-gradient(circle at 12% 50%, rgba(169,157,254,0.1) 0%, rgba(169,157,254,0.04) 24%, rgba(169,157,254,0) 56%), radial-gradient(circle at 88% 54%, rgba(169,157,254,0.09) 0%, rgba(169,157,254,0.04) 22%, rgba(169,157,254,0) 52%), radial-gradient(circle at 50% 94%, rgba(169,157,254,0.1) 0%, rgba(169,157,254,0.04) 26%, rgba(169,157,254,0) 60%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-[-2px] rounded-[26px]"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(169,157,254,0.19) 0%, rgba(169,157,254,0.08) 24%, rgba(255,255,255,0.02) 48%, rgba(169,157,254,0.08) 100%)",
+              boxShadow:
+                "0 0 0 1px rgba(169,157,254,0.05), 0 0 20px rgba(169,157,254,0.07)",
+            }}
+          />
+          <div className="relative overflow-hidden rounded-[24px] border border-[rgba(169,157,254,0.14)] bg-[var(--bg2)] shadow-[0_72px_180px_rgba(0,0,0,0.52),0_34px_84px_rgba(0,0,0,0.34),0_10px_22px_rgba(0,0,0,0.18),0_0_0_1px_rgba(255,255,255,0.02),0_0_48px_rgba(169,157,254,0.07)] backdrop-blur-sm lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-[12%] top-[-160px] h-[420px] rounded-full opacity-45 blur-3xl"
+            style={{ background: "var(--hero-glow)" }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-[8%] top-[14%] h-[320px] w-[320px] rounded-full opacity-18 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(169,157,254,0.24) 0%, rgba(169,157,254,0.1) 48%, rgba(169,157,254,0) 78%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-[6%] bottom-[8%] h-[280px] w-[280px] rounded-full opacity-16 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(169,157,254,0.22) 0%, rgba(169,157,254,0.09) 50%, rgba(169,157,254,0) 78%)",
+            }}
+          />
           <OnboardingSidebar
             currentStep={currentStep}
             completedSteps={completedSteps}
@@ -382,6 +458,7 @@ export function OnboardingFlow() {
               </div>
             </div>
           </section>
+          </div>
         </div>
       </div>
     </main>
