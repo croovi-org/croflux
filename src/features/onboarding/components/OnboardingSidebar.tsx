@@ -29,7 +29,7 @@ export function OnboardingSidebar({
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto px-3 py-4 lg:block lg:flex-1 lg:space-y-1 lg:overflow-visible lg:px-3 lg:py-6">
+      <div className="flex gap-2 overflow-x-auto px-3 py-4 lg:block lg:flex-1 lg:space-y-1 lg:overflow-visible lg:px-0 lg:py-4">
         {steps.map((label, index) => {
           const done = completedSteps.includes(index);
           const active = currentStep === index;
@@ -39,26 +39,29 @@ export function OnboardingSidebar({
               key={label}
               type="button"
               onClick={() => onStepSelect(index)}
-              className={`group flex min-w-[170px] items-center gap-3 rounded-[12px] border px-4 py-3 text-left transition lg:min-w-0 ${
+              className={`group relative flex min-w-[170px] items-center gap-3 rounded-[12px] border px-4 py-3 text-left transition lg:min-w-0 lg:rounded-none lg:border-0 lg:px-5 lg:py-4 ${
                 active
-                  ? "border-[var(--purple-border)] bg-[var(--purple-dim)]"
-                  : "border-transparent bg-transparent hover:border-[var(--border)] hover:bg-[rgba(255,255,255,0.02)]"
+                  ? "border-[var(--purple-border)] bg-[var(--purple-dim)] lg:border-0 lg:bg-[rgba(169,157,254,0.08)]"
+                  : "border-transparent bg-transparent hover:border-[var(--border)] hover:bg-[rgba(255,255,255,0.02)] lg:hover:border-0 lg:hover:bg-[rgba(255,255,255,0.02)]"
               }`}
             >
+              {active ? (
+                <span className="absolute left-0 top-0 hidden h-full w-[2px] bg-[var(--purple)] lg:block" />
+              ) : null}
               <div
-                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[11px] font-medium ${
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[11px] font-medium lg:h-6 lg:w-6 lg:text-[10px] ${
                   done
                     ? "border-[rgba(34,197,94,0.24)] bg-[var(--green-dim)] text-[var(--green)]"
                     : active
                       ? "border-[var(--purple)] bg-[rgba(169,157,254,0.12)] text-[var(--purple2)]"
-                      : "border-[var(--border2)] bg-[var(--bg4)] text-[var(--text3)]"
+                      : "border-[var(--border2)] bg-[var(--bg4)] text-[var(--text3)] lg:bg-transparent"
                 }`}
               >
-                {done ? "✓" : String(index + 1).padStart(2, "0")}
+                {done ? "✓" : String(index + 1)}
               </div>
               <div>
                 <div
-                  className={`text-[13px] font-medium ${
+                  className={`text-[13px] font-medium lg:text-[14px] ${
                     active || done ? "text-[var(--text)]" : "text-[var(--text2)]"
                   }`}
                 >
