@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Logo } from "@/components/shared/logo";
 import { OnboardingSidebar } from "@/features/onboarding/components/OnboardingSidebar";
 import { ReviewStep } from "@/features/onboarding/components/steps/ReviewStep";
@@ -24,6 +25,7 @@ function slugify(value: string) {
 export function OnboardingFlow() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [showIntro, setShowIntro] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
   const [startupName, setStartupName] = useState("");
   const [oneLiner, setOneLiner] = useState("");
@@ -44,6 +46,16 @@ export function OnboardingFlow() {
     if (isReviewStep) return "Generate roadmap →";
     return "Continue →";
   }, [isReviewStep]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setShowIntro(false);
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   function updateCompletion(step: number) {
     setCompletedSteps((previous) =>
@@ -186,6 +198,131 @@ export function OnboardingFlow() {
         strategyFile={strategyFile}
         notionUrl={notionUrl}
       />
+    );
+  }
+
+  if (showIntro) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[var(--bg)] px-6">
+        <div className="flex flex-col items-center text-center">
+          <div className="onboarding-intro-mark onboarding-intro-breathe onboarding-intro-reveal">
+            <div className="onboarding-intro-mark-shell">
+              <div className="onboarding-intro-mark-glow" />
+              <Image
+                src="/croflux-mark.png"
+                alt="CroFlux"
+                width={120}
+                height={120}
+                priority
+                className="onboarding-intro-mark-image"
+              />
+            </div>
+          </div>
+          <p className="onboarding-intro-copy onboarding-intro-reveal mt-6 text-[15px] leading-7 text-[var(--text3)]">
+            Tuning your founder cockpit...
+          </p>
+        </div>
+        <style jsx>{`
+          .onboarding-intro-mark {
+            opacity: 0;
+            transform: translateY(14px) scale(0.96);
+            animation: onboardingReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          }
+
+          .onboarding-intro-mark-shell {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 132px;
+            height: 132px;
+          }
+
+          .onboarding-intro-mark-image {
+            position: relative;
+            z-index: 2;
+            width: 96px;
+            height: auto;
+            object-fit: contain;
+          }
+
+          .onboarding-intro-mark-glow {
+            position: absolute;
+            inset: 18px;
+            border-radius: 999px;
+            background:
+              radial-gradient(circle, rgba(169, 157, 254, 0.38) 0%, rgba(169, 157, 254, 0.16) 42%, rgba(169, 157, 254, 0) 74%);
+            filter: blur(18px);
+            z-index: 1;
+          }
+
+          .onboarding-intro-copy {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: onboardingReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
+          }
+
+          .onboarding-intro-breathe {
+            animation:
+              onboardingReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+              onboardingBreathe 2.2s ease-in-out 0.75s infinite;
+          }
+
+          @keyframes onboardingReveal {
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+
+          @keyframes onboardingBreathe {
+            0%,
+            100% {
+              transform: translateY(0) scale(1);
+              opacity: 1;
+            }
+
+            50% {
+              transform: translateY(-2px) scale(1.02);
+              opacity: 0.92;
+            }
+          }
+
+          .onboarding-intro-breathe :global(.onboarding-intro-mark-image) {
+            animation: onboardingMarkPulse 2.4s ease-in-out infinite;
+          }
+
+          .onboarding-intro-breathe :global(.onboarding-intro-mark-glow) {
+            animation: onboardingGlowPulse 2.4s ease-in-out infinite;
+          }
+
+          @keyframes onboardingMarkPulse {
+            0%,
+            100% {
+              transform: scale(1);
+            }
+
+            50% {
+              transform: scale(1.035);
+            }
+          }
+
+          @keyframes onboardingGlowPulse {
+            0%,
+            100% {
+              opacity: 0.7;
+              transform: scale(0.98);
+              filter: blur(18px);
+            }
+
+            50% {
+              opacity: 1;
+              transform: scale(1.08);
+              filter: blur(24px);
+            }
+          }
+        `}</style>
+      </main>
     );
   }
 
