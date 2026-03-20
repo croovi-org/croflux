@@ -54,21 +54,24 @@ const howWorkflows = [
       {
         label: "Generating milestones",
         title: "Milestones appear automatically",
-        subtitle: "4 launch phases are drafted in the right sequence for the builder.",
+        subtitle:
+          "4 launch phases are drafted in the right sequence for the builder.",
         metricLabel: "Milestones drafted",
         metricValue: "4/4",
       },
       {
         label: "Expanding tasks",
         title: "Tasks are attached to each milestone",
-        subtitle: "Every phase gets focused actions instead of vague planning notes.",
+        subtitle:
+          "Every phase gets focused actions instead of vague planning notes.",
         metricLabel: "Tasks generated",
         metricValue: "16",
       },
       {
         label: "Assigning bosses",
         title: "Major phases become boss milestones",
-        subtitle: "CroFlux turns critical launch stages into boss battles to keep momentum high.",
+        subtitle:
+          "CroFlux turns critical launch stages into boss battles to keep momentum high.",
         metricLabel: "Bosses tagged",
         metricValue: "2",
       },
@@ -86,21 +89,24 @@ const howWorkflows = [
       {
         label: "Completing tasks",
         title: "Tasks get checked off live",
-        subtitle: "Daily work turns into visible progress instead of staying buried in a to-do list.",
+        subtitle:
+          "Daily work turns into visible progress instead of staying buried in a to-do list.",
         metricLabel: "Tasks shipped today",
         metricValue: "5",
       },
       {
         label: "Closing milestones",
         title: "Milestones close as work stacks up",
-        subtitle: "Completed tasks roll into milestone completion and unlock the next stage.",
+        subtitle:
+          "Completed tasks roll into milestone completion and unlock the next stage.",
         metricLabel: "Milestone progress",
         metricValue: "75%",
       },
       {
         label: "Earning momentum",
         title: "Builders gain points, streaks, and rank",
-        subtitle: "Each completion feeds streaks, leaderboard movement, and momentum messages.",
+        subtitle:
+          "Each completion feeds streaks, leaderboard movement, and momentum messages.",
         metricLabel: "Leaderboard rank",
         metricValue: "#8",
       },
@@ -118,21 +124,24 @@ const howWorkflows = [
       {
         label: "Draining boss HP",
         title: "Boss milestone health drops with every completed task",
-        subtitle: "CroFlux frames the hard phase as a visible challenge instead of a boring checklist.",
+        subtitle:
+          "CroFlux frames the hard phase as a visible challenge instead of a boring checklist.",
         metricLabel: "Boss HP",
         metricValue: "62%",
       },
       {
         label: "Defeating the boss",
         title: "The milestone is defeated and launch unlocks",
-        subtitle: "One last push clears the blocker and opens the final launch checklist.",
+        subtitle:
+          "One last push clears the blocker and opens the final launch checklist.",
         metricLabel: "Boss defeated",
         metricValue: "Unlocked",
       },
       {
         label: "Shipping the product",
         title: "The builder launches and climbs ahead",
-        subtitle: "Product launched. Rank improves. Momentum spills into the next build cycle.",
+        subtitle:
+          "Product launched. Rank improves. Momentum spills into the next build cycle.",
         metricLabel: "Launch status",
         metricValue: "Live",
       },
@@ -149,9 +158,9 @@ export function LandingPage() {
   const [previewProgress, setPreviewProgress] = useState(0);
   const [featureProgress, setFeatureProgress] = useState(20);
   const [waitlistEmail, setWaitlistEmail] = useState("");
-  const [waitlistState, setWaitlistState] = useState<"idle" | "loading" | "success" | "error">(
-    "idle",
-  );
+  const [waitlistState, setWaitlistState] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [waitlistMessage, setWaitlistMessage] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeWorkflow, setActiveWorkflow] = useState(0);
@@ -168,7 +177,9 @@ export function LandingPage() {
 
     const href = "/croflux-mark.png";
     ["icon", "shortcut icon", "apple-touch-icon"].forEach((rel) => {
-      let link = document.querySelector(`link[rel="${rel}"]`) as HTMLLinkElement | null;
+      let link = document.querySelector(
+        `link[rel="${rel}"]`,
+      ) as HTMLLinkElement | null;
       if (!link) {
         link = document.createElement("link");
         link.rel = rel;
@@ -180,7 +191,8 @@ export function LandingPage() {
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
-      const currentTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+      const currentTheme =
+        document.documentElement.dataset.theme === "light" ? "light" : "dark";
       setTheme(currentTheme);
       setThemeReady(true);
     });
@@ -272,7 +284,11 @@ export function LandingPage() {
   }, []);
 
   useEffect(() => {
-    const getScrollProgress = (element: HTMLDivElement | null, min: number, max: number) => {
+    const getScrollProgress = (
+      element: HTMLDivElement | null,
+      min: number,
+      max: number,
+    ) => {
       if (!element) {
         return min;
       }
@@ -354,11 +370,16 @@ export function LandingPage() {
         body: JSON.stringify({ email: waitlistEmail.trim() }),
       });
 
-      const payload = (await response.json()) as { error?: string; message?: string };
+      const payload = (await response.json()) as {
+        error?: string;
+        message?: string;
+      };
 
       if (!response.ok) {
         setWaitlistState("error");
-        setWaitlistMessage(payload.error ?? "Unable to join the waitlist right now.");
+        setWaitlistMessage(
+          payload.error ?? "Unable to join the waitlist right now.",
+        );
         return;
       }
 
@@ -402,15 +423,61 @@ export function LandingPage() {
             >
               {theme === "dark" ? (
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <circle cx="10" cy="10" r="3.6" stroke="currentColor" strokeWidth="1.6" />
-                  <path d="M10 1.8V4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <path d="M10 16V18.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <path d="M18.2 10H16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <path d="M4 10H1.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <path d="M15.8 4.2L14.2 5.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <path d="M5.8 14.2L4.2 15.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <path d="M15.8 15.8L14.2 14.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <path d="M5.8 5.8L4.2 4.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="3.6"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                  />
+                  <path
+                    d="M10 1.8V4"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M10 16V18.2"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M18.2 10H16"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M4 10H1.8"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M15.8 4.2L14.2 5.8"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M5.8 14.2L4.2 15.8"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M15.8 15.8L14.2 14.2"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M5.8 5.8L4.2 4.2"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
                 </svg>
               ) : (
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -427,20 +494,49 @@ export function LandingPage() {
             <button
               type="button"
               className="nav-menu-toggle"
-              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-label={
+                mobileMenuOpen
+                  ? "Close navigation menu"
+                  : "Open navigation menu"
+              }
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((open) => !open)}
             >
               {mobileMenuOpen ? (
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <path d="M5 5L15 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                  <path d="M15 5L5 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path
+                    d="M5 5L15 15"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M15 5L5 15"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
                 </svg>
               ) : (
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <path d="M3.5 5.5H16.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                  <path d="M3.5 10H16.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                  <path d="M3.5 14.5H16.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  <path
+                    d="M3.5 5.5H16.5"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M3.5 10H16.5"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M3.5 14.5H16.5"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
                 </svg>
               )}
             </button>
@@ -453,25 +549,44 @@ export function LandingPage() {
           </div>
         </div>
         <div className={`nav-mobile-menu ${mobileMenuOpen ? "open" : ""}`}>
-          <Link href="#features" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+          <Link
+            href="#features"
+            className="nav-mobile-link"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Features
           </Link>
-          <Link href="#how" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+          <Link
+            href="#how"
+            className="nav-mobile-link"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             How it works
           </Link>
-          <Link href="#pricing" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+          <Link
+            href="#pricing"
+            className="nav-mobile-link"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Pricing
           </Link>
-          <Link href={waitlistHref} className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+          <Link
+            href={waitlistHref}
+            className="nav-mobile-link"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Waitlist
           </Link>
-          <Link href={waitlistHref} className="nav-mobile-cta" onClick={() => setMobileMenuOpen(false)}>
+          <Link
+            href={waitlistHref}
+            className="nav-mobile-cta"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Join Waitlist →
           </Link>
         </div>
       </nav>
-...
-
+      ...
       <div className="ticker">
         <div className="ticker-inner">
           {tickerItems.map((msg, index) => (
@@ -482,7 +597,6 @@ export function LandingPage() {
           ))}
         </div>
       </div>
-
       <div className="hero">
         <div className={`hero-shell ${heroEntered ? "hero-entered" : ""}`}>
           <div className="hero-inner">
@@ -535,151 +649,166 @@ export function LandingPage() {
           </div>
 
           <div ref={previewRef} className="preview-wrap hero-preview reveal">
-          <div className="preview-bar">
-            <div className="preview-dots">
-              <div className="pv-dot" />
-              <div className="pv-dot" />
-              <div className="pv-dot" />
+            <div className="preview-bar">
+              <div className="preview-dots">
+                <div className="pv-dot" />
+                <div className="pv-dot" />
+                <div className="pv-dot" />
+              </div>
+              <div className="preview-url">croflux.app/dashboard</div>
             </div>
-            <div className="preview-url">croflux.app/dashboard</div>
-          </div>
-          <div className="preview-layout">
-            <div className="pv-sidebar">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  padding: "4px 8px",
-                  marginBottom: 8,
-                }}
-              >
+            <div className="preview-layout">
+              <div className="pv-sidebar">
                 <div
                   style={{
-                    width: 58,
-                    height: 28,
-                    position: "relative",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
+                    gap: 4,
+                    padding: "4px 8px",
+                    marginBottom: 8,
                   }}
                 >
-                  <Image
-                    src="/croflux-mark.png"
-                    alt=""
-                    fill
-                    sizes="92px"
-                    style={{ objectFit: "contain" }}
-                  />
+                  <div
+                    style={{
+                      width: 58,
+                      height: 28,
+                      position: "relative",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Image
+                      src="/croflux-mark.png"
+                      alt=""
+                      fill
+                      sizes="92px"
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 600,
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    <span style={{ color: "var(--text)" }}>Cro</span>
+                    <span style={{ color: "var(--brand-accent)" }}>Flux</span>
+                  </span>
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: "-0.02em" }}>
-                  <span style={{ color: "var(--text)" }}>Cro</span>
-                  <span style={{ color: "var(--brand-accent)" }}>Flux</span>
-                </span>
+                <div className="pv-sb-section">Workspace</div>
+                <div className="pv-sb-item active">Dashboard</div>
+                <div className="pv-sb-item">Milestones</div>
+                <div className="pv-sb-item">Activity</div>
+                <div className="pv-sb-section">Community</div>
+                <div className="pv-sb-item">Leaderboard</div>
               </div>
-              <div className="pv-sb-section">Workspace</div>
-              <div className="pv-sb-item active">Dashboard</div>
-              <div className="pv-sb-item">Milestones</div>
-              <div className="pv-sb-item">Activity</div>
-              <div className="pv-sb-section">Community</div>
-              <div className="pv-sb-item">Leaderboard</div>
-            </div>
-            <div className="pv-main">
-              <div className="pv-header">
-                <div>
-                  <div className="pv-project-name">AI Debugger</div>
-                  <div className="pv-project-sub">
-                    CLI tool for developers · Building in public
+              <div className="pv-main">
+                <div className="pv-header">
+                  <div>
+                    <div className="pv-project-name">AI Debugger</div>
+                    <div className="pv-project-sub">
+                      CLI tool for developers · Building in public
+                    </div>
+                  </div>
+                  <div className="pv-status">
+                    <svg width="6" height="6" viewBox="0 0 6 6">
+                      <circle cx="3" cy="3" r="3" fill="#22c55e" />
+                    </svg>
+                    Active
                   </div>
                 </div>
-                <div className="pv-status">
-                  <svg width="6" height="6" viewBox="0 0 6 6">
-                    <circle cx="3" cy="3" r="3" fill="#22c55e" />
-                  </svg>
-                  Active
+                <div className="pv-prog-row">
+                  <span className="pv-prog-lbl">Progress</span>
+                  <span className="pv-prog-val">{previewProgress}%</span>
+                </div>
+                <div className="pv-track">
+                  <div
+                    className="pv-fill"
+                    style={{ width: `${previewProgress}%` }}
+                  />
+                </div>
+                <div className="pv-ms-lbl">Milestones</div>
+                <div className="pv-ms-row">
+                  <div className="pv-ms-icon done">✓</div>
+                  <span className="pv-ms-name done">CLI Foundation</span>
+                  <span className="pv-pill done">Done</span>
+                </div>
+                <div className="pv-task-row">
+                  <div className="pv-task-cb done">✓</div>
+                  <span className="pv-task-txt done">Setup repository</span>
+                </div>
+                <div className="pv-task-row">
+                  <div className="pv-task-cb done">✓</div>
+                  <span className="pv-task-txt done">
+                    Initialize CLI framework
+                  </span>
+                </div>
+                <div className="pv-ms-row">
+                  <div className="pv-ms-icon active">⚡</div>
+                  <span className="pv-ms-name">Bug Detection Engine</span>
+                  <span className="pv-pill boss">BOSS</span>
+                </div>
+                <div className="pv-task-row">
+                  <div className="pv-task-cb done">✓</div>
+                  <span className="pv-task-txt done">Code scanning</span>
+                </div>
+                <div className="pv-task-row">
+                  <div className="pv-task-cb" />
+                  <span className="pv-task-txt pulse">
+                    Pattern detection...
+                  </span>
+                </div>
+                <div className="pv-task-row">
+                  <div className="pv-task-cb" />
+                  <span
+                    className="pv-task-txt"
+                    style={{ color: "var(--text4)" }}
+                  >
+                    Error classification
+                  </span>
+                </div>
+                <div className="pv-ms-row">
+                  <div className="pv-ms-icon locked">🔒</div>
+                  <span className="pv-ms-name locked">Patch Generator</span>
+                  <span className="pv-pill locked">Locked</span>
                 </div>
               </div>
-              <div className="pv-prog-row">
-                <span className="pv-prog-lbl">Progress</span>
-                <span className="pv-prog-val">{previewProgress}%</span>
-              </div>
-              <div className="pv-track">
-                <div className="pv-fill" style={{ width: `${previewProgress}%` }} />
-              </div>
-              <div className="pv-ms-lbl">Milestones</div>
-              <div className="pv-ms-row">
-                <div className="pv-ms-icon done">✓</div>
-                <span className="pv-ms-name done">CLI Foundation</span>
-                <span className="pv-pill done">Done</span>
-              </div>
-              <div className="pv-task-row">
-                <div className="pv-task-cb done">✓</div>
-                <span className="pv-task-txt done">Setup repository</span>
-              </div>
-              <div className="pv-task-row">
-                <div className="pv-task-cb done">✓</div>
-                <span className="pv-task-txt done">Initialize CLI framework</span>
-              </div>
-              <div className="pv-ms-row">
-                <div className="pv-ms-icon active">⚡</div>
-                <span className="pv-ms-name">Bug Detection Engine</span>
-                <span className="pv-pill boss">BOSS</span>
-              </div>
-              <div className="pv-task-row">
-                <div className="pv-task-cb done">✓</div>
-                <span className="pv-task-txt done">Code scanning</span>
-              </div>
-              <div className="pv-task-row">
-                <div className="pv-task-cb" />
-                <span className="pv-task-txt pulse">Pattern detection...</span>
-              </div>
-              <div className="pv-task-row">
-                <div className="pv-task-cb" />
-                <span className="pv-task-txt" style={{ color: "var(--text4)" }}>
-                  Error classification
-                </span>
-              </div>
-              <div className="pv-ms-row">
-                <div className="pv-ms-icon locked">🔒</div>
-                <span className="pv-ms-name locked">Patch Generator</span>
-                <span className="pv-pill locked">Locked</span>
-              </div>
-            </div>
-            <div className="pv-right">
-              <div className="pv-stat-card">
-                <div className="pv-stat-val p">{previewProgress}%</div>
-                <div className="pv-stat-lbl">progress</div>
-              </div>
-              <div className="pv-stat-card">
-                <div className="pv-stat-val a">6d</div>
-                <div className="pv-stat-lbl">streak</div>
-              </div>
-              <div className="pv-lb-head">Top Builders</div>
-              <div className="pv-lb-row">
-                <div className="pv-lb-rank g">1</div>
-                <div className="pv-lb-av">RK</div>
-                <div className="pv-lb-name">Riya K.</div>
-                <div className="pv-lb-score">34</div>
-              </div>
-              <div className="pv-lb-row">
-                <div className="pv-lb-rank g">2</div>
-                <div className="pv-lb-av">DM</div>
-                <div className="pv-lb-name">Dev M.</div>
-                <div className="pv-lb-score">28</div>
-              </div>
-              <div className="pv-lb-row">
-                <div className="pv-lb-rank">3</div>
-                <div className="pv-lb-av">SK</div>
-                <div className="pv-lb-name">Sara K.</div>
-                <div className="pv-lb-score">21</div>
+              <div className="pv-right">
+                <div className="pv-stat-card">
+                  <div className="pv-stat-val p">{previewProgress}%</div>
+                  <div className="pv-stat-lbl">progress</div>
+                </div>
+                <div className="pv-stat-card">
+                  <div className="pv-stat-val a">6d</div>
+                  <div className="pv-stat-lbl">streak</div>
+                </div>
+                <div className="pv-lb-head">Top Builders</div>
+                <div className="pv-lb-row">
+                  <div className="pv-lb-rank g">1</div>
+                  <div className="pv-lb-av">RK</div>
+                  <div className="pv-lb-name">Riya K.</div>
+                  <div className="pv-lb-score">34</div>
+                </div>
+                <div className="pv-lb-row">
+                  <div className="pv-lb-rank g">2</div>
+                  <div className="pv-lb-av">DM</div>
+                  <div className="pv-lb-name">Dev M.</div>
+                  <div className="pv-lb-score">28</div>
+                </div>
+                <div className="pv-lb-row">
+                  <div className="pv-lb-rank">3</div>
+                  <div className="pv-lb-av">SK</div>
+                  <div className="pv-lb-name">Sara K.</div>
+                  <div className="pv-lb-score">21</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      </div>
-
       <div className="social-proof">
         <div className="sp-inner">
           <span className="sp-label">Live builders</span>
@@ -698,7 +827,6 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-
       <div className="section-full">
         <div className="section-full-inner reveal">
           <div className="section-eyebrow">The problem</div>
@@ -765,7 +893,6 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-
       <section className="section reveal" id="solution">
         <div className="section-eyebrow">The solution</div>
         <h2 className="section-h">
@@ -807,7 +934,6 @@ export function LandingPage() {
           </div>
         </div>
       </section>
-
       <div className="section-full reveal" id="how">
         <div className="section-full-inner">
           <div className="section-eyebrow">How it works</div>
@@ -818,8 +944,8 @@ export function LandingPage() {
           </h2>
           <p className="section-sub" style={{ maxWidth: 760 }}>
             Click any tab to restart the workflow. CroFlux keeps looping through
-            the product journey so builders can instantly understand how the system
-            turns a PDS into shipped progress.
+            the product journey so builders can instantly understand how the
+            system turns a PDS into shipped progress.
           </p>
           <div className="how-flow">
             <div
@@ -846,10 +972,14 @@ export function LandingPage() {
                     }, 180);
                   }}
                 >
-                  <span className="how-flow-tab-index">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="how-flow-tab-index">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                   <span>
                     <span className="how-flow-tab-title">{workflow.tab}</span>
-                    <span className="how-flow-tab-caption">{workflow.caption}</span>
+                    <span className="how-flow-tab-caption">
+                      {workflow.caption}
+                    </span>
                   </span>
                 </button>
               ))}
@@ -864,8 +994,12 @@ export function LandingPage() {
                 </div>
                 <div className="how-flow-sidebar-title">CroFlux Architect</div>
               </div>
-              <div className="how-flow-prompt-title">{currentWorkflow.promptTitle}</div>
-              <p className="how-flow-prompt-body">{currentWorkflow.promptBody}</p>
+              <div className="how-flow-prompt-title">
+                {currentWorkflow.promptTitle}
+              </div>
+              <p className="how-flow-prompt-body">
+                {currentWorkflow.promptBody}
+              </p>
               <div className="how-flow-tags">
                 {currentWorkflow.promptTags.map((tag) => (
                   <span key={tag} className="how-flow-tag">
@@ -889,7 +1023,9 @@ export function LandingPage() {
                       </div>
                       <div>
                         <div className="how-flow-stage-label">{step.label}</div>
-                        <div className="how-flow-stage-meta">{step.metricLabel}</div>
+                        <div className="how-flow-stage-meta">
+                          {step.metricLabel}
+                        </div>
                       </div>
                     </div>
                   );
@@ -898,7 +1034,11 @@ export function LandingPage() {
             </div>
 
             <div className="how-flow-main">
-              <div className="how-flow-tabs" role="tablist" aria-label="CroFlux workflows">
+              <div
+                className="how-flow-tabs"
+                role="tablist"
+                aria-label="CroFlux workflows"
+              >
                 {howWorkflows.map((workflow, index) => (
                   <button
                     key={workflow.id}
@@ -918,10 +1058,14 @@ export function LandingPage() {
                       }, 180);
                     }}
                   >
-                    <span className="how-flow-tab-index">{String(index + 1).padStart(2, "0")}</span>
+                    <span className="how-flow-tab-index">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                     <span>
                       <span className="how-flow-tab-title">{workflow.tab}</span>
-                      <span className="how-flow-tab-caption">{workflow.caption}</span>
+                      <span className="how-flow-tab-caption">
+                        {workflow.caption}
+                      </span>
                     </span>
                   </button>
                 ))}
@@ -933,36 +1077,58 @@ export function LandingPage() {
                 >
                   <div className="how-flow-canvas-head">
                     <div>
-                      <div className="how-flow-canvas-kicker">{currentWorkflowStep.label}</div>
-                      <div className="how-flow-canvas-title">{currentWorkflowStep.title}</div>
+                      <div className="how-flow-canvas-kicker">
+                        {currentWorkflowStep.label}
+                      </div>
+                      <div className="how-flow-canvas-title">
+                        {currentWorkflowStep.title}
+                      </div>
                     </div>
                     <div className="how-flow-metric">
                       <span>{currentWorkflowStep.metricLabel}</span>
                       <strong>{currentWorkflowStep.metricValue}</strong>
                     </div>
                   </div>
-                  <p className="how-flow-canvas-sub">{currentWorkflowStep.subtitle}</p>
+                  <p className="how-flow-canvas-sub">
+                    {currentWorkflowStep.subtitle}
+                  </p>
 
                   {currentWorkflow.id === "roadmap" ? (
                     <div className="how-roadmap-board">
                       <div className="how-roadmap-column">
-                        <div className={`how-roadmap-card ${activeWorkflowStep >= 0 ? "active" : ""}`}>
+                        <div
+                          className={`how-roadmap-card ${activeWorkflowStep >= 0 ? "active" : ""}`}
+                        >
                           <div className="how-roadmap-card-head">
                             <span>Milestone 1</span>
                             <span>Done</span>
                           </div>
-                          <div className="how-roadmap-card-title">CLI Foundation</div>
-                          <div className="how-roadmap-task done">Setup repository</div>
-                          <div className="how-roadmap-task done">Initialize framework</div>
-                          <div className="how-roadmap-task done">Ship first command</div>
+                          <div className="how-roadmap-card-title">
+                            CLI Foundation
+                          </div>
+                          <div className="how-roadmap-task done">
+                            Setup repository
+                          </div>
+                          <div className="how-roadmap-task done">
+                            Initialize framework
+                          </div>
+                          <div className="how-roadmap-task done">
+                            Ship first command
+                          </div>
                         </div>
-                        <div className={`how-roadmap-card ${activeWorkflowStep >= 1 ? "active" : ""}`}>
+                        <div
+                          className={`how-roadmap-card ${activeWorkflowStep >= 1 ? "active" : ""}`}
+                        >
                           <div className="how-roadmap-card-head">
                             <span>Milestone 2</span>
                             <span>Active</span>
                           </div>
-                          <div className="how-roadmap-card-title">Bug Detection Engine</div>
-                          <div className="how-roadmap-task done">Code scanning</div>
+                          <div className="how-roadmap-card-title">
+                            Bug Detection Engine
+                          </div>
+                          <div className="how-roadmap-task done">
+                            Code scanning
+                          </div>
                           <div
                             className={`how-roadmap-task ${activeWorkflowStep >= 2 ? "active" : ""}`}
                           >
@@ -976,7 +1142,9 @@ export function LandingPage() {
                         </div>
                       </div>
                       <div className="how-roadmap-column">
-                        <div className={`how-boss-card ${activeWorkflowStep >= 3 ? "active" : ""}`}>
+                        <div
+                          className={`how-boss-card ${activeWorkflowStep >= 3 ? "active" : ""}`}
+                        >
                           <div className="how-boss-head">
                             <span>Boss milestone</span>
                             <span>BOSS</span>
@@ -985,7 +1153,9 @@ export function LandingPage() {
                           <div className="how-boss-bar">
                             <div
                               className="how-boss-bar-fill"
-                              style={{ width: activeWorkflowStep >= 3 ? "72%" : "36%" }}
+                              style={{
+                                width: activeWorkflowStep >= 3 ? "72%" : "36%",
+                              }}
                             />
                           </div>
                           <div className="how-boss-meta">
@@ -1004,23 +1174,33 @@ export function LandingPage() {
                   {currentWorkflow.id === "execution" ? (
                     <div className="how-execution-board">
                       <div className="how-execution-list">
-                        <div className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}>
+                        <div
+                          className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}
+                        >
                           <span>✓</span>
                           Finish landing page copy
                         </div>
-                        <div className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}>
+                        <div
+                          className={`how-execution-item ${activeWorkflowStep >= 0 ? "done" : ""}`}
+                        >
                           <span>✓</span>
                           Wire Supabase auth
                         </div>
-                        <div className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}>
+                        <div
+                          className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}
+                        >
                           <span>✓</span>
                           Confirm roadmap
                         </div>
-                        <div className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}>
+                        <div
+                          className={`how-execution-item ${activeWorkflowStep >= 1 ? "done" : ""}`}
+                        >
                           <span>✓</span>
                           Defeat CLI Foundation
                         </div>
-                        <div className={`how-execution-item ${activeWorkflowStep >= 2 ? "active" : ""}`}>
+                        <div
+                          className={`how-execution-item ${activeWorkflowStep >= 2 ? "active" : ""}`}
+                        >
                           <span>{activeWorkflowStep >= 2 ? "★" : "•"}</span>
                           Climb the weekly leaderboard
                         </div>
@@ -1029,19 +1209,31 @@ export function LandingPage() {
                         <div className="how-execution-stat">
                           <span>Progress</span>
                           <strong>
-                            {activeWorkflowStep === 0 ? "38%" : activeWorkflowStep === 1 ? "64%" : "81%"}
+                            {activeWorkflowStep === 0
+                              ? "38%"
+                              : activeWorkflowStep === 1
+                                ? "64%"
+                                : "81%"}
                           </strong>
                         </div>
                         <div className="how-execution-stat">
                           <span>Streak</span>
                           <strong>
-                            {activeWorkflowStep === 0 ? "4d" : activeWorkflowStep === 1 ? "6d" : "8d"}
+                            {activeWorkflowStep === 0
+                              ? "4d"
+                              : activeWorkflowStep === 1
+                                ? "6d"
+                                : "8d"}
                           </strong>
                         </div>
                         <div className="how-execution-stat">
                           <span>Leaderboard</span>
                           <strong>
-                            {activeWorkflowStep === 0 ? "#14" : activeWorkflowStep === 1 ? "#10" : "#8"}
+                            {activeWorkflowStep === 0
+                              ? "#14"
+                              : activeWorkflowStep === 1
+                                ? "#10"
+                                : "#8"}
                           </strong>
                         </div>
                       </div>
@@ -1075,26 +1267,50 @@ export function LandingPage() {
                           />
                         </div>
                         <div className="how-launch-checks">
-                          <div className={activeWorkflowStep >= 0 ? "done" : ""}>QA checklist locked in</div>
-                          <div className={activeWorkflowStep >= 1 ? "done" : ""}>Launch blocker resolved</div>
-                          <div className={activeWorkflowStep >= 2 ? "done" : ""}>Product live to users</div>
+                          <div
+                            className={activeWorkflowStep >= 0 ? "done" : ""}
+                          >
+                            QA checklist locked in
+                          </div>
+                          <div
+                            className={activeWorkflowStep >= 1 ? "done" : ""}
+                          >
+                            Launch blocker resolved
+                          </div>
+                          <div
+                            className={activeWorkflowStep >= 2 ? "done" : ""}
+                          >
+                            Product live to users
+                          </div>
                         </div>
                       </div>
                       <div className="how-launch-side">
                         <div className="how-launch-card">
                           <span>Rank</span>
                           <strong>
-                            {activeWorkflowStep === 0 ? "#7" : activeWorkflowStep === 1 ? "#5" : "#3"}
+                            {activeWorkflowStep === 0
+                              ? "#7"
+                              : activeWorkflowStep === 1
+                                ? "#5"
+                                : "#3"}
                           </strong>
                         </div>
                         <div className="how-launch-card">
                           <span>Status</span>
-                          <strong>{activeWorkflowStep === 2 ? "Launched" : "Final push"}</strong>
+                          <strong>
+                            {activeWorkflowStep === 2
+                              ? "Launched"
+                              : "Final push"}
+                          </strong>
                         </div>
                         <div className="how-launch-card accent">
                           <span>Momentum</span>
                           <strong>
-                            {activeWorkflowStep === 0 ? "+120" : activeWorkflowStep === 1 ? "+240" : "+400"}
+                            {activeWorkflowStep === 0
+                              ? "+120"
+                              : activeWorkflowStep === 1
+                                ? "+240"
+                                : "+400"}
                           </strong>
                         </div>
                       </div>
@@ -1106,7 +1322,6 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-
       <section className="section reveal" id="features">
         <div className="section-eyebrow">Features</div>
         <h2 className="section-h">
@@ -1114,180 +1329,209 @@ export function LandingPage() {
           <br />
           <span className="purple">actually needs.</span>
         </h2>
-          <div className="feat-grid">
-            <div ref={featureProgressRef} className="feat-card">
-              <div className="feat-icon-row">
-                <div className="feat-icon">⚔</div>
-                <span className="feat-badge amber">Gamification</span>
+        <div className="feat-grid">
+          <div ref={featureProgressRef} className="feat-card">
+            <div className="feat-icon-row">
+              <div className="feat-icon">⚔</div>
+              <span className="feat-badge amber">Gamification</span>
             </div>
             <div className="feat-title">Boss Milestones</div>
-              <p className="feat-desc">
-                Major milestones become boss battles. Complete tasks to drain the
-                boss&apos;s HP. Defeat it to unlock the next stage.
-              </p>
-              <div className="feat-preview">
-                <div className="boss-row">
-                  <span style={{ fontSize: 11, color: "var(--text2)", flex: 1 }}>
-                    Launch MVP
-                  </span>
-                  <span className="boss-tag">BOSS</span>
-                </div>
-                <div className="boss-row">
-                  <span
-                    style={{
-                      fontSize: 10,
-                      color: "var(--amber)",
-                      minWidth: 20,
-                      fontFamily: "var(--mono)",
-                    }}
-                  >
-                    HP
-                  </span>
-                  <div className="boss-hp-track">
-                    <div className="boss-hp-fill" />
-                  </div>
-                </div>
-                <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "var(--mono)" }}>
-                  4/6 tasks completed
-                </div>
+            <p className="feat-desc">
+              Major milestones become boss battles. Complete tasks to drain the
+              boss&apos;s HP. Defeat it to unlock the next stage.
+            </p>
+            <div className="feat-preview">
+              <div className="boss-row">
+                <span style={{ fontSize: 11, color: "var(--text2)", flex: 1 }}>
+                  Launch MVP
+                </span>
+                <span className="boss-tag">BOSS</span>
               </div>
-            </div>
-            <div className="feat-card">
-              <div className="feat-icon-row">
-                <div className="feat-icon">★</div>
-                <span className="feat-badge purple">Momentum</span>
-            </div>
-            <div className="feat-title">Builder Streak</div>
-              <p className="feat-desc">
-                Ship at least one task per day to keep your streak alive. Miss a
-                day and it resets. Simple accountability that works.
-              </p>
-              <div className="feat-preview">
-                <div className="streak-header">
-                  <span className="streak-fire">★</span>
-                  <span className="streak-count">6</span>
-                  <span className="streak-lbl">day streak</span>
-                </div>
-                <div className="streak-days">
-                  <div className="streak-day done">M</div>
-                  <div className="streak-day done">T</div>
-                  <div className="streak-day done">W</div>
-                  <div className="streak-day done">T</div>
-                  <div className="streak-day done">F</div>
-                  <div className="streak-day done">S</div>
-                  <div className="streak-day today">S</div>
-                </div>
-              </div>
-            </div>
-            <div className="feat-card">
-              <div className="feat-icon-row">
-                <div className="feat-icon">◈</div>
-                <span className="feat-badge purple">AI-Powered</span>
-            </div>
-            <div className="feat-title">AI Roadmap Generator</div>
-              <p className="feat-desc">
-                Paste your product strategy. GPT converts it into 4–6 milestones
-                with 3–5 actionable tasks each in seconds.
-              </p>
-              <div className="feat-preview" style={{ fontSize: 11, fontFamily: "var(--mono)", lineHeight: 1.8, color: "var(--text3)" }}>
-                <span style={{ color: "var(--purple2)" }}>→</span> CLI Foundation (4 tasks)
-                <br />
-                <span style={{ color: "var(--text2)" }}>→</span> Bug Detection (5 tasks)
-                <br />
-                <span style={{ color: "var(--text4)" }}>→</span> Patch Generator (3 tasks)
-                <br />
-                <span style={{ color: "var(--text4)" }}>→</span> GitHub Integration (4 tasks)
-              </div>
-            </div>
-            <div className="feat-card">
-              <div className="feat-icon-row">
-                <div className="feat-icon">◎</div>
-                <span className="feat-badge amber">Competition</span>
-            </div>
-            <div className="feat-title">Weekly Leaderboard</div>
-              <p className="feat-desc">
-                Ranked by weekly tasks completed. Resets every Monday. Your rank
-                updates live as you ship.
-              </p>
-              <div className="feat-preview">
-                <div className="lb-mini-row">
-                  <div className="lb-mini-rank g">1</div>
-                  <div className="lb-mini-av">RK</div>
-                  <div className="lb-mini-name">Riya K.</div>
-                  <div className="lb-mini-score">34</div>
-                </div>
-                <div className="lb-mini-row">
-                  <div className="lb-mini-rank g">2</div>
-                  <div className="lb-mini-av">DM</div>
-                  <div className="lb-mini-name">Dev M.</div>
-                  <div className="lb-mini-score">28</div>
-                </div>
-                <div
-                  className="lb-mini-row"
+              <div className="boss-row">
+                <span
                   style={{
-                    background: "var(--purple-dim)",
-                    border: "1px solid var(--purple-mid)",
-                    borderRadius: 4,
-                    padding: "5px 4px",
-                    margin: "2px -4px",
+                    fontSize: 10,
+                    color: "var(--amber)",
+                    minWidth: 20,
+                    fontFamily: "var(--mono)",
                   }}
                 >
-                  <div className="lb-mini-rank" style={{ color: "var(--purple2)" }}>
-                    —
-                  </div>
-                  <div
-                    className="lb-mini-av"
-                    style={{ borderColor: "var(--purple)", color: "var(--purple2)" }}
-                  >
-                    YO
-                  </div>
-                  <div className="lb-mini-name" style={{ color: "var(--purple2)" }}>
-                    You
-                  </div>
-                  <div className="lb-mini-score">0</div>
+                  HP
+                </span>
+                <div className="boss-hp-track">
+                  <div className="boss-hp-fill" />
                 </div>
               </div>
-            </div>
-            <div className="feat-card">
-              <div className="feat-icon-row">
-                <div className="feat-icon">▓</div>
-                <span className="feat-badge purple">Tracking</span>
-            </div>
-            <div className="feat-title">Progress Bar System</div>
-              <p className="feat-desc">
-                Progress calculated automatically: completed tasks / total tasks.
-                Always know how close you are to launch.
-              </p>
-              <div className="feat-preview">
-                <div className="prog-row">
-                  <span className="prog-lbl">Startup progress</span>
-                  <span className="prog-val">{featureProgress}%</span>
-                </div>
-                <div className="prog-track">
-                  <div className="prog-fill" style={{ width: `${featureProgress}%` }} />
-                </div>
-              </div>
-            </div>
-            <div className="feat-card">
-              <div className="feat-icon-row">
-                <div className="feat-icon">⚡</div>
-                <span className="feat-badge purple">Motivation</span>
-            </div>
-            <div className="feat-title">Completion Messages</div>
-              <p className="feat-desc">
-                Every completed task fires a motivational message. Random from a
-                curated set — keeps energy high.
-              </p>
-              <div className="msg-preview">
-                <div className="msg-head">Momentum unlocked</div>
-                <div className="msg-body">
-                  You&apos;re 63% closer to launch. Keep shipping.
-                </div>
+              <div
+                style={{
+                  fontSize: 10,
+                  color: "var(--text3)",
+                  fontFamily: "var(--mono)",
+                }}
+              >
+                4/6 tasks completed
               </div>
             </div>
           </div>
+          <div className="feat-card">
+            <div className="feat-icon-row">
+              <div className="feat-icon">★</div>
+              <span className="feat-badge purple">Momentum</span>
+            </div>
+            <div className="feat-title">Builder Streak</div>
+            <p className="feat-desc">
+              Ship at least one task per day to keep your streak alive. Miss a
+              day and it resets. Simple accountability that works.
+            </p>
+            <div className="feat-preview">
+              <div className="streak-header">
+                <span className="streak-fire">★</span>
+                <span className="streak-count">6</span>
+                <span className="streak-lbl">day streak</span>
+              </div>
+              <div className="streak-days">
+                <div className="streak-day done">M</div>
+                <div className="streak-day done">T</div>
+                <div className="streak-day done">W</div>
+                <div className="streak-day done">T</div>
+                <div className="streak-day done">F</div>
+                <div className="streak-day done">S</div>
+                <div className="streak-day today">S</div>
+              </div>
+            </div>
+          </div>
+          <div className="feat-card">
+            <div className="feat-icon-row">
+              <div className="feat-icon">◈</div>
+              <span className="feat-badge purple">AI-Powered</span>
+            </div>
+            <div className="feat-title">AI Roadmap Generator</div>
+            <p className="feat-desc">
+              Paste your product strategy. GPT converts it into 4–6 milestones
+              with 3–5 actionable tasks each in seconds.
+            </p>
+            <div
+              className="feat-preview"
+              style={{
+                fontSize: 11,
+                fontFamily: "var(--mono)",
+                lineHeight: 1.8,
+                color: "var(--text3)",
+              }}
+            >
+              <span style={{ color: "var(--purple2)" }}>→</span> CLI Foundation
+              (4 tasks)
+              <br />
+              <span style={{ color: "var(--text2)" }}>→</span> Bug Detection (5
+              tasks)
+              <br />
+              <span style={{ color: "var(--text4)" }}>→</span> Patch Generator
+              (3 tasks)
+              <br />
+              <span style={{ color: "var(--text4)" }}>→</span> GitHub
+              Integration (4 tasks)
+            </div>
+          </div>
+          <div className="feat-card">
+            <div className="feat-icon-row">
+              <div className="feat-icon">◎</div>
+              <span className="feat-badge amber">Competition</span>
+            </div>
+            <div className="feat-title">Weekly Leaderboard</div>
+            <p className="feat-desc">
+              Ranked by weekly tasks completed. Resets every Monday. Your rank
+              updates live as you ship.
+            </p>
+            <div className="feat-preview">
+              <div className="lb-mini-row">
+                <div className="lb-mini-rank g">1</div>
+                <div className="lb-mini-av">RK</div>
+                <div className="lb-mini-name">Riya K.</div>
+                <div className="lb-mini-score">34</div>
+              </div>
+              <div className="lb-mini-row">
+                <div className="lb-mini-rank g">2</div>
+                <div className="lb-mini-av">DM</div>
+                <div className="lb-mini-name">Dev M.</div>
+                <div className="lb-mini-score">28</div>
+              </div>
+              <div
+                className="lb-mini-row"
+                style={{
+                  background: "var(--purple-dim)",
+                  border: "1px solid var(--purple-mid)",
+                  borderRadius: 4,
+                  padding: "5px 4px",
+                  margin: "2px -4px",
+                }}
+              >
+                <div
+                  className="lb-mini-rank"
+                  style={{ color: "var(--purple2)" }}
+                >
+                  —
+                </div>
+                <div
+                  className="lb-mini-av"
+                  style={{
+                    borderColor: "var(--purple)",
+                    color: "var(--purple2)",
+                  }}
+                >
+                  YO
+                </div>
+                <div
+                  className="lb-mini-name"
+                  style={{ color: "var(--purple2)" }}
+                >
+                  You
+                </div>
+                <div className="lb-mini-score">0</div>
+              </div>
+            </div>
+          </div>
+          <div className="feat-card">
+            <div className="feat-icon-row">
+              <div className="feat-icon">▓</div>
+              <span className="feat-badge purple">Tracking</span>
+            </div>
+            <div className="feat-title">Progress Bar System</div>
+            <p className="feat-desc">
+              Progress calculated automatically: completed tasks / total tasks.
+              Always know how close you are to launch.
+            </p>
+            <div className="feat-preview">
+              <div className="prog-row">
+                <span className="prog-lbl">Startup progress</span>
+                <span className="prog-val">{featureProgress}%</span>
+              </div>
+              <div className="prog-track">
+                <div
+                  className="prog-fill"
+                  style={{ width: `${featureProgress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="feat-card">
+            <div className="feat-icon-row">
+              <div className="feat-icon">⚡</div>
+              <span className="feat-badge purple">Motivation</span>
+            </div>
+            <div className="feat-title">Completion Messages</div>
+            <p className="feat-desc">
+              Every completed task fires a motivational message. Random from a
+              curated set — keeps energy high.
+            </p>
+            <div className="msg-preview">
+              <div className="msg-head">Momentum unlocked</div>
+              <div className="msg-body">
+                You&apos;re 63% closer to launch. Keep shipping.
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
-
       <div className="section-full reveal" id="for-builders">
         <div className="section-full-inner">
           <div className="section-eyebrow">Who it&apos;s for</div>
@@ -1348,7 +1592,6 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-
       <div className="lb-section-bg reveal">
         <div className="lb-section-inner">
           <div>
@@ -1456,8 +1699,11 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-
-      <section className="section reveal" id="pricing" style={{ textAlign: "center" }}>
+      <section
+        className="section reveal"
+        id="pricing"
+        style={{ textAlign: "center" }}
+      >
         <div className="section-eyebrow" style={{ justifyContent: "center" }}>
           Pricing
         </div>
@@ -1501,7 +1747,10 @@ export function LandingPage() {
           <div className="price-card featured">
             <div className="price-badge-tag">Limited early access</div>
             <div className="price-head price-head-featured">
-              <div className="price-amount price-amount-featured" style={{ color: "var(--purple2)" }}>
+              <div
+                className="price-amount price-amount-featured"
+                style={{ color: "var(--purple2)" }}
+              >
                 Coming soon
               </div>
               <div className="price-period">Planned pricing after launch</div>
@@ -1535,7 +1784,6 @@ export function LandingPage() {
           </div>
         </div>
       </section>
-
       <div className="cta-section" id="waitlist">
         <div className="cta-bg-word">BUILD</div>
         <div className="cta-inner reveal">
@@ -1586,7 +1834,6 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-
       <footer>
         <div className="footer-inner">
           <div className="footer-top">
@@ -1657,7 +1904,9 @@ export function LandingPage() {
             </div>
           </div>
           <div className="footer-bottom">
-            <div className="footer-copy">© 2025 CroFlux. All rights reserved.</div>
+            <div className="footer-copy">
+              © 2025 CroFlux. All rights reserved.
+            </div>
             <div className="footer-socials">
               <Link
                 href="https://x.com/CrooviOfficial"
