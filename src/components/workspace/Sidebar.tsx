@@ -81,21 +81,27 @@ export function Sidebar({
       </div>
 
       <div className="sidebar-nav">
-        {navItems.map(({ href, label, badge, badgeTone }) => {
-          const active =
-            normalizedPathname === href ||
-            normalizedPathname.startsWith(`${href}/`);
+        {navItems.map(({ href, label, badge, badgeTone }, index) => {
+          const isExact = normalizedPathname === href;
+          const isNested = normalizedPathname.startsWith(`${href}/`);
+          const isDashboardRoot = href === "/dashboard" && normalizedPathname === "/";
+          const active = isExact || isNested || isDashboardRoot;
+          const fallbackActive =
+            !navItems.some((item) =>
+              normalizedPathname === item.href || normalizedPathname.startsWith(`${item.href}/`),
+            ) && index === 0;
+          const isActive = active || fallbackActive;
 
           return (
             <Link
               key={label}
               href={href}
-              className={`nav-item ${active ? "active" : ""}`}
+              className={`nav-item ${isActive ? "active" : ""}`}
             >
               <span className="nav-label">{label}</span>
               {badge ? (
                 <span
-                  className={`nav-badge ${active ? "active" : ""} ${
+                  className={`nav-badge ${isActive ? "active" : ""} ${
                     badgeTone === "amber" ? "amber" : ""
                   }`}
                 >
@@ -250,7 +256,7 @@ export function Sidebar({
           font-family: "Geist Mono", monospace;
         }
         .sidebar-nav {
-          padding: 10px 6px 6px;
+          padding: 12px 8px 8px;
           flex: 1;
           overflow-y: auto;
           display: flex;
@@ -261,43 +267,37 @@ export function Sidebar({
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 0 10px;
-          border-radius: 6px;
+          padding: 0 11px;
+          border-radius: 8px;
+          border: 1px solid transparent;
           color: var(--text2);
           position: relative;
-          transition: background 0.12s ease, color 0.12s ease, opacity 0.12s ease;
-          margin-bottom: 6px;
-          min-height: 28px;
+          transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+          margin-bottom: 18px;
+          min-height: 34px;
         }
         .nav-item:last-of-type {
           margin-bottom: 0;
         }
         .nav-item:hover {
           color: var(--text);
+          background: rgba(255, 255, 255, 0.02);
         }
         .nav-item.active {
-          background: #26213f;
+          background: #29234b;
+          border-color: #9386ff;
           color: var(--text);
-        }
-        .nav-item.active::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 4px;
-          bottom: 4px;
-          width: 2px;
-          border-radius: 0 999px 999px 0;
-          background: var(--accent);
+          box-shadow: 0 0 0 1px rgba(147, 134, 255, 0.6), inset 0 0 0 1px rgba(147, 134, 255, 0.28);
         }
         .nav-label {
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 400;
           flex: 1;
           line-height: 1;
         }
         .nav-badge {
-          font-size: 9px;
-          padding: 2px 6px;
+          font-size: 10px;
+          padding: 3px 8px;
           border-radius: 6px;
           background: #2a2a34;
           color: #84849b;
@@ -306,8 +306,8 @@ export function Sidebar({
           line-height: 1.2;
         }
         .nav-badge.active {
-          background: #3b334d;
-          color: #8f80ff;
+          background: #4a406a;
+          color: #b4a8ff;
         }
         .nav-badge.amber {
           color: #f2b42d;
