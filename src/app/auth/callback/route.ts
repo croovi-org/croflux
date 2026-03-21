@@ -22,7 +22,16 @@ export async function GET(request: Request) {
         name: data.user.user_metadata?.full_name || "",
       });
 
-      return NextResponse.redirect(`${publicOrigin}/onboarding`);
+      const { data: project } = await supabase
+        .from("projects")
+        .select("id")
+        .eq("user_id", data.user.id)
+        .limit(1)
+        .maybeSingle();
+
+      return NextResponse.redirect(
+        `${publicOrigin}${project ? "/dashboard" : "/onboarding"}`,
+      );
     }
   }
 

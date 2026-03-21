@@ -14,10 +14,12 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleGoogleLogin() {
     setError("");
+    setNotice("");
     setLoading(true);
 
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
@@ -34,9 +36,10 @@ export default function LoginPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    setNotice("");
     setLoading(true);
 
-    const { error: loginError } = await supabase.auth.signInWithPassword({
+    const { data, error: loginError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -47,7 +50,47 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/onboarding");
+    const authUserId = data.user?.id;
+
+    if (!authUserId) {
+      setError("We couldn't finish signing you in. Please try again.");
+      setLoading(false);
+      return;
+    }
+
+    const { data: project } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("user_id", authUserId)
+      .limit(1)
+      .maybeSingle();
+
+    router.push(project ? "/dashboard" : "/onboarding");
+  }
+
+  async function handleForgotPassword() {
+    setError("");
+    setNotice("");
+
+    if (!email.trim()) {
+      setError("Enter your email first so we can send a reset link.");
+      return;
+    }
+
+    setLoading(true);
+
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (resetError) {
+      setError(resetError.message);
+      setLoading(false);
+      return;
+    }
+
+    setNotice("Password reset link sent. Check your inbox to continue.");
+    setLoading(false);
   }
 
   return (
@@ -109,9 +152,13 @@ export default function LoginPage() {
                   <label className="block text-[13px] text-[var(--text2)]">
                     Password
                   </label>
-                  <Link href="/login" className="text-[12px] text-[var(--text3)]">
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-[12px] text-[var(--text3)] transition-colors hover:text-[var(--text)]"
+                  >
                     Forgot password?
-                  </Link>
+                  </button>
                 </div>
                 <input
                   type="password"
@@ -126,6 +173,12 @@ export default function LoginPage() {
               {error ? (
                 <p className="rounded-[var(--radius)] border border-[rgba(239,68,68,0.2)] bg-[rgba(239,68,68,0.08)] px-4 py-3 text-[13px] text-[#fda4af]">
                   {error}
+                </p>
+              ) : null}
+
+              {notice ? (
+                <p className="rounded-[var(--radius)] border border-[rgba(169,157,254,0.2)] bg-[rgba(169,157,254,0.08)] px-4 py-3 text-[13px] text-[var(--purple2)]">
+                  {notice}
                 </p>
               ) : null}
 
