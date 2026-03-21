@@ -6,142 +6,84 @@ type TopbarProps = {
   initials: string;
 };
 
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="11" cy="11" r="6.5" />
-      <path d="m16 16 4 4" />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
-
 export function Topbar({ workspaceName, currentPage, initials }: TopbarProps) {
   return (
-    <header className="topbar-shell">
-      <div className="topbar-breadcrumb">
-        <span>{workspaceName}</span>
-        <span>/</span>
-        <strong>{currentPage}</strong>
+    <header className="tb">
+      <div className="tb-left">
+        <span className="tb-ws">{workspaceName}</span>
+        <span className="tb-sep">/</span>
+        <span className="tb-page">{currentPage}</span>
       </div>
-
-      <div className="topbar-actions">
-        <button type="button" className="topbar-search">
-          <SearchIcon />
+      <div className="tb-spacer" />
+      <div className="tb-right">
+        <button type="button" className="tb-search">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" />
+          </svg>
           <span>Search</span>
         </button>
-        <button type="button" className="topbar-add">
-          <PlusIcon />
+        <button type="button" className="tb-add">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
           <span>Add task</span>
         </button>
-        <div className="topbar-avatar">{initials}</div>
+        <div className="tb-avatar">{initials}</div>
       </div>
 
       <style jsx>{`
-        .topbar-shell {
+        .tb {
           height: 48px;
           min-height: 48px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          padding: 0 22px;
           gap: 10px;
-          padding: 0 18px;
-          width: 100%;
-          background: #11111a;
-          border-bottom: 1px solid var(--border2);
-          flex-shrink: 0;
-          position: sticky;
-          top: 0;
-          z-index: 30;
-          box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.02),
-            inset 0 -1px 0 rgba(255, 255, 255, 0.015),
-            0 10px 24px rgba(0, 0, 0, 0.24);
-        }
-        .topbar-breadcrumb {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          min-width: 0;
-        }
-        .topbar-breadcrumb span:first-child {
-          font-size: 12px;
-          color: var(--text3);
-        }
-        .topbar-breadcrumb span:nth-child(2) {
-          color: var(--border3);
-          font-size: 12px;
-        }
-        .topbar-breadcrumb strong {
-          font-size: 12px;
-          color: var(--text);
-          font-weight: 500;
-        }
-        .topbar-actions {
-          display: flex;
-          align-items: center;
-          gap: 8px;
+          background: #0f0f17;
+          border-bottom: 1px solid #1e1e2e;
           flex-shrink: 0;
         }
-        .topbar-search,
-        .topbar-add {
+        .tb-left { display: flex; align-items: center; }
+        .tb-ws { font-size: 12px; color: #5f5f7a; }
+        .tb-sep { font-size: 12px; color: #2e2e48; margin: 0 6px; }
+        .tb-page { font-size: 12px; color: #f0f0f8; font-weight: 500; }
+        .tb-spacer { flex: 1; }
+        .tb-right { display: flex; align-items: center; gap: 8px; }
+        .tb-search, .tb-add {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 5px;
           border-radius: 7px;
-          padding: 5px 10px;
+          padding: 5px 11px;
           font-size: 11px;
           font-weight: 500;
-          transition:
-            background 0.12s ease,
-            border-color 0.12s ease;
+          cursor: pointer;
+          transition: background 0.12s, border-color 0.12s, color 0.12s;
+          font-family: Inter, sans-serif;
         }
-        .topbar-search {
-          background: rgba(255, 255, 255, 0.02);
-          border: 1px solid var(--border2);
-          color: var(--text2);
+        .tb-search {
+          background: #1a1a28;
+          border: 1px solid #252538;
+          color: #9898b8;
         }
-        .topbar-search:hover {
-          background: var(--bg4);
-          border-color: var(--border3);
-        }
-        .topbar-add {
-          background: var(--accent);
-          border: 1px solid var(--accent);
+        .tb-search:hover { border-color: #2e2e48; color: #f0f0f8; }
+        .tb-add {
+          background: #7c6ef7;
+          border: 1px solid #7c6ef7;
           color: white;
         }
-        .topbar-add:hover {
-          background: var(--accent2);
-          border-color: var(--accent2);
-        }
-        .topbar-search :global(svg),
-        .topbar-add :global(svg) {
-          width: 13px;
-          height: 13px;
-          stroke: currentColor;
-          stroke-width: 1.8;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          fill: none;
-        }
-        .topbar-avatar {
+        .tb-add:hover { background: #6357d4; border-color: #6357d4; }
+        .tb-avatar {
           width: 26px;
           height: 26px;
-          border-radius: 999px;
-          background: var(--accent);
+          border-radius: 50%;
+          background: #7c6ef7;
           color: white;
           display: grid;
           place-items: center;
           font-size: 10px;
-          font-weight: 700;
-          box-shadow: 0 0 0 1px rgba(124, 110, 247, 0.12);
+          font-weight: 600;
+          font-family: Inter, sans-serif;
         }
       `}</style>
     </header>
