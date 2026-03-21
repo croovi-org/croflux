@@ -35,6 +35,7 @@ export async function middleware(request: NextRequest) {
   if (
     !user &&
     (request.nextUrl.pathname.startsWith("/dashboard") ||
+      request.nextUrl.pathname.startsWith("/my-tasks") ||
       request.nextUrl.pathname.startsWith("/onboarding") ||
       request.nextUrl.pathname.startsWith("/leaderboard"))
   ) {
