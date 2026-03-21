@@ -32,3 +32,9 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+NEXT_PUBLIC_SUPABASE_URL = "https://yqasxgyepqqsglmqdrdr.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxYXN4Z3llcHFxc2dsbXFkcmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1OTk5ODAsImV4cCI6MjA4OTE3NTk4MH0.B_l9SGKzW49ibtxrOVY6vpJfS0A-SNQRi9yzU2eMjg4"
