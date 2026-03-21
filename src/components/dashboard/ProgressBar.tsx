@@ -8,64 +8,53 @@ type ProgressBarProps = {
 
 export function ProgressBar({ progress, completedTasks, totalTasks }: ProgressBarProps) {
   return (
-    <div className="launch-progress">
-      <div className="launch-progress-top">
+    <div className="lp">
+      <div className="lp-top">
         <span>Launch progress</span>
-        <span>
-          {completedTasks} / {totalTasks} tasks
-        </span>
+        <span>{completedTasks} / {totalTasks} tasks</span>
       </div>
-      <div className="launch-progress-bar">
-        <div className="launch-progress-fill" style={{ width: `${progress}%` }}>
-          <span className="launch-progress-dot" />
+      <div className="lp-track">
+        <div className="lp-fill" style={{ width: `${progress}%` }}>
+          <span className="lp-dot" />
         </div>
       </div>
 
       <style jsx>{`
-        .launch-progress {
-          margin-bottom: 20px;
-        }
-        .launch-progress-top {
+        .lp { margin-bottom: 20px; }
+        .lp-top {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 6px;
-          gap: 10px;
         }
-        .launch-progress-top span:first-child {
-          font-size: 11px;
-          color: var(--text3);
-        }
-        .launch-progress-top span:last-child {
-          font-size: 11px;
-          color: var(--text3);
-          font-family: var(--mono);
-        }
-        .launch-progress-bar {
+        .lp-top span:first-child { font-size: 11px; color: #5f5f7a; }
+        .lp-top span:last-child { font-size: 11px; color: #5f5f7a; font-family: "Geist Mono", monospace; }
+        .lp-track {
           position: relative;
           height: 5px;
-          overflow: hidden;
           border-radius: 3px;
-          background: var(--bg4);
+          background: #1a1a28;
+          overflow: visible;
         }
-        .launch-progress-fill {
+        .lp-fill {
           position: relative;
           height: 100%;
           border-radius: 3px;
-          background: var(--accent);
+          background: #7c6ef7;
           transition: width 0.5s ease;
+          overflow: visible;
         }
-        .launch-progress-dot {
+        .lp-dot {
           position: absolute;
-          right: 0;
+          right: -5px;
           top: 50%;
+          transform: translateY(-50%);
           width: 10px;
           height: 10px;
-          border-radius: 999px;
-          background: var(--accent);
-          border: 2px solid var(--bg2);
-          transform: translate(50%, -50%);
-          box-shadow: 0 0 0 4px rgba(124, 110, 247, 0.08);
+          border-radius: 50%;
+          background: #7c6ef7;
+          border: 2px solid #0f0f17;
+          box-shadow: 0 0 0 3px rgba(124,110,247,0.15);
         }
       `}</style>
     </div>

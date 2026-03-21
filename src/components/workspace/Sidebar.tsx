@@ -21,6 +21,51 @@ type SidebarProps = {
   streak: number;
 };
 
+function DashboardNavIcon({ active }: { active?: boolean }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke={active ? "#7c6ef7" : "#5f5f7a"}
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+      style={{ flexShrink: 0 }}>
+      <rect x="4" y="4" width="6" height="6" rx="1.2" />
+      <rect x="14" y="4" width="6" height="6" rx="1.2" />
+      <rect x="4" y="14" width="6" height="6" rx="1.2" />
+      <rect x="14" y="14" width="6" height="6" rx="1.2" />
+    </svg>
+  );
+}
+
+function TasksNavIcon({ active }: { active?: boolean }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke={active ? "#7c6ef7" : "#5f5f7a"}
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+      style={{ flexShrink: 0 }}>
+      <rect x="5" y="5" width="14" height="14" rx="3" />
+      <path d="m8.5 12 2.2 2.2 4.8-5.2" />
+    </svg>
+  );
+}
+
+function LeaderboardNavIcon({ active }: { active?: boolean }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke={active ? "#7c6ef7" : "#5f5f7a"}
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+      style={{ flexShrink: 0 }}>
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+    </svg>
+  );
+}
+
+const navConfig = [
+  { href: "/dashboard", label: "Dashboard", Icon: DashboardNavIcon },
+  { href: "/my-tasks", label: "My Tasks", Icon: TasksNavIcon },
+  { href: "/leaderboard", label: "Leaderboard", Icon: LeaderboardNavIcon },
+];
+
 export function Sidebar({
   workspaceName,
   initials,
@@ -32,6 +77,7 @@ export function Sidebar({
   streak,
 }: SidebarProps) {
   const pathname = usePathname();
+
   const navItems = [
     {
       href: "/dashboard",
@@ -59,7 +105,7 @@ export function Sidebar({
         <button type="button" className="workspace-switcher">
           <span className="workspace-avatar">{initials}</span>
           <span className="workspace-name">{workspaceName}</span>
-          <svg viewBox="0 0 16 16" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="m4 6 4 4 4-4" />
           </svg>
         </button>
@@ -84,12 +130,15 @@ export function Sidebar({
               ? pathname === "/dashboard"
               : pathname.startsWith(href);
 
+          const NavIcon = navConfig.find((n) => n.href === href)?.Icon;
+
           return (
             <Link
               key={label}
               href={href === "/dashboard" ? "/dashboard" : "#"}
               className={`nav-item ${active ? "active" : ""}`}
             >
+              {NavIcon ? <NavIcon active={active} /> : null}
               <span className="nav-label">{label}</span>
               {badge ? (
                 <span
@@ -140,7 +189,7 @@ export function Sidebar({
 
       <style jsx>{`
         .sidebar-shell {
-          width: 190px;
+          width: 220px;
           height: 100vh;
           background: var(--bg3);
           border-right: 1px solid var(--border);
@@ -170,6 +219,7 @@ export function Sidebar({
           text-align: left;
           transition: background 0.12s ease;
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+          cursor: pointer;
         }
         .workspace-switcher:hover {
           background: rgba(255, 255, 255, 0.02);
@@ -208,8 +258,8 @@ export function Sidebar({
           padding: 10px 8px 10px;
         }
         .next-up-card {
-          background: rgba(124, 110, 247, 0.12);
-          border: 1px solid rgba(124, 110, 247, 0.18);
+          background: rgba(124, 110, 247, 0.08);
+          border: 1px solid rgba(124, 110, 247, 0.20);
           border-radius: 8px;
           padding: 10px 12px 11px;
         }
@@ -224,6 +274,7 @@ export function Sidebar({
           height: 5px;
           border-radius: 999px;
           background: var(--accent);
+          flex-shrink: 0;
           animation: pulse 2s infinite;
         }
         .next-up-label {
@@ -232,6 +283,7 @@ export function Sidebar({
           font-weight: 600;
           letter-spacing: 0.08em;
           font-family: "Geist Mono", monospace;
+          text-transform: uppercase;
         }
         .next-up-task {
           font-size: 12px;
@@ -248,6 +300,9 @@ export function Sidebar({
           padding: 8px 8px 6px;
           flex: 1;
           overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+          gap: 0;
         }
         .nav-item {
           display: flex;
@@ -258,9 +313,13 @@ export function Sidebar({
           color: var(--text2);
           position: relative;
           transition: background 0.12s ease;
+          margin-bottom: 4px;
+        }
+        .nav-item:last-of-type {
+          margin-bottom: 0;
         }
         .nav-item:hover {
-          background: var(--bg4);
+          background: #1a1a28;
         }
         .nav-item.active {
           background: var(--accent-dim);
@@ -276,6 +335,16 @@ export function Sidebar({
           width: 2px;
           border-radius: 0 999px 999px 0;
           background: var(--accent);
+        }
+        .nav-item :global(.nav-icon) {
+          width: 14px;
+          height: 14px;
+          stroke: currentColor;
+          stroke-width: 1.8;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          fill: none;
+          flex-shrink: 0;
         }
         .nav-label {
           font-size: 12px;
@@ -345,6 +414,7 @@ export function Sidebar({
           white-space: nowrap;
           font-size: 11px;
           color: var(--text2);
+          max-width: 110px;
         }
         .milestone-title.locked {
           color: var(--text3);

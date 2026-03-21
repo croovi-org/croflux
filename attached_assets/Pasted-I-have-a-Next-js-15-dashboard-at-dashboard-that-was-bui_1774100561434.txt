@@ -1,0 +1,62 @@
+I have a Next.js 15 dashboard at /dashboard that was built but has several visual issues. 
+Fix all of the following. Do not rebuild from scratch — only fix what's listed.
+
+Reference the live site at https://croflux.vercel.app for the exact color system and aesthetic.
+
+ISSUE 1 — Missing icon rail
+The leftmost column (52px wide) is completely missing. Add it back.
+It should contain:
+- CroFlux logo mark at top: 28x28px rounded square, background #7c6ef7, white "C" text
+- Four icon buttons below: Dashboard, Milestones, Calendar, Leaderboard (SVG icons, no labels)
+- Flex spacer
+- Settings icon at bottom
+- Each button: 36x36px, border-radius 9px
+- Active state: rgba(124,110,247,0.08) background + 2.5px left border in #7c6ef7 + #7c6ef7 icon stroke
+- Hover: #1a1a28 background
+- Default icon stroke: #5f5f7a
+- Background: #13131e, right border 1px solid #1e1e2e
+
+ISSUE 2 — Missing topbar
+The topbar (48px tall) is missing. Add it above the view tabs.
+Contents:
+- Left: breadcrumb — workspace name in #5f5f7a, "/" separator, "Dashboard" in #f0f0f8 font-weight 500. Both 12px.
+- Right: Search button (#1a1a28 bg, #252538 border, #9898b8 text, magnifier SVG icon, 11px, border-radius 7px, padding 5px 11px), "+ Add task" button (#7c6ef7 bg, white text, plus SVG, same sizing but hover #6357d4), user avatar (26x26 circle, #7c6ef7 bg, white initials "AK", 10px bold)
+- Background: #0f0f17, border-bottom 1px solid #1e1e2e
+
+ISSUE 3 — Missing view tabs
+Below the topbar and above the main content body, add a tab row with four tabs:
+List | Board | Calendar | Integrations
+- Each tab has a small SVG icon to its left
+- Default: #5f5f7a text, no border
+- Active: #7c6ef7 text, 2px bottom border #7c6ef7
+- Font-size: 11px, font-weight 500, padding 9px 14px
+- Border-bottom of the tab row: 1px solid #252538
+- "List" is active by default
+- The Integrations tab shows a small green dot (5px, #22c55e) + "3 connected" label instead of an icon
+- Other tabs show "Coming soon" placeholder when clicked for now
+
+ISSUE 4 — Nav items running together and missing icons
+Fix the sidebar navigation:
+- Add proper gap between nav items (gap: 4px between each)
+- Add SVG icons to the left of each nav label (14x14, stroke only, stroke-width 1.8):
+  Dashboard: four small squares in a 2x2 grid
+  My Tasks: checkbox with checkmark path
+  Leaderboard: three people / group icon
+- Active item: rgba(124,110,247,0.08) background, 2px left border #7c6ef7
+- Hover: #1a1a28 background
+
+ISSUE 5 — Milestone names truncating too early
+In the sidebar milestones section, increase the name truncation width so more characters show before the ellipsis. The sidebar is 220px wide so there is room for at least 12-14 characters before truncating.
+
+ISSUE 6 — "Next up" card needs stronger styling
+The Next Up card in the sidebar should have:
+- Background: rgba(124,110,247,0.08)
+- Border: 1px solid rgba(124,110,247,0.20)
+- The "NEXT UP" label: #7c6ef7, 10px, uppercase, letter-spacing 0.08em, Geist Mono or monospace font
+- A small 5px pulsing circle dot in #7c6ef7 to the left of the "NEXT UP" label
+- The pulse animation: opacity alternates 1 → 0.4 → 1 over 2 seconds infinite
+
+ISSUE 7 — Task count shows 15 instead of 16
+Check the task query — one task may be missing. The data should have 4 milestones × 4 tasks = 16 total. Verify the query fetches all tasks for all milestones of the current project.
+
+Keep all existing functionality working — task completion, boss HP updates, progress bar, streak display. Only fix the visual and structural issues listed above.
