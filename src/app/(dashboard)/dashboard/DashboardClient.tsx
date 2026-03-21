@@ -369,9 +369,9 @@ export function DashboardClient({
           --amber: #ffb700;
           --amber-dim: rgba(255,183,0,0.10);
           --mono: "Geist Mono", monospace;
-          position: relative;
+          position: fixed;
+          inset: 0;
           display: flex;
-          height: 100vh;
           overflow: hidden;
           background: var(--bg);
           color: var(--text);
