@@ -102,13 +102,6 @@ export function Sidebar({
   return (
     <aside className="sidebar-shell">
       <div className="sidebar-top">
-        <button type="button" className="workspace-switcher">
-          <span className="workspace-avatar">{initials}</span>
-          <span className="workspace-name">{workspaceName}</span>
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path d="m4 6 4 4 4-4" />
-          </svg>
-        </button>
         <div className="next-up-wrap">
           <div className="next-up-card">
             <div className="next-up-top">

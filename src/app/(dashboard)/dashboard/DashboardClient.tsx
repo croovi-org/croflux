@@ -280,21 +280,23 @@ export function DashboardClient({
 
   return (
     <div className="shell">
-      <IconRail />
-      <Sidebar
-        workspaceName={project.name}
-        initials={getInitials(user.name)}
-        nextUpTask={nextUp?.task.title ?? null}
-        nextUpContext={nextUp?.context ?? null}
-        incompleteTaskCount={getIncompleteTaskCount(milestones)}
-        rank={rank}
-        milestones={sidebarMilestones}
-        streak={user.streak}
-      />
+      <Topbar workspaceName={project.name} currentPage="Dashboard" initials={getInitials(user.name)} />
 
-      <main className="main">
-        <Topbar workspaceName={project.name} currentPage="Dashboard" initials={getInitials(user.name)} />
-        <ViewTabs active={activeTab} onSelect={setActiveTab} />
+      <div className="body-row">
+        <IconRail />
+        <Sidebar
+          workspaceName={project.name}
+          initials={getInitials(user.name)}
+          nextUpTask={nextUp?.task.title ?? null}
+          nextUpContext={nextUp?.context ?? null}
+          incompleteTaskCount={getIncompleteTaskCount(milestones)}
+          rank={rank}
+          milestones={sidebarMilestones}
+          streak={user.streak}
+        />
+
+        <main className="main">
+          <ViewTabs active={activeTab} onSelect={setActiveTab} />
 
         {activeTab === "list" ? (
           <div className="body">
@@ -342,7 +344,8 @@ export function DashboardClient({
         ) : (
           <ComingSoon label={TABS.find((t) => t.id === activeTab)?.label ?? ""} />
         )}
-      </main>
+        </main>
+      </div>
 
       <div className={`toast ${toast ? "show" : ""}`}>
         <div className="toast-title">{toast?.title}</div>
@@ -372,10 +375,17 @@ export function DashboardClient({
           position: fixed;
           inset: 0;
           display: flex;
+          flex-direction: column;
           overflow: hidden;
           background: var(--bg);
           color: var(--text);
           font-family: Inter, sans-serif;
+        }
+        .body-row {
+          flex: 1;
+          display: flex;
+          min-height: 0;
+          overflow: hidden;
         }
         .shell::before {
           content: "";
