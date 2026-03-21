@@ -1725,8 +1725,9 @@ export function LandingPage() {
         </p>
         <div className="pricing-grid">
           <div className="price-card">
+            <div className="price-badge-tag">Limited early access</div>
             <div className="price-head">
-              <div className="price-tier">Early Access</div>
+              <div style={{ height: 14 }} aria-hidden="true" />
               <div className="price-amount">$0</div>
               <div className="price-period">Free during beta</div>
             </div>
@@ -1740,12 +1741,34 @@ export function LandingPage() {
               <li className="price-feat no">Boss milestone battles</li>
               <li className="price-feat no">Multiple projects</li>
             </ul>
+            <div
+              className="price-priority-note"
+              style={{
+                marginTop: 14,
+                color: "var(--purple2)",
+                borderColor: "rgba(169,157,254,0.28)",
+                background:
+                  "linear-gradient(180deg, rgba(169,157,254,0.12), rgba(169,157,254,0.06))",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+              }}
+            >
+              <span
+                style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: "999px",
+                  background: "var(--purple2)",
+                  boxShadow: "0 0 14px rgba(169,157,254,0.45)",
+                  flexShrink: 0,
+                }}
+              />
+              Limited to first 20 builders
+            </div>
             <Link href={waitlistHref} className="btn-plan-ghost">
               Get early access →
             </Link>
           </div>
           <div className="price-card featured">
-            <div className="price-badge-tag">Limited early access</div>
             <div className="price-head price-head-featured">
               <div
                 className="price-amount price-amount-featured"
@@ -1756,16 +1779,7 @@ export function LandingPage() {
               <div className="price-period">Planned pricing after launch</div>
             </div>
             <div className="price-priority-note">
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "999px",
-                  background: "var(--purple2)",
-                  flexShrink: 0,
-                }}
-              />
-              First 20 builders get priority access
+              Access opens after early builder spots are filled.
             </div>
             <ul className="price-feats">
               <li className="price-feat">Unlimited projects</li>
