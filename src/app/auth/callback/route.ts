@@ -5,6 +5,12 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
 
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") ?? "https";
+  const publicOrigin = forwardedHost
+    ? `${forwardedProto}://${forwardedHost}`
+    : origin;
+
   if (code) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
@@ -16,9 +22,9 @@ export async function GET(request: Request) {
         name: data.user.user_metadata?.full_name || "",
       });
 
-      return NextResponse.redirect(`${origin}/onboarding`);
+      return NextResponse.redirect(`${publicOrigin}/onboarding`);
     }
   }
 
-  return NextResponse.redirect(`${origin}/login`);
+  return NextResponse.redirect(`${publicOrigin}/login`);
 }
