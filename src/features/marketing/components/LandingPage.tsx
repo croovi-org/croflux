@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Logo } from "@/components/shared/logo";
 
@@ -150,6 +151,7 @@ const howWorkflows = [
 ] as const;
 
 export function LandingPage() {
+  const router = useRouter();
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [themeReady, setThemeReady] = useState(false);
   const [taskCount, setTaskCount] = useState(1284);
@@ -188,6 +190,31 @@ export function LandingPage() {
       link.href = href;
     });
   };
+
+  useEffect(() => {
+    const search = new URLSearchParams(window.location.search);
+    const hash = window.location.hash.startsWith("#")
+      ? window.location.hash.slice(1)
+      : window.location.hash;
+    const hashParams = new URLSearchParams(hash);
+
+    if (search.has("code")) {
+      router.replace(`/auth/callback?${search.toString()}`);
+      return;
+    }
+
+    if (
+      hashParams.get("type") === "recovery" ||
+      hashParams.has("access_token") ||
+      search.has("error") ||
+      search.has("error_code")
+    ) {
+      const nextQuery = search.toString();
+      const nextHash = hash ? `#${hash}` : "";
+      router.replace(`/reset-password${nextQuery ? `?${nextQuery}` : ""}${nextHash}`);
+      return;
+    }
+  }, [router]);
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
