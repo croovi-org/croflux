@@ -21,33 +21,41 @@ type SidebarProps = {
   streak: number;
 };
 
-function DashboardNavIcon() {
+function DashboardNavIcon({ active }: { active?: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="nav-icon">
-      <rect x="4" y="4" width="6" height="6" rx="1.2" fill="none" />
-      <rect x="14" y="4" width="6" height="6" rx="1.2" fill="none" />
-      <rect x="4" y="14" width="6" height="6" rx="1.2" fill="none" />
-      <rect x="14" y="14" width="6" height="6" rx="1.2" fill="none" />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke={active ? "#7c6ef7" : "#5f5f7a"}
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+      style={{ flexShrink: 0 }}>
+      <rect x="4" y="4" width="6" height="6" rx="1.2" />
+      <rect x="14" y="4" width="6" height="6" rx="1.2" />
+      <rect x="4" y="14" width="6" height="6" rx="1.2" />
+      <rect x="14" y="14" width="6" height="6" rx="1.2" />
     </svg>
   );
 }
 
-function TasksNavIcon() {
+function TasksNavIcon({ active }: { active?: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="nav-icon">
-      <rect x="5" y="5" width="14" height="14" rx="3" fill="none" />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke={active ? "#7c6ef7" : "#5f5f7a"}
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+      style={{ flexShrink: 0 }}>
+      <rect x="5" y="5" width="14" height="14" rx="3" />
       <path d="m8.5 12 2.2 2.2 4.8-5.2" />
     </svg>
   );
 }
 
-function LeaderboardNavIcon() {
+function LeaderboardNavIcon({ active }: { active?: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="nav-icon">
-      <path d="M7.5 11.2a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4Z" />
-      <path d="M16.6 10.3a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z" />
-      <path d="M12.6 18.8a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" />
-      <path d="M3.9 18.8a4.2 4.2 0 0 1 7.2-2.9M19.9 18.8a4 4 0 0 0-4.7-3.9" />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke={active ? "#7c6ef7" : "#5f5f7a"}
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+      style={{ flexShrink: 0 }}>
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
     </svg>
   );
 }
@@ -130,7 +138,7 @@ export function Sidebar({
               href={href === "/dashboard" ? "/dashboard" : "#"}
               className={`nav-item ${active ? "active" : ""}`}
             >
-              {NavIcon ? <NavIcon /> : null}
+              {NavIcon ? <NavIcon active={active} /> : null}
               <span className="nav-label">{label}</span>
               {badge ? (
                 <span
