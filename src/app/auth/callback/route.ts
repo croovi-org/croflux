@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const next = searchParams.get("next");
+  const type = searchParams.get("type");
 
   const forwardedHost = request.headers.get("x-forwarded-host");
   const forwardedProto = request.headers.get("x-forwarded-proto") ?? "https";
@@ -16,6 +18,10 @@ export async function GET(request: Request) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.user) {
+      if (type === "recovery" || next === "/reset-password") {
+        return NextResponse.redirect(`${publicOrigin}/reset-password`);
+      }
+
       await supabase.from("users").upsert({
         id: data.user.id,
         email: data.user.email,
@@ -31,6 +37,16 @@ export async function GET(request: Request) {
 
       return NextResponse.redirect(
         `${publicOrigin}${project ? "/dashboard" : "/onboarding"}`,
+      );
+    }
+
+    if (next === "/reset-password" && error) {
+      const params = new URLSearchParams({
+        error_description: error.message,
+      });
+
+      return NextResponse.redirect(
+        `${publicOrigin}/reset-password?${params.toString()}`,
       );
     }
   }
