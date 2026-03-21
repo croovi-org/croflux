@@ -101,38 +101,38 @@ export function IconRail() {
 
       <style jsx>{`
         .rail-shell {
-          width: 44px;
+          width: 52px;
           height: 100vh;
-          background: var(--bg3);
-          border-right: 1px solid var(--border);
+          background: #13131e;
+          border-right: 1px solid #1e1e2e;
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 8px 0 10px;
+          padding: 10px 0 10px;
           position: relative;
           flex-shrink: 0;
         }
         .rail-logo {
           width: 28px;
           height: 28px;
-          border-radius: 8px;
-          background: var(--bg4);
-          border: 1px solid var(--border2);
-          color: var(--accent);
+          border-radius: 9px;
+          background: #7c6ef7;
+          color: white;
           display: grid;
           place-items: center;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 700;
           font-family: Inter, sans-serif;
+          flex-shrink: 0;
         }
         .rail-spacer {
-          height: 14px;
+          height: 16px;
         }
         .rail-nav,
         .rail-bottom {
           display: flex;
           flex-direction: column;
-          gap: 9px;
+          gap: 4px;
           width: 100%;
           align-items: center;
         }
@@ -140,15 +140,17 @@ export function IconRail() {
           margin-top: auto;
         }
         .rail-btn {
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
+          width: 36px;
+          height: 36px;
+          border-radius: 9px;
           display: grid;
           place-items: center;
-          color: var(--text3);
+          color: #5f5f7a;
           position: relative;
-          border: 1px solid transparent;
-          transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+          border: none;
+          background: transparent;
+          transition: background 0.12s ease, color 0.12s ease;
+          cursor: pointer;
         }
         .rail-btn :global(svg) {
           width: 17px;
@@ -160,14 +162,12 @@ export function IconRail() {
           fill: none;
         }
         .rail-btn:hover {
-          background: var(--bg4);
-          color: var(--text2);
+          background: #1a1a28;
+          color: #9898b8;
         }
         .rail-btn.active {
-          background: var(--accent-dim);
-          color: var(--accent);
-          border-color: rgba(124, 110, 247, 0.22);
-          box-shadow: inset 0 0 0 1px rgba(124, 110, 247, 0.12);
+          background: rgba(124, 110, 247, 0.08);
+          color: #7c6ef7;
         }
         .rail-active-line {
           position: absolute;
@@ -179,15 +179,15 @@ export function IconRail() {
           background: transparent;
         }
         .rail-btn.active .rail-active-line {
-          background: var(--accent);
+          background: #7c6ef7;
         }
         .rail-tooltip {
           position: absolute;
           left: calc(100% + 10px);
           top: 50%;
           transform: translateY(-50%);
-          background: var(--bg4);
-          border: 1px solid var(--border2);
+          background: #1a1a28;
+          border: 1px solid #252538;
           border-radius: 6px;
           padding: 4px 10px;
           font-size: 11px;

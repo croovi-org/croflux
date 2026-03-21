@@ -79,6 +79,119 @@ function getNextUpTask(milestones: MilestoneWithTasks[]) {
   };
 }
 
+function ViewTabs() {
+  const tabs = [
+    { id: "list", label: "List", active: true },
+    { id: "board", label: "Board", active: false },
+    { id: "calendar", label: "Calendar", active: false },
+    { id: "integrations", label: "Integrations", active: false, connected: 3 },
+  ];
+
+  return (
+    <div className="view-tabs-shell">
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          type="button"
+          className={`view-tab ${tab.active ? "active" : ""}`}
+        >
+          {tab.id === "integrations" ? (
+            <span className="integrations-dot" />
+          ) : (
+            <TabIcon id={tab.id} />
+          )}
+          <span>{tab.label}</span>
+          {tab.id === "integrations" && tab.connected ? (
+            <span className="integrations-count">{tab.connected} connected</span>
+          ) : null}
+        </button>
+      ))}
+      <style jsx>{`
+        .view-tabs-shell {
+          display: flex;
+          align-items: stretch;
+          border-bottom: 1px solid #252538;
+          background: var(--bg2);
+          flex-shrink: 0;
+          padding: 0 6px;
+        }
+        .view-tab {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 9px 14px;
+          font-size: 11px;
+          font-weight: 500;
+          color: #5f5f7a;
+          background: transparent;
+          border: none;
+          border-bottom: 2px solid transparent;
+          margin-bottom: -1px;
+          cursor: pointer;
+          transition: color 0.12s ease, border-color 0.12s ease;
+          white-space: nowrap;
+        }
+        .view-tab:hover {
+          color: #9898b8;
+        }
+        .view-tab.active {
+          color: #7c6ef7;
+          border-bottom-color: #7c6ef7;
+        }
+        .view-tab :global(svg) {
+          width: 13px;
+          height: 13px;
+          stroke: currentColor;
+          stroke-width: 1.8;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          fill: none;
+          flex-shrink: 0;
+        }
+        .integrations-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 999px;
+          background: #22c55e;
+          flex-shrink: 0;
+        }
+        .integrations-count {
+          font-size: 10px;
+          color: #22c55e;
+          font-family: "Geist Mono", monospace;
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function TabIcon({ id }: { id: string }) {
+  if (id === "list") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+      </svg>
+    );
+  }
+  if (id === "board") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="18" rx="1.5" fill="none" />
+        <rect x="14" y="3" width="7" height="11" rx="1.5" fill="none" />
+      </svg>
+    );
+  }
+  if (id === "calendar") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4" y="5" width="16" height="15" rx="2.5" fill="none" />
+        <path d="M8 3.8v3.4M16 3.8v3.4M4 9.5h16" />
+      </svg>
+    );
+  }
+  return null;
+}
+
 function getIncompleteTaskCount(milestones: MilestoneWithTasks[]) {
   return milestones.reduce(
     (count, milestone) => count + milestone.tasks.filter((task) => !task.completed).length,
@@ -257,6 +370,7 @@ export function DashboardClient({
           currentPage="Dashboard"
           initials={getInitials(user.name)}
         />
+        <ViewTabs />
         <div className="dashboard-body">
           <div className="dashboard-header">
             <div className="dashboard-greeting">{greeting}</div>
