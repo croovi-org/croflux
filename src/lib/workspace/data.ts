@@ -1,0 +1,158 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import type { Milestone, Project, Task, User } from "@/types";
+
+export type MilestoneWithTasks = Milestone & {
+  tasks: Task[];
+};
+
+type MilestoneRow = Milestone & {
+  tasks?: Task[];
+};
+
+export type WorkspaceData = {
+  user: User;
+  project: Project;
+  milestones: MilestoneWithTasks[];
+  rank: number | null;
+};
+
+function normalizeMilestones(rows: MilestoneRow[]) {
+  return rows
+    .map((milestone) => ({
+      ...milestone,
+      tasks: [...(milestone.tasks ?? [])].sort((a, b) =>
+        a.created_at.localeCompare(b.created_at),
+      ),
+    }))
+    .sort((a, b) => a.order_index - b.order_index);
+}
+
+export function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  return parts.slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "AS";
+}
+
+export function getMilestoneProgress(milestone: MilestoneWithTasks) {
+  if (milestone.tasks.length === 0) return 0;
+  return Math.round(
+    (milestone.tasks.filter((task) => task.completed).length / milestone.tasks.length) * 100,
+  );
+}
+
+export function getBossHp(milestone: MilestoneWithTasks) {
+  if (milestone.tasks.length === 0) return 100;
+  return Math.round(
+    (milestone.tasks.filter((task) => !task.completed).length / milestone.tasks.length) * 100,
+  );
+}
+
+export function getActiveMilestoneIndex(milestones: MilestoneWithTasks[]) {
+  const index = milestones.findIndex(
+    (milestone) =>
+      milestone.tasks.length === 0 || milestone.tasks.some((task) => !task.completed),
+  );
+
+  return index === -1 ? 0 : index;
+}
+
+export function getSidebarMilestones(milestones: MilestoneWithTasks[]) {
+  const activeMilestoneIndex = getActiveMilestoneIndex(milestones);
+
+  return milestones.map((milestone, index) => ({
+    id: milestone.id,
+    title: milestone.title,
+    progress: milestone.is_boss
+      ? 100 - getBossHp(milestone)
+      : getMilestoneProgress(milestone),
+    state:
+      index < activeMilestoneIndex
+        ? ("done" as const)
+        : index === activeMilestoneIndex
+          ? ("active" as const)
+          : ("locked" as const),
+  }));
+}
+
+export function getNextUpTask(milestones: MilestoneWithTasks[]) {
+  const activeMilestone = milestones[getActiveMilestoneIndex(milestones)];
+  if (!activeMilestone) return null;
+
+  const task = activeMilestone.tasks.find((item) => !item.completed);
+  if (!task) return null;
+
+  const taskIndex = activeMilestone.tasks.findIndex((item) => item.id === task.id);
+
+  return {
+    task,
+    context: `${activeMilestone.title} · task ${taskIndex + 1} of ${activeMilestone.tasks.length}`,
+  };
+}
+
+export function getIncompleteTaskCount(milestones: MilestoneWithTasks[]) {
+  return milestones.reduce(
+    (count, milestone) => count + milestone.tasks.filter((task) => !task.completed).length,
+    0,
+  );
+}
+
+export async function getWorkspaceData() {
+  const supabase = await createClient();
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
+
+  if (!authUser) {
+    redirect("/login");
+  }
+
+  const [{ data: projectData }, { data: profileData }] = await Promise.all([
+    supabase
+      .from("projects")
+      .select("*")
+      .eq("user_id", authUser.id)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle(),
+    supabase.from("users").select("*").eq("id", authUser.id).maybeSingle(),
+  ]);
+
+  const project = projectData as Project | null;
+  const profile = profileData as User | null;
+
+  if (!project) {
+    redirect("/onboarding");
+  }
+
+  const { data: milestoneRows } = await supabase
+    .from("milestones")
+    .select("*, tasks(*)")
+    .eq("project_id", project.id)
+    .order("order_index", { ascending: true });
+
+  const milestones = normalizeMilestones((milestoneRows ?? []) as MilestoneRow[]);
+
+  const user: User = profile ?? {
+    id: authUser.id,
+    email: authUser.email ?? "",
+    name:
+      typeof authUser.user_metadata?.full_name === "string"
+        ? authUser.user_metadata.full_name
+        : (authUser.email?.split("@")[0] ?? "Builder"),
+    weekly_tasks_completed: 0,
+    streak: 0,
+    created_at: new Date().toISOString(),
+  };
+
+  const rank =
+    user.weekly_tasks_completed > 0
+      ? Math.max(1, 18 - user.weekly_tasks_completed)
+      : null;
+
+  return {
+    user,
+    project,
+    milestones,
+    rank,
+  } satisfies WorkspaceData;
+}

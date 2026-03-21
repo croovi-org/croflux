@@ -21,51 +21,6 @@ type SidebarProps = {
   streak: number;
 };
 
-function DashboardNavIcon({ active }: { active?: boolean }) {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke={active ? "#7c6ef7" : "#5f5f7a"}
-      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
-      style={{ flexShrink: 0 }}>
-      <rect x="4" y="4" width="6" height="6" rx="1.2" />
-      <rect x="14" y="4" width="6" height="6" rx="1.2" />
-      <rect x="4" y="14" width="6" height="6" rx="1.2" />
-      <rect x="14" y="14" width="6" height="6" rx="1.2" />
-    </svg>
-  );
-}
-
-function TasksNavIcon({ active }: { active?: boolean }) {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke={active ? "#7c6ef7" : "#5f5f7a"}
-      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
-      style={{ flexShrink: 0 }}>
-      <rect x="5" y="5" width="14" height="14" rx="3" />
-      <path d="m8.5 12 2.2 2.2 4.8-5.2" />
-    </svg>
-  );
-}
-
-function LeaderboardNavIcon({ active }: { active?: boolean }) {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke={active ? "#7c6ef7" : "#5f5f7a"}
-      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
-      style={{ flexShrink: 0 }}>
-      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-    </svg>
-  );
-}
-
-const navConfig = [
-  { href: "/dashboard", label: "Dashboard", Icon: DashboardNavIcon },
-  { href: "/my-tasks", label: "My Tasks", Icon: TasksNavIcon },
-  { href: "/leaderboard", label: "Leaderboard", Icon: LeaderboardNavIcon },
-];
-
 export function Sidebar({
   workspaceName,
   initials,
@@ -77,6 +32,8 @@ export function Sidebar({
   streak,
 }: SidebarProps) {
   const pathname = usePathname();
+  const normalizedPathname =
+    pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
 
   const navItems = [
     {
@@ -126,19 +83,15 @@ export function Sidebar({
       <div className="sidebar-nav">
         {navItems.map(({ href, label, badge, badgeTone }) => {
           const active =
-            href === "/dashboard"
-              ? pathname === "/dashboard"
-              : pathname.startsWith(href);
-
-          const NavIcon = navConfig.find((n) => n.href === href)?.Icon;
+            normalizedPathname === href ||
+            normalizedPathname.startsWith(`${href}/`);
 
           return (
             <Link
               key={label}
-              href={href === "/dashboard" ? "/dashboard" : "#"}
+              href={href}
               className={`nav-item ${active ? "active" : ""}`}
             >
-              {NavIcon ? <NavIcon active={active} /> : null}
               <span className="nav-label">{label}</span>
               {badge ? (
                 <span
@@ -297,7 +250,7 @@ export function Sidebar({
           font-family: "Geist Mono", monospace;
         }
         .sidebar-nav {
-          padding: 8px 8px 6px;
+          padding: 10px 6px 6px;
           flex: 1;
           overflow-y: auto;
           display: flex;
@@ -308,66 +261,57 @@ export function Sidebar({
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 7px 10px;
-          border-radius: 7px;
+          padding: 0 10px;
+          border-radius: 6px;
           color: var(--text2);
           position: relative;
-          transition: background 0.12s ease;
-          margin-bottom: 4px;
+          transition: background 0.12s ease, color 0.12s ease, opacity 0.12s ease;
+          margin-bottom: 6px;
+          min-height: 28px;
         }
         .nav-item:last-of-type {
           margin-bottom: 0;
         }
         .nav-item:hover {
-          background: #1a1a28;
+          color: var(--text);
         }
         .nav-item.active {
-          background: var(--accent-dim);
+          background: #26213f;
           color: var(--text);
-          box-shadow: inset 0 0 0 1px rgba(124, 110, 247, 0.12);
         }
         .nav-item.active::before {
           content: "";
           position: absolute;
           left: 0;
-          top: 7px;
-          bottom: 7px;
+          top: 4px;
+          bottom: 4px;
           width: 2px;
           border-radius: 0 999px 999px 0;
           background: var(--accent);
         }
-        .nav-item :global(.nav-icon) {
-          width: 14px;
-          height: 14px;
-          stroke: currentColor;
-          stroke-width: 1.8;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          fill: none;
-          flex-shrink: 0;
-        }
         .nav-label {
           font-size: 12px;
+          font-weight: 400;
           flex: 1;
+          line-height: 1;
         }
         .nav-badge {
           font-size: 9px;
-          padding: 1px 6px;
-          border-radius: 10px;
-          background: var(--bg5);
-          color: var(--text3);
-          border: 1px solid var(--border2);
+          padding: 2px 6px;
+          border-radius: 6px;
+          background: #2a2a34;
+          color: #84849b;
+          border: 0;
           font-family: "Geist Mono", monospace;
+          line-height: 1.2;
         }
         .nav-badge.active {
-          background: var(--accent-dim);
-          color: var(--accent);
-          border-color: rgba(124, 110, 247, 0.2);
+          background: #3b334d;
+          color: #8f80ff;
         }
         .nav-badge.amber {
-          color: var(--amber);
-          border-color: rgba(255, 183, 0, 0.15);
-          background: var(--amber-dim);
+          color: #f2b42d;
+          background: #3a3221;
         }
         .milestones-label {
           padding: 15px 9px 4px;

@@ -76,11 +76,13 @@ export function IconRail() {
             href === "/dashboard"
               ? pathname === "/dashboard"
               : pathname.startsWith(href);
+          const target =
+            href === "/dashboard" || href === "/leaderboard" ? href : "#";
 
           return (
             <Link
               key={href}
-              href={href === "/dashboard" ? "/dashboard" : "#"}
+              href={target}
               className={`rail-btn ${active ? "active" : ""}`}
               aria-label={label}
             >
