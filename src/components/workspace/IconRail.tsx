@@ -70,7 +70,7 @@ export function IconRail() {
 
       <div className="rail-spacer" />
 
-      <nav className="rail-nav">
+      <div className="rail-nav">
         {items.map(({ href, label, icon: Icon }) => {
           const active =
             href === "/dashboard"
@@ -90,7 +90,7 @@ export function IconRail() {
             </Link>
           );
         })}
-      </nav>
+      </div>
 
       <div className="rail-bottom">
         <button type="button" className="rail-btn" aria-label="Settings">
