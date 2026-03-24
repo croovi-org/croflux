@@ -10,7 +10,7 @@ type Badge =
 
 type BossMilestoneProps = {
   milestone: Milestone & { tasks: Task[] };
-  hp: number;
+  progress: number;
   onTaskComplete: (milestoneId: string, taskId: string) => void;
   getTaskBadge: (taskIndex: number) => Badge;
 };
@@ -25,11 +25,11 @@ function ShieldIcon() {
 
 export function BossMilestone({
   milestone,
-  hp,
+  progress,
   onTaskComplete,
   getTaskBadge,
 }: BossMilestoneProps) {
-  const defeated = hp === 0;
+  const defeated = progress === 100;
 
   return (
     <section className="boss-shell">
@@ -44,12 +44,12 @@ export function BossMilestone({
       <div className="boss-hp">
         <div className="boss-hp-top">
           <span>{defeated ? "DEFEATED" : "Boss health"}</span>
-          <span>{hp}%</span>
+          <span>{progress}%</span>
         </div>
-        <div className="boss-hp-bar">
+        <div className="boss-progress-bar">
           <span
-            className={`boss-hp-fill ${defeated ? "defeated" : ""}`}
-            style={{ width: `${hp}%` }}
+            className={`boss-progress-fill ${defeated ? "defeated" : ""}`}
+            style={{ width: `${progress}%` }}
           />
         </div>
       </div>
@@ -130,19 +130,19 @@ export function BossMilestone({
           color: ${""}var(--amber);
           font-family: var(--mono);
         }
-        .boss-hp-bar {
+        .boss-progress-bar {
           height: 4px;
           overflow: hidden;
           border-radius: 2px;
           background: var(--bg4);
         }
-        .boss-hp-fill {
+        .boss-progress-fill {
           display: block;
           height: 100%;
           background: var(--amber);
           transition: width 0.5s ease;
         }
-        .boss-hp-fill.defeated {
+        .boss-progress-fill.defeated {
           background: var(--green);
         }
         .boss-tasks {

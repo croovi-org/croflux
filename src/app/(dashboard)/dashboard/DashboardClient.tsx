@@ -202,7 +202,9 @@ export function DashboardClient({
   const overallProgress = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
   const currentMilestoneProgress = activeMilestone
-    ? activeMilestone.is_boss ? getBossHp(activeMilestone) : getMilestoneProgress(activeMilestone)
+    ? activeMilestone.is_boss
+      ? 100 - getBossHp(activeMilestone)
+      : getMilestoneProgress(activeMilestone)
     : 0;
 
   const sidebarMilestones = useMemo(() =>
@@ -252,7 +254,11 @@ export function DashboardClient({
         : m,
     );
     const updActive = snapshot[getActiveMilestoneIndex(snapshot)];
-    const updHp = updActive ? getBossHp(updActive) : 0;
+    const updBossProgress = updActive
+      ? updActive.is_boss
+        ? 100 - getBossHp(updActive)
+        : getMilestoneProgress(updActive)
+      : 0;
     const updTotal = snapshot.reduce((n, m) => n + m.tasks.length, 0);
     const updDone = snapshot.reduce((n, m) => n + m.tasks.filter((t) => t.completed).length, 0);
     const updPct = updTotal === 0 ? 0 : Math.round((updDone / updTotal) * 100);
@@ -261,7 +267,7 @@ export function DashboardClient({
       const msgs: ToastState[] = [
         { title: "Momentum", body: `You're ${updPct}% closer to launch.` },
         { title: "Shipping it", body: "Keep the streak alive." },
-        { title: "Progress", body: `Boss HP at ${updHp}%. Almost there.` },
+        { title: "Progress", body: `Boss progress at ${updBossProgress}%. Keep going.` },
       ];
       nextToast = msgs[Math.floor(Math.random() * msgs.length)];
     }
@@ -313,7 +319,7 @@ export function DashboardClient({
               currentMilestoneCopy={
                 activeMilestone
                   ? activeMilestone.is_boss
-                    ? `Boss milestone · ${currentMilestoneProgress}% HP`
+                    ? `Boss milestone · ${currentMilestoneProgress}% complete`
                     : `Milestone · ${currentMilestoneProgress}% complete`
                   : "No active milestone"
               }
@@ -331,7 +337,7 @@ export function DashboardClient({
             {activeMilestone && (
               <BossMilestone
                 milestone={activeMilestone}
-                hp={getBossHp(activeMilestone)}
+                progress={100 - getBossHp(activeMilestone)}
                 onTaskComplete={handleTaskComplete}
                 getTaskBadge={() => null}
               />
