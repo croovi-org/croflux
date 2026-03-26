@@ -68,8 +68,6 @@ export function IconRail() {
         C
       </div>
 
-      <div className="rail-spacer" />
-
       <div className="rail-nav">
         {items.map(({ href, label, icon: Icon }) => {
           const active =
@@ -103,51 +101,56 @@ export function IconRail() {
 
       <style jsx>{`
         .rail-shell {
-          width: 52px;
-          height: 100vh;
+          width: 64px;
+          min-width: 64px;
+          max-width: 64px;
+          height: 100%;
+          min-height: 0;
           background: #13131e;
-          border-right: 1px solid #1e1e2e;
+          border-right: 1px solid rgba(255, 255, 255, 0.05);
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 10px 0 10px;
+          padding-top: 14px;
           position: relative;
           flex-shrink: 0;
         }
         .rail-logo {
-          width: 28px;
-          height: 28px;
-          border-radius: 9px;
-          background: #7c6ef7;
-          color: white;
-          display: grid;
-          place-items: center;
-          font-size: 13px;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          background: rgba(120, 100, 255, 0.12);
+          box-shadow: inset 0 0 0 1px rgba(120, 100, 255, 0.32);
+          color: #8d80ff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 15px;
           font-weight: 700;
           font-family: Inter, sans-serif;
           flex-shrink: 0;
-        }
-        .rail-spacer {
-          height: 16px;
+          margin-bottom: 16px;
         }
         .rail-nav,
         .rail-bottom {
           display: flex;
           flex-direction: column;
-          gap: 4px;
-          width: 100%;
           align-items: center;
+          gap: 14px;
+          width: 100%;
         }
         .rail-bottom {
           margin-top: auto;
+          padding-bottom: 12px;
         }
         .rail-btn {
-          width: 36px;
-          height: 36px;
-          border-radius: 9px;
-          display: grid;
-          place-items: center;
-          color: #5f5f7a;
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #6b6f84;
           position: relative;
           border: none;
           background: transparent;
@@ -164,19 +167,20 @@ export function IconRail() {
           fill: none;
         }
         .rail-btn:hover {
-          background: #1a1a28;
-          color: #9898b8;
+          background: rgba(255, 255, 255, 0.03);
+          color: #959ab2;
         }
         .rail-btn.active {
-          background: rgba(124, 110, 247, 0.08);
+          background: rgba(120, 100, 255, 0.14);
           color: #7c6ef7;
+          box-shadow: inset 0 0 0 1px rgba(120, 100, 255, 0.2);
         }
         .rail-active-line {
           position: absolute;
-          left: -1px;
-          top: 6px;
-          bottom: 6px;
-          width: 2.5px;
+          left: -7px;
+          top: 5px;
+          bottom: 5px;
+          width: 3px;
           border-radius: 0 999px 999px 0;
           background: transparent;
         }

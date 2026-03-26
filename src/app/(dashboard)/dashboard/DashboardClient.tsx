@@ -125,7 +125,8 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
         .vtabs {
           display: flex;
           border-bottom: 1px solid #252538;
-          padding: 0 22px;
+          padding: 6px 24px 0;
+          gap: 22px;
           flex-shrink: 0;
           background: #0f0f17;
         }
@@ -133,7 +134,7 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
           display: flex;
           align-items: center;
           gap: 6px;
-          padding: 9px 14px;
+          padding: 9px 0;
           font-size: 11px;
           font-weight: 500;
           color: #5f5f7a;
