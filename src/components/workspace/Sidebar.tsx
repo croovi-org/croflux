@@ -19,6 +19,7 @@ type SidebarProps = {
   rank: number | null;
   milestones: SidebarMilestone[];
   streak: number;
+  currentSection?: "/dashboard" | "/my-tasks" | "/leaderboard";
 };
 
 export function Sidebar({
@@ -30,6 +31,7 @@ export function Sidebar({
   rank,
   milestones,
   streak,
+  currentSection,
 }: SidebarProps) {
   const pathname = usePathname();
   const normalizedPathname =
@@ -82,22 +84,33 @@ export function Sidebar({
 
       <div className="sidebar-nav">
         {navItems.map(({ href, label, badge, badgeTone }, index) => {
-          const isExact = normalizedPathname === href;
-          const isNested = normalizedPathname.startsWith(`${href}/`);
-          const isDashboardRoot = href === "/dashboard" && normalizedPathname === "/";
-          const active = isExact || isNested || isDashboardRoot;
+          const derivedActive =
+            normalizedPathname === href ||
+            normalizedPathname.startsWith(`${href}/`) ||
+            (href === "/dashboard" && normalizedPathname === "/");
           const fallbackActive =
+            !currentSection &&
             !navItems.some((item) =>
               normalizedPathname === item.href || normalizedPathname.startsWith(`${item.href}/`),
-            ) && index === 0;
-          const isActive = active || fallbackActive;
+            ) &&
+            index === 0;
+          const isActive = currentSection ? currentSection === href : derivedActive || fallbackActive;
 
           return (
             <Link
               key={label}
               href={href}
               className={`nav-item ${isActive ? "active" : ""}`}
+              aria-current={isActive ? "page" : undefined}
+              style={
+                isActive
+                  ? { background: "rgba(124, 110, 247, 0.14)", color: "#f0f0f8" }
+                  : undefined
+              }
             >
+              {isActive ? (
+                <span className="nav-active-bar" aria-hidden="true" />
+              ) : null}
               <span className="nav-label">{label}</span>
               {badge ? (
                 <span
@@ -149,7 +162,8 @@ export function Sidebar({
       <style jsx>{`
         .sidebar-shell {
           width: 220px;
-          height: 100vh;
+          height: 100%;
+          min-height: 0;
           background: var(--bg3);
           border-right: 1px solid var(--border);
           display: flex;
@@ -256,7 +270,7 @@ export function Sidebar({
           font-family: "Geist Mono", monospace;
         }
         .sidebar-nav {
-          padding: 12px 8px 8px;
+          padding: 10px 12px 8px;
           flex: 1;
           overflow-y: auto;
           display: flex;
@@ -267,51 +281,65 @@ export function Sidebar({
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 0 11px;
+          padding: 8px 10px;
+          width: 100%;
           border-radius: 8px;
-          border: 1px solid transparent;
-          color: var(--text2);
+          border: 0;
+          color: #8f90ab;
           position: relative;
-          transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
-          margin-bottom: 18px;
-          min-height: 34px;
+          transition: background 0.12s ease, color 0.12s ease;
+          margin-bottom: 8px;
+          cursor: pointer;
+          text-decoration: none;
+          box-sizing: border-box;
         }
         .nav-item:last-of-type {
           margin-bottom: 0;
         }
         .nav-item:hover {
-          color: var(--text);
-          background: rgba(255, 255, 255, 0.02);
+          color: #c3c4de;
+          background: rgba(255, 255, 255, 0.015);
         }
         .nav-item.active {
-          background: #29234b;
-          border-color: #9386ff;
-          color: var(--text);
-          box-shadow: 0 0 0 1px rgba(147, 134, 255, 0.6), inset 0 0 0 1px rgba(147, 134, 255, 0.28);
+          background: rgba(124, 110, 247, 0.14);
+          color: #f0f0f8 !important;
+        }
+        .nav-active-bar {
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 2px;
+          height: 14px;
+          border-radius: 0 2px 2px 0;
+          background: #7c6ef7;
+          pointer-events: none;
         }
         .nav-label {
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 400;
           flex: 1;
           line-height: 1;
         }
         .nav-badge {
-          font-size: 10px;
-          padding: 3px 8px;
-          border-radius: 6px;
-          background: #2a2a34;
-          color: #84849b;
-          border: 0;
+          font-size: 9px;
+          padding: 1px 6px;
+          border-radius: 10px;
+          background: #1f1f30;
+          color: #5f5f7a;
+          border: 1px solid #252538;
           font-family: "Geist Mono", monospace;
           line-height: 1.2;
         }
         .nav-badge.active {
-          background: #4a406a;
-          color: #b4a8ff;
+          background: rgba(124, 110, 247, 0.08);
+          color: #7c6ef7;
+          border-color: rgba(124, 110, 247, 0.2);
         }
         .nav-badge.amber {
-          color: #f2b42d;
-          background: #3a3221;
+          color: #ffb700;
+          background: rgba(255, 183, 0, 0.1);
+          border-color: rgba(255, 183, 0, 0.15);
         }
         .milestones-label {
           padding: 15px 9px 4px;

@@ -299,6 +299,7 @@ export function DashboardClient({
           rank={rank}
           milestones={sidebarMilestones}
           streak={user.streak}
+          currentSection="/dashboard"
         />
 
         <main className="main">
