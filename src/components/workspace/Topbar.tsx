@@ -9,28 +9,6 @@ type TopbarProps = {
 export function Topbar({ workspaceName, currentPage, initials }: TopbarProps) {
   return (
     <header className="tb">
-      <div className="tb-left">
-        <button type="button" className="tb-ws-btn">
-          <span className="tb-avatar">{initials}</span>
-          <span className="tb-ws-name">{workspaceName}</span>
-          <svg
-            viewBox="0 0 16 16"
-            width="12"
-            height="12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="m4 6 4 4 4-4" />
-          </svg>
-        </button>
-      </div>
-
-      <div className="tb-divider" />
-
       <div className="tb-crumbs">
         <span className="tb-ws-dim">{workspaceName}</span>
         <span className="tb-sep">/</span>
@@ -76,68 +54,22 @@ export function Topbar({ workspaceName, currentPage, initials }: TopbarProps) {
 
       <style jsx>{`
         .tb {
-          height: 40px;
-          min-height: 40px;
+          height: 64px;
+          min-height: 64px;
           flex-shrink: 0;
           display: flex;
           align-items: center;
-          padding: 0 14px 0 0;
+          justify-content: space-between;
+          padding: 0 24px;
           background: #111119;
-          border-bottom: 1px solid #252538;
-        }
-        .tb-left {
-          display: flex;
-          align-items: center;
-          flex-shrink: 0;
-          width: 136px;
-          height: 40px;
-        }
-        .tb-ws-btn {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          width: 100%;
-          height: 40px;
-          padding: 0 12px;
-          background: transparent;
-          border: none;
-          color: #f0f0f8;
-          cursor: pointer;
-          font-family: Inter, sans-serif;
-          font-size: 12px;
-          font-weight: 500;
-          transition: background 0.12s ease;
-        }
-        .tb-ws-btn:hover { background: rgba(255, 255, 255, 0.02); }
-        .tb-avatar {
-          width: 20px;
-          height: 20px;
-          border-radius: 5px;
-          background: #7c6ef7;
-          color: white;
-          display: grid;
-          place-items: center;
-          font-size: 9px;
-          font-weight: 700;
-          font-family: Inter, sans-serif;
-          flex-shrink: 0;
-        }
-        .tb-ws-name {
-          color: #f0f0f8;
-          line-height: 1;
-        }
-        .tb-divider {
-          width: 1px;
-          align-self: stretch;
-          background: #252538;
-          flex-shrink: 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         .tb-crumbs {
           display: flex;
           align-items: center;
-          gap: 0;
-          height: 40px;
-          padding: 0 16px;
+          gap: 10px;
+          height: 64px;
+          padding: 0;
           min-width: 0;
         }
         .tb-ws-dim {
@@ -149,7 +81,6 @@ export function Topbar({ workspaceName, currentPage, initials }: TopbarProps) {
         .tb-sep {
           font-size: 12px;
           color: #44445a;
-          margin: 0 10px;
           line-height: 1;
         }
         .tb-page {
@@ -163,7 +94,7 @@ export function Topbar({ workspaceName, currentPage, initials }: TopbarProps) {
         .tb-right {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 12px;
         }
         .tb-search,
         .tb-add {
@@ -183,6 +114,10 @@ export function Topbar({ workspaceName, currentPage, initials }: TopbarProps) {
           background: #1a1a25;
           border: 1px solid #252538;
           color: #8f8fa8;
+          height: 36px;
+          border-radius: 8px;
+          padding-left: 12px;
+          padding-right: 12px;
         }
         .tb-search:hover { border-color: #2e2e48; color: #f0f0f8; }
         .tb-add {
