@@ -14,9 +14,8 @@ export function ProgressBar({ progress, completedTasks, totalTasks }: ProgressBa
         <span>{completedTasks} / {totalTasks} tasks</span>
       </div>
       <div className="lp-track">
-        <div className="lp-fill" style={{ width: `${progress}%` }}>
-          <span className="lp-dot" />
-        </div>
+        <div className="lp-fill" style={{ width: `${progress}%` }} />
+        <span className="lp-dot" style={{ left: `${progress}%` }} />
       </div>
 
       <style jsx>{`
@@ -42,19 +41,27 @@ export function ProgressBar({ progress, completedTasks, totalTasks }: ProgressBa
           border-radius: 3px;
           background: #7c6ef7;
           transition: width 0.5s ease;
-          overflow: visible;
         }
         .lp-dot {
           position: absolute;
-          right: -5px;
           top: 50%;
-          transform: translateY(-50%);
-          width: 10px;
-          height: 10px;
+          transform: translate(-50%, -50%);
+          margin-left: 1px;
+          z-index: 1;
+          pointer-events: none;
+          width: 12px;
+          height: 12px;
           border-radius: 50%;
           background: #7c6ef7;
-          border: 2px solid #0f0f17;
-          box-shadow: 0 0 0 3px rgba(124,110,247,0.15);
+          box-shadow: none;
+        }
+        .lp-track::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 3px;
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.01);
+          pointer-events: none;
         }
       `}</style>
     </div>
