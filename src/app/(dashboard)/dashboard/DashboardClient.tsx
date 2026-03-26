@@ -124,11 +124,11 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
       <style jsx>{`
         .vtabs {
           display: flex;
-          border-bottom: 1px solid #252538;
-          padding: 6px 24px 0;
+          padding: 0;
           gap: 22px;
+          align-items: center;
           flex-shrink: 0;
-          background: #0f0f17;
+          background: transparent;
         }
         .vtab {
           display: flex;
@@ -141,7 +141,7 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
           background: transparent;
           border: none;
           border-bottom: 2px solid transparent;
-          margin-bottom: -1px;
+          margin-bottom: 0;
           cursor: pointer;
           transition: color 0.12s, border-color 0.12s;
           white-space: nowrap;
@@ -287,8 +287,6 @@ export function DashboardClient({
 
   return (
     <div className="shell">
-      <Topbar workspaceName={project.name} currentPage="Dashboard" initials={getInitials(user.name)} />
-
       <div className="body-row">
         <IconRail />
         <Sidebar
@@ -303,56 +301,67 @@ export function DashboardClient({
           currentSection="/dashboard"
         />
 
-        <main className="main">
-          <ViewTabs active={activeTab} onSelect={setActiveTab} />
-
-        {activeTab === "list" ? (
-          <div className="body">
-            <div className="header">
-              <div className="greeting">{greeting}</div>
-              <h1>{project.name}<span className="dot">.</span></h1>
+        <div className="content-shell">
+          <div className="navbar">
+            <div className="navbar-inner">
+              <div className="navbar-top">
+                <Topbar workspaceName={project.name} currentPage="Dashboard" initials={getInitials(user.name)} />
+              </div>
+              <div className="navbar-tabs">
+                <ViewTabs active={activeTab} onSelect={setActiveTab} />
+              </div>
             </div>
-
-            <StatCards
-              overallProgress={overallProgress}
-              completedTasks={completedTasks}
-              totalTasks={totalTasks}
-              currentMilestoneName={activeMilestone?.title ?? "No milestone"}
-              currentMilestoneCopy={
-                activeMilestone
-                  ? activeMilestone.is_boss
-                    ? `Boss milestone · ${currentMilestoneProgress}% complete`
-                    : `Milestone · ${currentMilestoneProgress}% complete`
-                  : "No active milestone"
-              }
-              rank={rank}
-              topPercent={topPercent}
-            />
-
-            <ProgressBar progress={overallProgress} completedTasks={completedTasks} totalTasks={totalTasks} />
-
-            <div className="section-head">
-              <span>Active milestone</span>
-              <span>{Math.min(activeMilestoneIndex + 1, milestones.length)} of {milestones.length} unlocked</span>
-            </div>
-
-            {activeMilestone && (
-              <BossMilestone
-                milestone={activeMilestone}
-                progress={100 - getBossHp(activeMilestone)}
-                onTaskComplete={handleTaskComplete}
-                getTaskBadge={() => null}
-              />
-            )}
-
-            {lockedMilestones.map((m) => (
-              <LockedMilestone key={m.id} title={m.title} />
-            ))}
           </div>
-        ) : (
-          <ComingSoon label={TABS.find((t) => t.id === activeTab)?.label ?? ""} />
-        )}
-        </main>
+
+          <main className="main">
+          {activeTab === "list" ? (
+            <div className="body">
+              <div className="header">
+                <div className="greeting">{greeting}</div>
+                <h1>{project.name}<span className="dot">.</span></h1>
+              </div>
+
+              <StatCards
+                overallProgress={overallProgress}
+                completedTasks={completedTasks}
+                totalTasks={totalTasks}
+                currentMilestoneName={activeMilestone?.title ?? "No milestone"}
+                currentMilestoneCopy={
+                  activeMilestone
+                    ? activeMilestone.is_boss
+                      ? `Boss milestone · ${currentMilestoneProgress}% complete`
+                      : `Milestone · ${currentMilestoneProgress}% complete`
+                    : "No active milestone"
+                }
+                rank={rank}
+                topPercent={topPercent}
+              />
+
+              <ProgressBar progress={overallProgress} completedTasks={completedTasks} totalTasks={totalTasks} />
+
+              <div className="section-head">
+                <span>Active milestone</span>
+                <span>{Math.min(activeMilestoneIndex + 1, milestones.length)} of {milestones.length} unlocked</span>
+              </div>
+
+              {activeMilestone && (
+                <BossMilestone
+                  milestone={activeMilestone}
+                  progress={100 - getBossHp(activeMilestone)}
+                  onTaskComplete={handleTaskComplete}
+                  getTaskBadge={() => null}
+                />
+              )}
+
+              {lockedMilestones.map((m) => (
+                <LockedMilestone key={m.id} title={m.title} />
+              ))}
+            </div>
+          ) : (
+            <ComingSoon label={TABS.find((t) => t.id === activeTab)?.label ?? ""} />
+          )}
+          </main>
+        </div>
       </div>
 
       <div className={`toast ${toast ? "show" : ""}`}>
@@ -395,6 +404,39 @@ export function DashboardClient({
           min-height: 0;
           overflow: hidden;
         }
+        .content-shell {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          background: #0f0f17;
+          overflow: hidden;
+        }
+        .navbar {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          flex-shrink: 0;
+        }
+        .navbar-inner {
+          padding-left: 24px;
+          padding-right: 24px;
+          box-sizing: border-box;
+        }
+        .navbar-top {
+          height: 64px;
+          display: flex;
+          align-items: center;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .navbar-tabs {
+          height: 48px;
+          display: flex;
+          align-items: flex-end;
+          margin-top: -8px;
+          padding-bottom: 6px;
+        }
         .shell::before {
           content: "";
           position: absolute;
@@ -409,7 +451,6 @@ export function DashboardClient({
           min-width: 0;
           display: flex;
           flex-direction: column;
-          background: #0f0f17;
           overflow: hidden;
         }
         .body {

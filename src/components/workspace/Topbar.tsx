@@ -54,21 +54,21 @@ export function Topbar({ workspaceName, currentPage, initials }: TopbarProps) {
 
       <style jsx>{`
         .tb {
-          height: 64px;
-          min-height: 64px;
-          flex-shrink: 0;
+          width: 100%;
+          height: 100%;
+          min-height: 0;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 24px;
-          background: #111119;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          padding: 0;
+          background: transparent;
+          border-bottom: 0;
         }
         .tb-crumbs {
           display: flex;
           align-items: center;
           gap: 10px;
-          height: 64px;
+          height: 100%;
           padding: 0;
           min-width: 0;
         }
