@@ -104,13 +104,14 @@ export function Sidebar({
               aria-current={isActive ? "page" : undefined}
               style={
                 isActive
-                  ? { background: "rgba(124, 110, 247, 0.14)", color: "#f0f0f8" }
+                  ? {
+                      background: "rgba(120, 100, 255, 0.10)",
+                      color: "#f0f0f8",
+                      boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.025)",
+                    }
                   : undefined
               }
             >
-              {isActive ? (
-                <span className="nav-active-bar" aria-hidden="true" />
-              ) : null}
               <span className="nav-label">{label}</span>
               {badge ? (
                 <span
@@ -275,20 +276,21 @@ export function Sidebar({
           overflow-y: auto;
           display: flex;
           flex-direction: column;
-          gap: 0;
+          gap: 6px;
         }
         .nav-item {
           display: flex;
           align-items: center;
+          justify-content: space-between;
           gap: 8px;
-          padding: 8px 10px;
+          padding: 10px 14px;
           width: 100%;
-          border-radius: 8px;
+          border-radius: 12px;
           border: 0;
-          color: #8f90ab;
+          color: rgba(255, 255, 255, 0.65);
           position: relative;
-          transition: background 0.12s ease, color 0.12s ease;
-          margin-bottom: 8px;
+          transition: background 0.2s ease, color 0.2s ease;
+          margin-bottom: 0;
           cursor: pointer;
           text-decoration: none;
           box-sizing: border-box;
@@ -297,23 +299,31 @@ export function Sidebar({
           margin-bottom: 0;
         }
         .nav-item:hover {
-          color: #c3c4de;
-          background: rgba(255, 255, 255, 0.015);
+          background: rgba(255, 255, 255, 0.04);
+          color: rgba(255, 255, 255, 0.9);
+        }
+        .nav-item.active:hover {
+          background: rgba(120, 100, 255, 0.12);
         }
         .nav-item.active {
-          background: rgba(124, 110, 247, 0.14);
+          background: rgba(120, 100, 255, 0.1);
+          border-radius: 14px;
           color: #f0f0f8 !important;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
         }
-        .nav-active-bar {
+        .nav-item.active::before {
+          content: "";
           position: absolute;
           left: 0;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 2px;
-          height: 14px;
-          border-radius: 0 2px 2px 0;
-          background: #7c6ef7;
-          pointer-events: none;
+          top: 6px;
+          bottom: 6px;
+          width: 3px;
+          border-radius: 3px;
+          background: linear-gradient(
+            to bottom,
+            rgba(140, 120, 255, 0.9),
+            rgba(120, 100, 255, 0.6)
+          );
         }
         .nav-label {
           font-size: 12px;
@@ -322,24 +332,27 @@ export function Sidebar({
           line-height: 1;
         }
         .nav-badge {
-          font-size: 9px;
-          padding: 1px 6px;
-          border-radius: 10px;
-          background: #1f1f30;
-          color: #5f5f7a;
-          border: 1px solid #252538;
+          margin-left: auto;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 24px;
+          font-size: 12px;
+          padding: 2px 8px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.06);
+          color: rgba(255, 255, 255, 0.7);
+          border: 0;
           font-family: "Geist Mono", monospace;
           line-height: 1.2;
         }
         .nav-badge.active {
-          background: rgba(124, 110, 247, 0.08);
-          color: #7c6ef7;
-          border-color: rgba(124, 110, 247, 0.2);
+          background: rgba(255, 255, 255, 0.06);
+          color: rgba(255, 255, 255, 0.7);
         }
         .nav-badge.amber {
-          color: #ffb700;
-          background: rgba(255, 183, 0, 0.1);
-          border-color: rgba(255, 183, 0, 0.15);
+          background: rgba(255, 200, 0, 0.12);
+          color: rgba(255, 200, 0, 0.9);
         }
         .milestones-label {
           padding: 15px 9px 4px;
