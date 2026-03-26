@@ -44,6 +44,7 @@ export default async function LeaderboardPage() {
           rank={rank}
           milestones={getSidebarMilestones(milestones)}
           streak={user.streak}
+          currentSection="/leaderboard"
         />
 
         <main style={{ flex: 1, minWidth: 0, background: "#0f0f17" }}>
