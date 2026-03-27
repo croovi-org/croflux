@@ -28,6 +28,7 @@ type BoardItem = {
   sequence: number;
   dateLabel: string | null;
 };
+type BoardOverrides = Record<string, Exclude<BoardColumnId, "done">>;
 
 function getFirstName(name: string) {
   return name.trim().split(/\s+/)[0] || "Builder";
@@ -84,7 +85,10 @@ function formatBoardDate(value: string) {
   });
 }
 
-function getBoardColumns(milestones: MilestoneWithTasks[]) {
+function getBoardColumnsWithOverrides(
+  milestones: MilestoneWithTasks[],
+  overrides: BoardOverrides,
+) {
   const activeMilestoneIndex = getActiveMilestoneIndex(milestones);
   const columns: Record<BoardColumnId, BoardItem[]> = {
     todo: [],
@@ -110,14 +114,21 @@ function getBoardColumns(milestones: MilestoneWithTasks[]) {
 
       if (task.completed) {
         columns.done.push(item);
-      } else if (
-        milestoneIndex === activeMilestoneIndex &&
-        inProgressAssigned < 2
-      ) {
-        columns.inprogress.push(item);
-        inProgressAssigned += 1;
       } else {
-        columns.todo.push(item);
+        const override = overrides[task.id];
+        if (override === "inprogress") {
+          columns.inprogress.push(item);
+        } else if (override === "todo") {
+          columns.todo.push(item);
+        } else if (
+          milestoneIndex === activeMilestoneIndex &&
+          inProgressAssigned < 2
+        ) {
+          columns.inprogress.push(item);
+          inProgressAssigned += 1;
+        } else {
+          columns.todo.push(item);
+        }
       }
 
       sequence += 1;
@@ -244,8 +255,48 @@ function ComingSoon({ label }: { label: string }) {
   );
 }
 
-function BoardView({ milestones }: { milestones: MilestoneWithTasks[] }) {
-  const columns = useMemo(() => getBoardColumns(milestones), [milestones]);
+function BoardView({
+  milestones,
+  projectId,
+  onMoveTask,
+}: {
+  milestones: MilestoneWithTasks[];
+  projectId: string;
+  onMoveTask: (taskId: string, destination: BoardColumnId) => Promise<void>;
+}) {
+  const storageKey = `croflux-board:${projectId}`;
+  const [boardOverrides, setBoardOverrides] = useState<BoardOverrides>(() => {
+    if (typeof window === "undefined") return {};
+    try {
+      const raw = window.localStorage.getItem(storageKey);
+      return raw ? (JSON.parse(raw) as BoardOverrides) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [activeDropColumn, setActiveDropColumn] = useState<BoardColumnId | null>(null);
+
+  const sanitizedOverrides = useMemo(() => {
+    const incompleteTaskIds = new Set(
+      milestones.flatMap((milestone) =>
+        milestone.tasks.filter((task) => !task.completed).map((task) => task.id),
+      ),
+    );
+
+    return Object.fromEntries(
+      Object.entries(boardOverrides).filter(([taskId]) => incompleteTaskIds.has(taskId)),
+    ) as BoardOverrides;
+  }, [boardOverrides, milestones]);
+
+  useEffect(() => {
+    window.localStorage.setItem(storageKey, JSON.stringify(sanitizedOverrides));
+  }, [sanitizedOverrides, storageKey]);
+
+  const columns = useMemo(
+    () => getBoardColumnsWithOverrides(milestones, sanitizedOverrides),
+    [milestones, sanitizedOverrides],
+  );
   const columnMeta: {
     id: BoardColumnId;
     label: string;
@@ -256,10 +307,50 @@ function BoardView({ milestones }: { milestones: MilestoneWithTasks[] }) {
     { id: "done", label: "DONE", tone: "success" },
   ];
 
+  const persistOverrides = (next: BoardOverrides) => {
+    setBoardOverrides(next);
+    window.localStorage.setItem(storageKey, JSON.stringify(next));
+  };
+
+  const handleDrop = async (destination: BoardColumnId) => {
+    if (!draggedTaskId) return;
+
+    const nextOverrides = { ...sanitizedOverrides };
+    if (destination === "done") {
+      delete nextOverrides[draggedTaskId];
+    } else {
+      nextOverrides[draggedTaskId] = destination;
+    }
+
+    persistOverrides(nextOverrides);
+    setActiveDropColumn(null);
+    const taskId = draggedTaskId;
+    setDraggedTaskId(null);
+    await onMoveTask(taskId, destination);
+  };
+
   return (
     <div className="board-view">
       {columnMeta.map((column) => (
-        <section key={column.id} className={`board-column ${column.tone}`}>
+        <section
+          key={column.id}
+          className={`board-column ${column.tone} ${
+            activeDropColumn === column.id ? "drop-active" : ""
+          }`}
+          onDragOver={(event) => {
+            event.preventDefault();
+            setActiveDropColumn(column.id);
+          }}
+          onDragLeave={() => {
+            setActiveDropColumn((current) =>
+              current === column.id ? null : current,
+            );
+          }}
+          onDrop={async (event) => {
+            event.preventDefault();
+            await handleDrop(column.id);
+          }}
+        >
           <div className="board-column-head">
             <span className="board-column-label">{column.label}</span>
             <span className="board-column-count">{columns[column.id].length}</span>
@@ -267,7 +358,20 @@ function BoardView({ milestones }: { milestones: MilestoneWithTasks[] }) {
 
           <div className="board-stack">
             {columns[column.id].map((item) => (
-              <article key={item.id} className="board-card">
+              <article
+                key={item.id}
+                className="board-card"
+                draggable
+                onDragStart={(event) => {
+                  event.dataTransfer.effectAllowed = "move";
+                  event.dataTransfer.setData("text/plain", item.id);
+                  setDraggedTaskId(item.id);
+                }}
+                onDragEnd={() => {
+                  setDraggedTaskId(null);
+                  setActiveDropColumn(null);
+                }}
+              >
                 <h3>{item.title}</h3>
                 <div className="board-meta">
                   <span className="board-chip milestone">{item.milestoneTitle}</span>
@@ -296,7 +400,8 @@ function BoardView({ milestones }: { milestones: MilestoneWithTasks[] }) {
         }
         .board-column {
           min-width: 0;
-          min-height: 100%;
+          min-height: 0;
+          height: 100%;
           border-radius: 18px;
           border: 1px solid rgba(255, 255, 255, 0.08);
           background: linear-gradient(180deg, rgba(29, 29, 39, 0.96) 0%, rgba(27, 27, 37, 0.98) 100%);
@@ -306,6 +411,17 @@ function BoardView({ milestones }: { milestones: MilestoneWithTasks[] }) {
           padding: 22px 20px 20px;
           display: flex;
           flex-direction: column;
+          transition:
+            border-color 0.16s ease,
+            box-shadow 0.16s ease,
+            background 0.16s ease;
+        }
+        .board-column.drop-active {
+          border-color: rgba(124, 110, 247, 0.22);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.02),
+            0 18px 40px rgba(0, 0, 0, 0.16),
+            0 0 0 1px rgba(124, 110, 247, 0.12);
         }
         .board-column-head {
           display: flex;
@@ -341,9 +457,13 @@ function BoardView({ milestones }: { milestones: MilestoneWithTasks[] }) {
           font-family: var(--mono);
         }
         .board-stack {
+          flex: 1;
+          min-height: 0;
           display: flex;
           flex-direction: column;
           gap: 16px;
+          overflow-y: auto;
+          padding-right: 4px;
         }
         .board-card {
           border-radius: 14px;
@@ -351,10 +471,14 @@ function BoardView({ milestones }: { milestones: MilestoneWithTasks[] }) {
           background: linear-gradient(180deg, rgba(34, 34, 46, 0.96) 0%, rgba(31, 31, 42, 0.98) 100%);
           padding: 18px 20px 16px;
           min-height: 110px;
+          cursor: grab;
           transition:
             transform 0.16s ease,
             border-color 0.16s ease,
             box-shadow 0.16s ease;
+        }
+        .board-card:active {
+          cursor: grabbing;
         }
         .board-card:hover {
           transform: translateY(-2px);
@@ -518,6 +642,25 @@ export function DashboardClient({
     }
   };
 
+  const handleBoardMove = async (taskId: string, destination: BoardColumnId) => {
+    const shouldComplete = destination === "done";
+
+    setMilestones((current) =>
+      current.map((milestone) => ({
+        ...milestone,
+        tasks: milestone.tasks.map((task) =>
+          task.id === taskId ? { ...task, completed: shouldComplete } : task,
+        ),
+      })),
+    );
+
+    const supabase = createClient();
+    await supabase
+      .from("tasks")
+      .update({ completed: shouldComplete })
+      .eq("id", taskId);
+  };
+
   return (
     <>
       <WorkspaceShell
@@ -579,7 +722,11 @@ export function DashboardClient({
               ))}
             </div>
           ) : activeTab === "board" ? (
-            <BoardView milestones={milestones} />
+            <BoardView
+              milestones={milestones}
+              projectId={project.id}
+              onMoveTask={handleBoardMove}
+            />
           ) : (
             <ComingSoon label={TABS.find((t) => t.id === activeTab)?.label ?? ""} />
           )}
