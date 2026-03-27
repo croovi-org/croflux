@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 
 const items = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/milestones", label: "Milestone", icon: CheckSquare },
+  { href: "/milestones", label: "Milestones", icon: CheckSquare },
   { href: "/calendar", label: "Activity", icon: Activity },
   { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
 ];
@@ -48,58 +48,61 @@ export function IconRail() {
             href === "/dashboard" || href === "/leaderboard" ? href : "#";
 
           return (
-            <Link
-              key={href}
-              href={target}
-              className={`rail-btn ${active ? "active" : ""}`}
-              aria-label={label}
-              style={{
-                width: "42px",
-                height: "42px",
-                minWidth: "42px",
-                minHeight: "42px",
-                borderRadius: "12px",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                position: "relative",
-                boxSizing: "border-box",
-                flexShrink: 0,
-                textDecoration: "none",
-                appearance: "none",
-                cursor: "pointer",
-                color: active ? "#8b7fff" : "#70758d",
-                border: active
-                  ? "1px solid rgba(124, 110, 247, 0.14)"
-                  : "1px solid transparent",
-                background: active
-                  ? "linear-gradient(180deg, #211d36 0%, #1d1a31 100%)"
-                  : "transparent",
-                boxShadow: active
-                  ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 8px 18px rgba(10, 10, 16, 0.22), 0 0 18px -14px rgba(124, 110, 247, 0.6)"
-                  : "none",
-              }}
-            >
-              <span
-                className="rail-active-line"
+            <div key={href} className="rail-item">
+              <Link
+                href={target}
+                className={`rail-btn ${active ? "active" : ""}`}
+                aria-label={label}
+                title={label}
                 style={{
-                  position: "absolute",
-                  left: "0",
-                  top: "5px",
-                  bottom: "5px",
-                  width: "3px",
-                  borderRadius: "0 999px 999px 0",
+                  width: "42px",
+                  height: "42px",
+                  minWidth: "42px",
+                  minHeight: "42px",
+                  borderRadius: "12px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "relative",
+                  boxSizing: "border-box",
+                  flexShrink: 0,
+                  textDecoration: "none",
+                  appearance: "none",
+                  cursor: "pointer",
+                  color: active ? "#8b7fff" : "#70758d",
+                  border: active
+                    ? "1px solid rgba(124, 110, 247, 0.14)"
+                    : "1px solid transparent",
                   background: active
-                    ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
+                    ? "linear-gradient(180deg, #211d36 0%, #1d1a31 100%)"
                     : "transparent",
                   boxShadow: active
-                    ? "0 0 10px rgba(124, 110, 247, 0.42)"
+                    ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 8px 18px rgba(10, 10, 16, 0.22), 0 0 18px -14px rgba(124, 110, 247, 0.6)"
                     : "none",
                 }}
-              />
-              <IconComponent size={15} strokeWidth={1.7} />
-              <span className="rail-tooltip">{label}</span>
-            </Link>
+              >
+                <span
+                  className="rail-active-line"
+                  style={{
+                    position: "absolute",
+                    left: "0",
+                    top: "5px",
+                    bottom: "5px",
+                    width: "3px",
+                    borderRadius: "0 999px 999px 0",
+                    background: active
+                      ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
+                      : "transparent",
+                    boxShadow: active
+                      ? "0 0 10px rgba(124, 110, 247, 0.42)"
+                      : "none",
+                  }}
+                />
+                <IconComponent size={15} strokeWidth={1.7} />
+                <span className="rail-tooltip">{label}</span>
+              </Link>
+              <span className={`rail-caption ${active ? "active" : ""}`}>{label}</span>
+            </div>
           );
         })}
       </div>
@@ -109,6 +112,7 @@ export function IconRail() {
           type="button"
           className="rail-btn"
           aria-label="Settings"
+          title="Settings"
           style={{
             width: "42px",
             height: "42px",
@@ -168,9 +172,17 @@ export function IconRail() {
         .rail-middle {
           flex: 1;
           justify-content: flex-start;
-          gap: 12px;
+          gap: 14px;
           min-height: 0;
           padding-top: 12px;
+        }
+        .rail-item {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+          flex-shrink: 0;
         }
         .rail-logo {
           width: 38px;
@@ -243,6 +255,22 @@ export function IconRail() {
           background: rgba(124, 110, 247, 0.05);
           border-color: transparent;
           color: #8a8fb0;
+        }
+        .rail-caption {
+          max-width: 54px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          text-align: center;
+          font-size: 8px;
+          line-height: 1;
+          letter-spacing: 0.02em;
+          font-weight: 600;
+          color: #6e738c;
+          pointer-events: none;
+        }
+        .rail-caption.active {
+          color: #8b7fff;
         }
         .rail-tooltip {
           position: absolute;
