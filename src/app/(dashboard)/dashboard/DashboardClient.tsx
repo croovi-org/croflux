@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BossMilestone } from "@/components/dashboard/BossMilestone";
 import { LockedMilestone } from "@/components/dashboard/LockedMilestone";
@@ -29,6 +30,15 @@ type BoardItem = {
   dateLabel: string | null;
 };
 type BoardOverrides = Record<string, Exclude<BoardColumnId, "done">>;
+type IntegrationItem = {
+  id: string;
+  name: string;
+  description: string;
+  features: string[];
+  icon: ReactNode;
+  action: "connect" | "soon";
+  muted?: boolean;
+};
 
 function getFirstName(name: string) {
   return name.trim().split(/\s+/)[0] || "Builder";
@@ -250,6 +260,286 @@ function ComingSoon({ label }: { label: string }) {
         }
         .cs-label { font-size: 11px; font-weight: 500; color: #5f5f7a; }
         .cs-text { font-size: 10px; font-family: "Geist Mono", monospace; color: #2e2e48; }
+      `}</style>
+    </div>
+  );
+}
+
+function GithubIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+      <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58l-.02-2.03c-3.34.73-4.04-1.42-4.04-1.42-.55-1.38-1.34-1.75-1.34-1.75-1.1-.75.08-.73.08-.73 1.21.09 1.85 1.23 1.85 1.23 1.08 1.83 2.84 1.3 3.53 1 .11-.77.42-1.3.76-1.6-2.67-.3-5.48-1.32-5.48-5.89 0-1.3.47-2.36 1.24-3.19-.13-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.22a11.6 11.6 0 0 1 6 0c2.29-1.54 3.3-1.22 3.3-1.22.66 1.65.25 2.88.12 3.18.77.83 1.24 1.89 1.24 3.19 0 4.58-2.82 5.58-5.5 5.88.43.37.82 1.1.82 2.22l-.02 3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z" />
+    </svg>
+  );
+}
+
+function NotionIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d="M5 4.5 17.5 3l2 2v14l-12.5 2L5 19V4.5Z" />
+      <path d="M8 8.5v8m0-8 7-1m-7 1 7 8m0-9v9" />
+    </svg>
+  );
+}
+
+function GoogleCalendarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="17" rx="3" />
+      <path d="M8 2v4m8-4v4M3 9.5h18" />
+      <rect x="8" y="12" width="4" height="4" rx="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function AppleCalendarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d="M8 2v3m8-3v3M4 7h16M6 4h12a2 2 0 0 1 2 2v12a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2Z" />
+      <path d="M12 11.5c-.9-.8-2.2-.72-2.95.17-.75.9-.68 2.28.16 3.06.85.79 2.17.72 2.95-.17.79.89 2.11.96 2.95.17.84-.78.9-2.16.16-3.06-.75-.89-2.06-.97-2.95-.17Z" />
+    </svg>
+  );
+}
+
+function SlackIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+      <path d="M9 4a2 2 0 1 0-4 0 2 2 0 0 0 4 0Zm0 0v5m0 6v5a2 2 0 1 1-4 0 2 2 0 0 1 4 0m6-11h5a2 2 0 1 0 0-4 2 2 0 0 0 0 4m0 0h-5m-6 0H4a2 2 0 1 1 0-4 2 2 0 0 1 0 4m11 6v5a2 2 0 1 0 4 0 2 2 0 0 0-4 0m0 0v-5m0-6V4a2 2 0 1 1 4 0 2 2 0 0 1-4 0m-6 11H4a2 2 0 1 0 0 4 2 2 0 0 0 0-4m0 0h5m6 0h5a2 2 0 1 1 0 4 2 2 0 0 1 0-4" />
+    </svg>
+  );
+}
+
+function IntegrationsView() {
+  const connected: IntegrationItem[] = [
+    {
+      id: "github",
+      name: "GitHub",
+      description: "Sync pull requests and issues directly with your tasks.",
+      features: ["PR merges complete tasks", "Issues sync as tasks", "Milestone tracking"],
+      icon: <GithubIcon />,
+      action: "connect",
+    },
+    {
+      id: "notion",
+      name: "Notion",
+      description: "Import your PDS from Notion and push progress back automatically.",
+      features: ["Import PDS pages", "Sync milestones", "Push progress updates"],
+      icon: <NotionIcon />,
+      action: "connect",
+    },
+    {
+      id: "google-calendar",
+      name: "Google Calendar",
+      description: "Block time for tasks and keep your calendar in two-way sync.",
+      features: ["Block time for tasks", "Two-way sync", "Deadline reminders"],
+      icon: <GoogleCalendarIcon />,
+      action: "connect",
+    },
+    {
+      id: "apple-calendar",
+      name: "Apple Calendar",
+      description: "Sync tasks with Apple Calendar and keep your sessions scheduled natively.",
+      features: ["Task scheduling", "Calendar sync", "Focus blocks"],
+      icon: <AppleCalendarIcon />,
+      action: "connect",
+    },
+  ];
+
+  const comingSoon: IntegrationItem[] = [
+    {
+      id: "slack",
+      name: "Slack",
+      description: "Get task reminders and streak updates in Slack.",
+      features: [],
+      icon: <SlackIcon />,
+      action: "soon",
+      muted: true,
+    },
+  ];
+
+  return (
+    <div className="integrations-view">
+      <div className="integrations-head">
+        <h2>Integrations</h2>
+        <p>Connect your tools to supercharge your startup execution.</p>
+      </div>
+
+      <div className="integration-list">
+        {connected.map((item) => (
+          <article key={item.id} className="integration-card">
+            <div className="integration-icon">{item.icon}</div>
+            <div className="integration-content">
+              <h3>{item.name}</h3>
+              <p>{item.description}</p>
+              <div className="integration-features">
+                {item.features.map((feature) => (
+                  <span key={feature} className="integration-chip">
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <button type="button" className="integration-button">
+              Connect
+            </button>
+          </article>
+        ))}
+      </div>
+
+      <section className="coming-section">
+        <div className="coming-title">COMING SOON</div>
+        <div className="integration-list">
+          {comingSoon.map((item) => (
+            <article key={item.id} className="integration-card muted">
+              <div className="integration-icon">{item.icon}</div>
+              <div className="integration-content">
+                <h3>{item.name}</h3>
+                <p>{item.description}</p>
+              </div>
+              <span className="integration-soon">soon</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <style jsx>{`
+        .integrations-view {
+          flex: 1;
+          overflow-y: auto;
+          padding: 34px 24px 32px;
+        }
+        .integrations-head {
+          margin-bottom: 28px;
+        }
+        .integrations-head h2 {
+          margin: 0 0 10px;
+          font-size: 20px;
+          line-height: 1.1;
+          font-weight: 600;
+          color: #f0f2f8;
+          letter-spacing: -0.02em;
+        }
+        .integrations-head p {
+          margin: 0;
+          font-size: 12px;
+          color: #737995;
+        }
+        .integration-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .integration-card {
+          display: grid;
+          grid-template-columns: 68px minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 18px;
+          border-radius: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: linear-gradient(180deg, rgba(30, 30, 39, 0.96) 0%, rgba(27, 27, 36, 0.99) 100%);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+          padding: 24px 24px 24px 20px;
+        }
+        .integration-card.muted {
+          opacity: 0.5;
+        }
+        .integration-icon {
+          width: 60px;
+          height: 60px;
+          border-radius: 15px;
+          display: grid;
+          place-items: center;
+          color: #d4d7e7;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.02);
+        }
+        .integration-content {
+          min-width: 0;
+        }
+        .integration-content h3 {
+          margin: 0 0 8px;
+          font-size: 16px;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          color: #f0f2f8;
+        }
+        .integration-content p {
+          margin: 0;
+          font-size: 12px;
+          line-height: 1.5;
+          color: #8187a2;
+        }
+        .integration-features {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 18px;
+        }
+        .integration-chip {
+          height: 28px;
+          padding: 0 12px;
+          border-radius: 7px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.03);
+          color: #717791;
+          font-size: 11px;
+          white-space: nowrap;
+          font-family: var(--mono);
+        }
+        .integration-button,
+        .integration-soon {
+          min-width: 122px;
+          height: 44px;
+          padding: 0 18px;
+          border-radius: 10px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          flex-shrink: 0;
+        }
+        .integration-button {
+          border: 0;
+          background: #7c6ef7;
+          color: #f5f2ff;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.14),
+            0 12px 28px -20px rgba(124, 110, 247, 0.95);
+          cursor: pointer;
+        }
+        .integration-soon {
+          min-width: 84px;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: rgba(255, 255, 255, 0.02);
+          color: #70758c;
+          text-transform: lowercase;
+        }
+        .coming-section {
+          margin-top: 44px;
+        }
+        .coming-title {
+          margin-bottom: 16px;
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          color: #6a708b;
+          font-family: var(--mono);
+        }
+        @media (max-width: 1080px) {
+          .integration-card {
+            grid-template-columns: 68px minmax(0, 1fr);
+          }
+          .integration-button,
+          .integration-soon {
+            grid-column: 2;
+            justify-self: flex-start;
+            margin-top: 4px;
+          }
+        }
       `}</style>
     </div>
   );
@@ -727,6 +1017,8 @@ export function DashboardClient({
               projectId={project.id}
               onMoveTask={handleBoardMove}
             />
+          ) : activeTab === "integrations" ? (
+            <IntegrationsView />
           ) : (
             <ComingSoon label={TABS.find((t) => t.id === activeTab)?.label ?? ""} />
           )}
