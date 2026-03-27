@@ -180,15 +180,15 @@ export function Sidebar({
         }
         .workspace-switcher {
           width: 100%;
-          height: 42px;
+          height: 64px;
           background: var(--bg3);
           border: 0;
           border-bottom: 1px solid var(--border);
           border-radius: 0;
-          padding: 0 10px;
+          padding: 0 16px;
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           color: var(--text);
           text-align: left;
           transition: background 0.12s ease;
@@ -199,14 +199,14 @@ export function Sidebar({
           background: rgba(255, 255, 255, 0.02);
         }
         .workspace-avatar {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
           border-radius: 5px;
           background: var(--accent);
           color: white;
           display: grid;
           place-items: center;
-          font-size: 9px;
+          font-size: 10px;
           font-weight: 700;
           flex-shrink: 0;
         }
