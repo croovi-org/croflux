@@ -80,7 +80,7 @@ const TABS: { id: TabId; label: string }[] = [
 
 function ListIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
       <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
     </svg>
@@ -88,15 +88,26 @@ function ListIcon() {
 }
 function BoardIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="18" rx="1.5" /><rect x="14" y="3" width="7" height="11" rx="1.5" />
     </svg>
   );
 }
 function CalTabIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  );
+}
+function IntegrationsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 7.5 5.5 5 3 7.5 5.5 10 8 7.5Z" />
+      <path d="M21 7.5 18.5 5 16 7.5l2.5 2.5L21 7.5Z" />
+      <path d="M12 12l-2-2m2 2 2-2m-2 2-2 2m2-2 2 2" />
+      <path d="M8 16.5 5.5 14 3 16.5 5.5 19 8 16.5Z" />
+      <path d="M21 16.5 18.5 14 16 16.5l2.5 2.5L21 16.5Z" />
     </svg>
   );
 }
@@ -114,18 +125,15 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
           {tab.id === "list" && <ListIcon />}
           {tab.id === "board" && <BoardIcon />}
           {tab.id === "calendar" && <CalTabIcon />}
-          {tab.id === "integrations" && <span className="vdot" />}
+          {tab.id === "integrations" && <IntegrationsIcon />}
           <span>{tab.label}</span>
-          {tab.id === "integrations" && (
-            <span className="vconnected">3 connected</span>
-          )}
         </button>
       ))}
       <style jsx>{`
         .vtabs {
           display: flex;
           padding: 0;
-          gap: 22px;
+          gap: 28px;
           align-items: center;
           flex-shrink: 0;
           background: transparent;
@@ -133,15 +141,15 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
         .vtab {
           display: flex;
           align-items: center;
-          gap: 8px;
-          padding: 10px 0 12px;
-          font-size: 14px;
+          gap: 7px;
+          padding: 8px 0 7px;
+          font-size: 12px;
           font-weight: 500;
           color: #5f5f7a;
           background: transparent;
           border: none;
-          border-bottom: 3px solid transparent;
-          margin-bottom: -12px;
+          border-bottom: 2px solid transparent;
+          margin-bottom: -7px;
           cursor: pointer;
           transition: color 0.12s, border-color 0.12s;
           white-space: nowrap;
@@ -149,11 +157,6 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
         }
         .vtab:hover { color: #9898b8; }
         .vtab.active { color: #7c6ef7; border-bottom-color: #7c6ef7; }
-        .vdot {
-          width: 7px; height: 7px; border-radius: 50%;
-          background: #22c55e; flex-shrink: 0;
-        }
-        .vconnected { font-size: 13px; color: #22c55e; font-family: "Geist Mono", monospace; }
       `}</style>
     </div>
   );
@@ -439,12 +442,12 @@ export function DashboardClient({
           background: rgba(255, 255, 255, 0.05);
         }
         .navbar-tabs {
-          height: 56px;
+          height: 48px;
           display: flex;
           align-items: flex-end;
           margin-top: 0;
-          padding-top: 4px;
-          padding-bottom: 10px;
+          padding-top: 0;
+          padding-bottom: 8px;
           position: relative;
         }
         .navbar-tabs::after {
