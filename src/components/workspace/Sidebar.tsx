@@ -221,7 +221,7 @@ export function Sidebar({
           width: 220px;
           height: 100%;
           min-height: 0;
-          background: var(--bg3);
+          background: #111014;
           border-right: 1px solid var(--border);
           display: flex;
           flex-direction: column;
@@ -230,14 +230,14 @@ export function Sidebar({
         .sidebar-top {
           padding: 0;
           border-bottom: 1px solid var(--border);
-          background: var(--bg3);
+          background: #111014;
           position: relative;
           z-index: 2;
         }
         .workspace-switcher {
           width: 100%;
           height: 64px;
-          background: var(--bg3);
+          background: #111014;
           border: 0;
           border-bottom: 1px solid var(--border);
           border-radius: 0;
