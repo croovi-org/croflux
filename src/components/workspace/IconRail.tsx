@@ -53,8 +53,50 @@ export function IconRail() {
               href={target}
               className={`rail-btn ${active ? "active" : ""}`}
               aria-label={label}
+              style={{
+                width: "42px",
+                height: "42px",
+                minWidth: "42px",
+                minHeight: "42px",
+                borderRadius: "12px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                boxSizing: "border-box",
+                flexShrink: 0,
+                textDecoration: "none",
+                appearance: "none",
+                cursor: "pointer",
+                color: active ? "#8b7fff" : "#70758d",
+                border: active
+                  ? "1px solid rgba(124, 110, 247, 0.14)"
+                  : "1px solid rgba(255, 255, 255, 0.03)",
+                background: active
+                  ? "linear-gradient(180deg, #211d36 0%, #1d1a31 100%)"
+                  : "rgba(255, 255, 255, 0.015)",
+                boxShadow: active
+                  ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 8px 18px rgba(10, 10, 16, 0.22), 0 0 18px -14px rgba(124, 110, 247, 0.6)"
+                  : "inset 0 1px 0 rgba(255, 255, 255, 0.01)",
+              }}
             >
-              <span className="rail-active-line" />
+              <span
+                className="rail-active-line"
+                style={{
+                  position: "absolute",
+                  left: "-3px",
+                  top: "4px",
+                  bottom: "4px",
+                  width: "3px",
+                  borderRadius: "0 999px 999px 0",
+                  background: active
+                    ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
+                    : "transparent",
+                  boxShadow: active
+                    ? "0 0 10px rgba(124, 110, 247, 0.42)"
+                    : "none",
+                }}
+              />
               <IconComponent />
             </Link>
           );
@@ -62,7 +104,30 @@ export function IconRail() {
       </div>
 
       <div className="rail-bottom">
-        <button type="button" className="rail-btn" aria-label="Settings">
+        <button
+          type="button"
+          className="rail-btn"
+          aria-label="Settings"
+          style={{
+            width: "42px",
+            height: "42px",
+            minWidth: "42px",
+            minHeight: "42px",
+            borderRadius: "12px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            boxSizing: "border-box",
+            flexShrink: 0,
+            appearance: "none",
+            cursor: "pointer",
+            color: "#70758d",
+            border: "1px solid rgba(255, 255, 255, 0.03)",
+            background: "rgba(255, 255, 255, 0.015)",
+            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.01)",
+          }}
+        >
           <Settings />
         </button>
       </div>
@@ -100,9 +165,9 @@ export function IconRail() {
         .rail-middle {
           flex: 1;
           justify-content: flex-start;
-          gap: 14px;
+          gap: 12px;
           min-height: 0;
-          padding-top: 14px;
+          padding-top: 12px;
         }
         .rail-logo {
           width: 38px;
@@ -133,22 +198,22 @@ export function IconRail() {
         }
         .rail-bottom {
           margin-top: auto;
-          padding-bottom: 8px;
+          padding-bottom: 6px;
         }
         .rail-btn {
-          width: 40px;
-          height: 40px;
-          min-width: 40px;
-          min-height: 40px;
+          width: 42px;
+          height: 42px;
+          min-width: 42px;
+          min-height: 42px;
           border-radius: 12px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          color: #636882;
+          color: #70758d;
           position: relative;
-          border: none;
-          background: transparent;
-          box-shadow: none;
+          border: 1px solid transparent;
+          background: rgba(255, 255, 255, 0.015);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.01);
           box-sizing: border-box;
           flex-shrink: 0;
           text-decoration: none;
@@ -156,12 +221,13 @@ export function IconRail() {
           transition:
             background 0.14s ease,
             color 0.14s ease,
+            border-color 0.14s ease,
             box-shadow 0.14s ease;
           cursor: pointer;
         }
         .rail-btn :global(svg) {
-          width: 17px;
-          height: 17px;
+          width: 18px;
+          height: 18px;
           stroke: currentColor;
           stroke-width: 1.7;
           stroke-linecap: round;
@@ -169,32 +235,33 @@ export function IconRail() {
           fill: none;
         }
         .rail-btn:hover {
-          background: rgba(255, 255, 255, 0.018);
-          color: #7d829a;
+          background: rgba(124, 110, 247, 0.08);
+          border-color: rgba(124, 110, 247, 0.12);
+          color: #8a8fb0;
         }
         .rail-btn.active {
-          background: #1f1b34;
+          background: linear-gradient(180deg, #211d36 0%, #1d1a31 100%);
           color: #8b7fff;
           box-shadow:
-            inset 0 0 0 1px rgba(124, 110, 247, 0.08),
-            0 6px 16px rgba(10, 10, 16, 0.18);
+            inset 0 0 0 1px rgba(124, 110, 247, 0.14),
+            0 8px 18px rgba(10, 10, 16, 0.22),
+            0 0 18px -14px rgba(124, 110, 247, 0.6);
         }
         .rail-active-line {
           position: absolute;
-          left: -7px;
-          top: 5px;
-          bottom: 5px;
+          left: -3px;
+          top: 4px;
+          bottom: 4px;
           width: 3px;
           border-radius: 0 999px 999px 0;
           background: transparent;
         }
         .rail-btn.active .rail-active-line {
           background: linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%);
+          box-shadow: 0 0 10px rgba(124, 110, 247, 0.42);
         }
         .rail-bottom .rail-btn {
-          background: transparent;
-          box-shadow: none;
-          color: #636882;
+          color: #70758d;
         }
       `}</style>
     </aside>
