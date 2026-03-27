@@ -24,7 +24,7 @@ export function IconRail() {
   return (
     <aside className="rail-shell">
       <div className="rail-top">
-        <div className="rail-logo" aria-label="CroFlux">
+        <Link href="/" className="rail-logo" aria-label="CroFlux home">
           <span className="rail-logo-mark" aria-hidden="true">
             <Image
               src="/croflux-mark.png"
@@ -34,7 +34,7 @@ export function IconRail() {
               className="object-contain"
             />
           </span>
-        </div>
+        </Link>
       </div>
 
       <div className="rail-middle">
@@ -79,7 +79,7 @@ export function IconRail() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 16px 0 14px;
+          padding: 0 0 14px;
           position: relative;
           flex-shrink: 0;
         }
@@ -93,22 +93,20 @@ export function IconRail() {
         }
         .rail-top {
           flex-shrink: 0;
+          height: 64px;
+          justify-content: center;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         .rail-middle {
           flex: 1;
           justify-content: flex-start;
           gap: 12px;
           min-height: 0;
-          padding-top: 16px;
+          padding-top: 18px;
         }
         .rail-logo {
           width: 38px;
           height: 38px;
-          border-radius: 11px;
-          background: rgba(124, 110, 247, 0.08);
-          box-shadow:
-            inset 0 0 0 1px rgba(124, 110, 247, 0.34),
-            0 0 0 1px rgba(17, 17, 26, 0.55);
           color: #897cff;
           display: flex;
           align-items: center;
@@ -117,11 +115,19 @@ export function IconRail() {
           font-weight: 700;
           font-family: Inter, sans-serif;
           flex-shrink: 0;
+          text-decoration: none;
+          cursor: pointer;
+          border-radius: 10px;
+          transition: filter 0.14s ease, transform 0.14s ease;
+        }
+        .rail-logo:hover {
+          filter: drop-shadow(0 0 10px rgba(124, 110, 247, 0.34));
+          transform: scale(1.06);
         }
         .rail-logo-mark {
           position: relative;
-          width: 22px;
-          height: 22px;
+          width: 26px;
+          height: 26px;
           display: block;
           flex-shrink: 0;
         }
