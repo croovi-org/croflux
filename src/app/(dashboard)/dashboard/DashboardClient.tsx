@@ -610,7 +610,14 @@ function ChevronRight() {
 
 function CalendarView() {
   const minMonth = new Date(2025, 0, 1);
+  const maxYear = new Date().getFullYear() + 8;
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(new Date()));
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerDay, setPickerDay] = useState(() => new Date().getDate());
+  const [pickerMonth, setPickerMonth] = useState(() => new Date().getMonth());
+  const [pickerYear, setPickerYear] = useState(() => new Date().getFullYear());
+  const pickerRef = useRef<HTMLDivElement | null>(null);
   const monthLabel = visibleMonth.toLocaleDateString("en-US", {
     month: "long",
     year: "numeric",
@@ -618,6 +625,37 @@ function CalendarView() {
   const cells = useMemo(() => getCalendarCells(visibleMonth), [visibleMonth]);
   const canGoPrev = visibleMonth > minMonth;
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const pickerDaysInMonth = new Date(pickerYear, pickerMonth + 1, 0).getDate();
+  const safePickerDay = Math.min(pickerDay, pickerDaysInMonth);
+  const yearOptions = Array.from(
+    { length: maxYear - 2025 + 1 },
+    (_, index) => 2025 + index,
+  );
+
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!pickerRef.current?.contains(event.target as Node)) {
+        setPickerOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", handlePointerDown);
+    return () => window.removeEventListener("mousedown", handlePointerDown);
+  }, [pickerOpen]);
 
   return (
     <div className="calendar-view">
@@ -632,7 +670,77 @@ function CalendarView() {
           >
             <ChevronLeft />
           </button>
-          <h2>{monthLabel}</h2>
+          <div className="calendar-picker-wrap" ref={pickerRef}>
+            <button
+              type="button"
+              className="calendar-title-btn"
+              onClick={() => setPickerOpen((current) => !current)}
+            >
+              <h2>{monthLabel}</h2>
+            </button>
+
+            {pickerOpen ? (
+              <div className="calendar-picker">
+                <div className="calendar-picker-row">
+                  <label>
+                    <span>Day</span>
+                    <select
+                      value={safePickerDay}
+                      onChange={(event) => setPickerDay(Number(event.target.value))}
+                    >
+                      {Array.from({ length: pickerDaysInMonth }, (_, index) => index + 1).map((day) => (
+                        <option key={day} value={day}>
+                          {day}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    <span>Month</span>
+                    <select
+                      value={pickerMonth}
+                      onChange={(event) => setPickerMonth(Number(event.target.value))}
+                    >
+                      {monthNames.map((name, index) => (
+                        <option key={name} value={index}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+                <label className="calendar-year-field">
+                  <span>Year</span>
+                  <select
+                    value={pickerYear}
+                    onChange={(event) => setPickerYear(Number(event.target.value))}
+                  >
+                    {yearOptions.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  className="calendar-picker-apply"
+                  onClick={() => {
+                    const nextDate = new Date(
+                      pickerYear,
+                      pickerMonth,
+                      safePickerDay,
+                    );
+                    setSelectedDate(nextDate);
+                    setVisibleMonth(startOfMonth(nextDate));
+                    setPickerOpen(false);
+                  }}
+                >
+                  Go to date
+                </button>
+              </div>
+            ) : null}
+          </div>
           <button
             type="button"
             className="calendar-nav-btn"
@@ -656,6 +764,13 @@ function CalendarView() {
               key={cell.key}
               className={`calendar-cell ${cell.isCurrentMonth ? "filled" : "empty"} ${
                 cell.isToday ? "today" : ""
+              } ${
+                cell.dayNumber &&
+                visibleMonth.getMonth() === selectedDate.getMonth() &&
+                visibleMonth.getFullYear() === selectedDate.getFullYear() &&
+                cell.dayNumber === selectedDate.getDate()
+                  ? "selected"
+                  : ""
               }`}
             >
               {cell.dayNumber ? <span className="calendar-day">{cell.dayNumber}</span> : null}
@@ -684,6 +799,15 @@ function CalendarView() {
           align-items: center;
           gap: 18px;
         }
+        .calendar-picker-wrap {
+          position: relative;
+        }
+        .calendar-title-btn {
+          background: transparent;
+          border: 0;
+          padding: 0;
+          cursor: pointer;
+        }
         .calendar-nav h2 {
           margin: 0;
           font-size: 18px;
@@ -691,6 +815,64 @@ function CalendarView() {
           color: #eef1f8;
           letter-spacing: -0.02em;
           min-width: 140px;
+        }
+        .calendar-picker {
+          position: absolute;
+          top: calc(100% + 10px);
+          left: 0;
+          width: 224px;
+          padding: 12px;
+          border-radius: 14px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: linear-gradient(180deg, rgba(28, 28, 37, 0.98) 0%, rgba(24, 24, 32, 0.99) 100%);
+          box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+          z-index: 20;
+        }
+        .calendar-picker-row {
+          display: grid;
+          grid-template-columns: 78px minmax(0, 1fr);
+          gap: 8px;
+          margin-bottom: 8px;
+        }
+        .calendar-picker label {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        }
+        .calendar-picker span {
+          font-size: 10px;
+          color: #747a95;
+          font-family: var(--mono);
+          letter-spacing: 0.05em;
+        }
+        .calendar-picker select {
+          width: 100%;
+          height: 34px;
+          border-radius: 9px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.03);
+          color: #e9edf9;
+          padding: 0 10px;
+          font-size: 12px;
+          outline: none;
+        }
+        .calendar-picker select:focus {
+          border-color: rgba(124, 110, 247, 0.22);
+        }
+        .calendar-year-field {
+          margin-bottom: 10px;
+        }
+        .calendar-picker-apply {
+          width: 100%;
+          height: 34px;
+          border-radius: 9px;
+          border: 0;
+          background: #7c6ef7;
+          color: #f6f3ff;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          box-shadow: 0 12px 24px -18px rgba(124, 110, 247, 0.9);
         }
         .calendar-nav-btn {
           width: 42px;
@@ -757,6 +939,11 @@ function CalendarView() {
         .calendar-cell.today {
           border-color: rgba(124, 110, 247, 0.34);
           background: linear-gradient(180deg, rgba(39, 33, 61, 0.96) 0%, rgba(32, 28, 48, 0.98) 100%);
+        }
+        .calendar-cell.selected {
+          border-color: rgba(124, 110, 247, 0.4);
+          box-shadow: inset 0 0 0 1px rgba(124, 110, 247, 0.12);
+          background: linear-gradient(180deg, rgba(40, 35, 60, 0.98) 0%, rgba(33, 29, 49, 0.99) 100%);
         }
         .calendar-day {
           font-size: 12px;
