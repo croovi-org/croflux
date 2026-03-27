@@ -80,7 +80,7 @@ const TABS: { id: TabId; label: string }[] = [
 
 function ListIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
       <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
     </svg>
@@ -88,14 +88,14 @@ function ListIcon() {
 }
 function BoardIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="18" rx="1.5" /><rect x="14" y="3" width="7" height="11" rx="1.5" />
     </svg>
   );
 }
 function CalTabIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
     </svg>
   );
@@ -133,15 +133,15 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
         .vtab {
           display: flex;
           align-items: center;
-          gap: 6px;
-          padding: 9px 0;
-          font-size: 11px;
+          gap: 8px;
+          padding: 10px 0 12px;
+          font-size: 14px;
           font-weight: 500;
           color: #5f5f7a;
           background: transparent;
           border: none;
-          border-bottom: 2px solid transparent;
-          margin-bottom: 0;
+          border-bottom: 3px solid transparent;
+          margin-bottom: -12px;
           cursor: pointer;
           transition: color 0.12s, border-color 0.12s;
           white-space: nowrap;
@@ -150,10 +150,10 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
         .vtab:hover { color: #9898b8; }
         .vtab.active { color: #7c6ef7; border-bottom-color: #7c6ef7; }
         .vdot {
-          width: 5px; height: 5px; border-radius: 50%;
+          width: 7px; height: 7px; border-radius: 50%;
           background: #22c55e; flex-shrink: 0;
         }
-        .vconnected { font-size: 10px; color: #22c55e; font-family: "Geist Mono", monospace; }
+        .vconnected { font-size: 13px; color: #22c55e; font-family: "Geist Mono", monospace; }
       `}</style>
     </div>
   );
@@ -416,7 +416,6 @@ export function DashboardClient({
           width: 100%;
           display: flex;
           flex-direction: column;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
           flex-shrink: 0;
         }
         .navbar-inner {
@@ -428,14 +427,34 @@ export function DashboardClient({
           height: 64px;
           display: flex;
           align-items: center;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          position: relative;
+        }
+        .navbar-top::after {
+          content: "";
+          position: absolute;
+          left: -24px;
+          right: -24px;
+          bottom: 0;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.05);
         }
         .navbar-tabs {
-          height: 48px;
+          height: 56px;
           display: flex;
           align-items: flex-end;
-          margin-top: -8px;
-          padding-bottom: 6px;
+          margin-top: 0;
+          padding-top: 4px;
+          padding-bottom: 10px;
+          position: relative;
+        }
+        .navbar-tabs::after {
+          content: "";
+          position: absolute;
+          left: -24px;
+          right: -24px;
+          bottom: 0;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.05);
         }
         .shell::before {
           content: "";

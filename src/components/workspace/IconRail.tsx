@@ -7,6 +7,7 @@ import {
   Settings,
   Trophy,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -24,7 +25,15 @@ export function IconRail() {
     <aside className="rail-shell">
       <div className="rail-top">
         <div className="rail-logo" aria-label="CroFlux">
-          C
+          <span className="rail-logo-mark" aria-hidden="true">
+            <Image
+              src="/croflux-mark.png"
+              alt=""
+              fill
+              sizes="40px"
+              className="object-contain"
+            />
+          </span>
         </div>
       </div>
 
@@ -109,6 +118,13 @@ export function IconRail() {
           font-family: Inter, sans-serif;
           flex-shrink: 0;
         }
+        .rail-logo-mark {
+          position: relative;
+          width: 22px;
+          height: 22px;
+          display: block;
+          flex-shrink: 0;
+        }
         .rail-bottom {
           margin-top: auto;
           padding-bottom: 8px;
@@ -131,7 +147,10 @@ export function IconRail() {
           flex-shrink: 0;
           text-decoration: none;
           appearance: none;
-          transition: background 0.14s ease, color 0.14s ease, box-shadow 0.14s ease;
+          transition:
+            background 0.14s ease,
+            color 0.14s ease,
+            box-shadow 0.14s ease;
           cursor: pointer;
         }
         .rail-btn :global(svg) {
