@@ -20,6 +20,14 @@ type DashboardClientProps = {
 
 type ToastState = { title: string; body: string };
 type TabId = "list" | "board" | "calendar" | "integrations";
+type BoardColumnId = "todo" | "inprogress" | "done";
+type BoardItem = {
+  id: string;
+  title: string;
+  milestoneTitle: string;
+  sequence: number;
+  dateLabel: string | null;
+};
 
 function getFirstName(name: string) {
   return name.trim().split(/\s+/)[0] || "Builder";
@@ -67,6 +75,60 @@ function getNextUpTask(milestones: MilestoneWithTasks[]) {
 
 function getIncompleteTaskCount(milestones: MilestoneWithTasks[]) {
   return milestones.reduce((n, m) => n + m.tasks.filter((t) => !t.completed).length, 0);
+}
+
+function formatBoardDate(value: string) {
+  return new Date(value).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function getBoardColumns(milestones: MilestoneWithTasks[]) {
+  const activeMilestoneIndex = getActiveMilestoneIndex(milestones);
+  const columns: Record<BoardColumnId, BoardItem[]> = {
+    todo: [],
+    inprogress: [],
+    done: [],
+  };
+
+  let sequence = 1;
+  let inProgressAssigned = 0;
+
+  milestones.forEach((milestone, milestoneIndex) => {
+    milestone.tasks.forEach((task, taskIndex) => {
+      const item: BoardItem = {
+        id: task.id,
+        title: task.title,
+        milestoneTitle: milestone.title,
+        sequence,
+        dateLabel:
+          sequence % 3 === 0 || taskIndex === milestone.tasks.length - 1
+            ? formatBoardDate(task.created_at)
+            : null,
+      };
+
+      if (task.completed) {
+        columns.done.push(item);
+      } else if (
+        milestoneIndex === activeMilestoneIndex &&
+        inProgressAssigned < 2
+      ) {
+        columns.inprogress.push(item);
+        inProgressAssigned += 1;
+      } else {
+        columns.todo.push(item);
+      }
+
+      sequence += 1;
+    });
+  });
+
+  if (columns.inprogress.length === 0 && columns.todo.length > 0) {
+    columns.inprogress.push(columns.todo.shift() as BoardItem);
+  }
+
+  return columns;
 }
 
 const TABS: { id: TabId; label: string }[] = [
@@ -177,6 +239,176 @@ function ComingSoon({ label }: { label: string }) {
         }
         .cs-label { font-size: 11px; font-weight: 500; color: #5f5f7a; }
         .cs-text { font-size: 10px; font-family: "Geist Mono", monospace; color: #2e2e48; }
+      `}</style>
+    </div>
+  );
+}
+
+function BoardView({ milestones }: { milestones: MilestoneWithTasks[] }) {
+  const columns = useMemo(() => getBoardColumns(milestones), [milestones]);
+  const columnMeta: {
+    id: BoardColumnId;
+    label: string;
+    tone: "muted" | "accent" | "success";
+  }[] = [
+    { id: "todo", label: "TO DO", tone: "muted" },
+    { id: "inprogress", label: "IN PROGRESS", tone: "accent" },
+    { id: "done", label: "DONE", tone: "success" },
+  ];
+
+  return (
+    <div className="board-view">
+      {columnMeta.map((column) => (
+        <section key={column.id} className={`board-column ${column.tone}`}>
+          <div className="board-column-head">
+            <span className="board-column-label">{column.label}</span>
+            <span className="board-column-count">{columns[column.id].length}</span>
+          </div>
+
+          <div className="board-stack">
+            {columns[column.id].map((item) => (
+              <article key={item.id} className="board-card">
+                <h3>{item.title}</h3>
+                <div className="board-meta">
+                  <span className="board-chip milestone">{item.milestoneTitle}</span>
+                  {column.id !== "done" ? (
+                    <span className="board-chip subtle">#{item.sequence}</span>
+                  ) : null}
+                  {item.dateLabel ? (
+                    <span className="board-chip date">{item.dateLabel}</span>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <style jsx>{`
+        .board-view {
+          flex: 1;
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 22px;
+          padding: 22px 20px 18px;
+          overflow: auto;
+          min-height: 0;
+        }
+        .board-column {
+          min-width: 0;
+          min-height: 100%;
+          border-radius: 18px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: linear-gradient(180deg, rgba(29, 29, 39, 0.96) 0%, rgba(27, 27, 37, 0.98) 100%);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.02),
+            0 18px 40px rgba(0, 0, 0, 0.16);
+          padding: 22px 20px 20px;
+          display: flex;
+          flex-direction: column;
+        }
+        .board-column-head {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 18px;
+        }
+        .board-column-label {
+          font-size: 11px;
+          letter-spacing: 0.16em;
+          font-family: var(--mono);
+        }
+        .board-column.muted .board-column-label {
+          color: #6e7692;
+        }
+        .board-column.accent .board-column-label {
+          color: #887cff;
+        }
+        .board-column.success .board-column-label {
+          color: #38d27d;
+        }
+        .board-column-count {
+          min-width: 24px;
+          height: 24px;
+          padding: 0 8px;
+          border-radius: 8px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255, 255, 255, 0.04);
+          color: #757b94;
+          font-size: 12px;
+          font-family: var(--mono);
+        }
+        .board-stack {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .board-card {
+          border-radius: 14px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: linear-gradient(180deg, rgba(34, 34, 46, 0.96) 0%, rgba(31, 31, 42, 0.98) 100%);
+          padding: 18px 20px 16px;
+          min-height: 110px;
+          transition:
+            transform 0.16s ease,
+            border-color 0.16s ease,
+            box-shadow 0.16s ease;
+        }
+        .board-card:hover {
+          transform: translateY(-2px);
+          border-color: rgba(124, 110, 247, 0.18);
+          box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+        }
+        .board-card h3 {
+          margin: 0 0 18px;
+          font-size: 16px;
+          line-height: 1.35;
+          font-weight: 500;
+          color: #e3e6f2;
+          letter-spacing: -0.01em;
+        }
+        .board-meta {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .board-chip {
+          height: 28px;
+          padding: 0 11px;
+          border-radius: 8px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 11px;
+          letter-spacing: 0.02em;
+          font-family: var(--mono);
+        }
+        .board-chip.milestone {
+          color: #8b7fff;
+          border: 1px solid rgba(124, 110, 247, 0.42);
+          background: rgba(124, 110, 247, 0.08);
+        }
+        .board-chip.subtle {
+          color: #70758c;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.04);
+        }
+        .board-chip.date {
+          color: #54a2ff;
+          border: 1px solid rgba(64, 130, 255, 0.42);
+          background: rgba(64, 130, 255, 0.08);
+        }
+        @media (max-width: 1180px) {
+          .board-view {
+            grid-template-columns: 1fr;
+          }
+          .board-column {
+            min-height: 0;
+          }
+        }
       `}</style>
     </div>
   );
@@ -346,6 +578,8 @@ export function DashboardClient({
                 <LockedMilestone key={m.id} title={m.title} />
               ))}
             </div>
+          ) : activeTab === "board" ? (
+            <BoardView milestones={milestones} />
           ) : (
             <ComingSoon label={TABS.find((t) => t.id === activeTab)?.label ?? ""} />
           )}
