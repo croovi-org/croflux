@@ -5,9 +5,7 @@ import { BossMilestone } from "@/components/dashboard/BossMilestone";
 import { LockedMilestone } from "@/components/dashboard/LockedMilestone";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatCards } from "@/components/dashboard/StatCards";
-import { IconRail } from "@/components/workspace/IconRail";
-import { Sidebar } from "@/components/workspace/Sidebar";
-import { Topbar } from "@/components/workspace/Topbar";
+import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
 import { createClient } from "@/lib/supabase/client";
 import type { Milestone, Project, Task, User } from "@/types";
 
@@ -289,34 +287,22 @@ export function DashboardClient({
   };
 
   return (
-    <div className="shell">
-      <div className="body-row">
-        <IconRail />
-        <Sidebar
-          workspaceName={project.name}
-          initials={getInitials(user.name)}
-          nextUpTask={nextUp?.task.title ?? null}
-          nextUpContext={nextUp?.context ?? null}
-          incompleteTaskCount={getIncompleteTaskCount(milestones)}
-          rank={rank}
-          milestones={sidebarMilestones}
-          streak={user.streak}
-          currentSection="/dashboard"
-        />
-
-        <div className="content-shell">
-          <div className="navbar">
-            <div className="navbar-inner">
-              <div className="navbar-top">
-                <Topbar workspaceName={project.name} currentPage="Dashboard" initials={getInitials(user.name)} userName={user.name} />
-              </div>
-              <div className="navbar-tabs">
-                <ViewTabs active={activeTab} onSelect={setActiveTab} />
-              </div>
-            </div>
-          </div>
-
-          <main className="main">
+    <>
+      <WorkspaceShell
+        workspaceName={project.name}
+        currentPage="Dashboard"
+        currentSection="/dashboard"
+        initials={getInitials(user.name)}
+        userName={user.name}
+        nextUpTask={nextUp?.task.title ?? null}
+        nextUpContext={nextUp?.context ?? null}
+        incompleteTaskCount={getIncompleteTaskCount(milestones)}
+        rank={rank}
+        milestones={sidebarMilestones}
+        streak={user.streak}
+        headerBottom={<div className="navbar-tabs"><ViewTabs active={activeTab} onSelect={setActiveTab} /></div>}
+      >
+        <main className="main">
           {activeTab === "list" ? (
             <div className="body">
               <div className="header">
@@ -363,84 +349,14 @@ export function DashboardClient({
           ) : (
             <ComingSoon label={TABS.find((t) => t.id === activeTab)?.label ?? ""} />
           )}
-          </main>
+        </main>
+
+        <div className={`toast ${toast ? "show" : ""}`}>
+          <div className="toast-title">{toast?.title}</div>
+          <div className="toast-body">{toast?.body}</div>
         </div>
-      </div>
-
-      <div className={`toast ${toast ? "show" : ""}`}>
-        <div className="toast-title">{toast?.title}</div>
-        <div className="toast-body">{toast?.body}</div>
-      </div>
-
+      </WorkspaceShell>
       <style jsx>{`
-        .shell {
-          --bg: #0a0a0f;
-          --bg2: #0f0f17;
-          --bg3: #13131e;
-          --bg4: #1a1a28;
-          --bg5: #1f1f30;
-          --border: #1e1e2e;
-          --border2: #252538;
-          --border3: #2e2e48;
-          --accent: #7c6ef7;
-          --accent2: #6357d4;
-          --accent-dim: rgba(124,110,247,0.08);
-          --text: #f0f0f8;
-          --text2: #9898b8;
-          --text3: #5f5f7a;
-          --green: #22c55e;
-          --amber: #ffb700;
-          --amber-dim: rgba(255,183,0,0.10);
-          --mono: "Geist Mono", monospace;
-          position: fixed;
-          inset: 0;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-          background: var(--bg);
-          color: var(--text);
-          font-family: Inter, sans-serif;
-        }
-        .body-row {
-          flex: 1;
-          display: flex;
-          min-height: 0;
-          overflow: hidden;
-        }
-        .content-shell {
-          flex: 1;
-          min-width: 0;
-          display: flex;
-          flex-direction: column;
-          background: #0f0f17;
-          overflow: hidden;
-        }
-        .navbar {
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          flex-shrink: 0;
-        }
-        .navbar-inner {
-          padding-left: 24px;
-          padding-right: 24px;
-          box-sizing: border-box;
-        }
-        .navbar-top {
-          height: 64px;
-          display: flex;
-          align-items: center;
-          position: relative;
-        }
-        .navbar-top::after {
-          content: "";
-          position: absolute;
-          left: -24px;
-          right: -24px;
-          bottom: 0;
-          height: 1px;
-          background: rgba(255, 255, 255, 0.05);
-        }
         .navbar-tabs {
           height: 48px;
           display: flex;
@@ -459,22 +375,7 @@ export function DashboardClient({
           height: 1px;
           background: rgba(255, 255, 255, 0.05);
         }
-        .shell::before {
-          content: "";
-          position: absolute;
-          inset: 0 0 auto;
-          height: 1px;
-          background: rgba(124,110,247,0.7);
-          z-index: 10;
-          pointer-events: none;
-        }
-        .main {
-          flex: 1;
-          min-width: 0;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-        }
+        .main { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
         .body {
           flex: 1;
           overflow-y: auto;
@@ -546,6 +447,6 @@ export function DashboardClient({
           color: #9898b8;
         }
       `}</style>
-    </div>
+    </>
   );
 }
