@@ -308,7 +308,7 @@ export function DashboardClient({
           <div className="navbar">
             <div className="navbar-inner">
               <div className="navbar-top">
-                <Topbar workspaceName={project.name} currentPage="Dashboard" initials={getInitials(user.name)} />
+                <Topbar workspaceName={project.name} currentPage="Dashboard" initials={getInitials(user.name)} userName={user.name} />
               </div>
               <div className="navbar-tabs">
                 <ViewTabs active={activeTab} onSelect={setActiveTab} />

@@ -30,7 +30,7 @@ export default async function MyTasksPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#0a0a0f", color: "#f0f0f8" }}>
-      <Topbar workspaceName={project.name} currentPage="My Tasks" initials={initials} />
+      <Topbar workspaceName={project.name} currentPage="My Tasks" initials={initials} userName={user.name} />
 
       <div style={{ display: "flex", minHeight: "calc(100vh - 48px)" }}>
         <IconRail />
