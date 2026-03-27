@@ -102,15 +102,6 @@ export function Sidebar({
               href={href}
               className={`nav-item ${isActive ? "active" : ""}`}
               aria-current={isActive ? "page" : undefined}
-              style={
-                isActive
-                  ? {
-                      background: "rgba(120, 100, 255, 0.10)",
-                      color: "#f0f0f8",
-                      boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.025)",
-                    }
-                  : undefined
-              }
             >
               <span className="nav-label">{label}</span>
               {badge ? (
@@ -271,25 +262,25 @@ export function Sidebar({
           font-family: "Geist Mono", monospace;
         }
         .sidebar-nav {
-          padding: 10px 12px 8px;
+          padding: 12px 14px 8px;
           flex: 1;
           overflow-y: auto;
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 8px;
         }
         .nav-item {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 8px;
-          padding: 10px 14px;
+          padding: 12px 16px;
           width: 100%;
-          border-radius: 12px;
+          border-radius: 14px;
           border: 0;
           color: rgba(255, 255, 255, 0.65);
           position: relative;
-          transition: background 0.2s ease, color 0.2s ease;
+          transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
           margin-bottom: 0;
           cursor: pointer;
           text-decoration: none;
@@ -303,18 +294,21 @@ export function Sidebar({
           color: rgba(255, 255, 255, 0.9);
         }
         .nav-item.active:hover {
-          background: rgba(120, 100, 255, 0.12);
+          background: rgba(120, 100, 255, 0.15);
         }
         .nav-item.active {
-          background: rgba(120, 100, 255, 0.1);
-          border-radius: 14px;
+          background: rgba(120, 100, 255, 0.12);
+          border-radius: 16px;
           color: #f0f0f8 !important;
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.03),
+            inset -1px 0 0 rgba(124, 110, 247, 0.28),
+            10px 0 18px -16px rgba(124, 110, 247, 0.6);
         }
         .nav-item.active::before {
           content: "";
           position: absolute;
-          left: 0;
+          left: 2px;
           top: 6px;
           bottom: 6px;
           width: 3px;

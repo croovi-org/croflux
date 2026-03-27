@@ -30,10 +30,18 @@ export default async function LeaderboardPage() {
   const nextUp = getNextUpTask(milestones);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0a0f", color: "#f0f0f8" }}>
-      <Topbar workspaceName={project.name} currentPage="Leaderboard" initials={initials} userName={user.name} />
-
-      <div style={{ display: "flex", minHeight: "calc(100vh - 48px)" }}>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+        background: "#0a0a0f",
+        color: "#f0f0f8",
+      }}
+    >
+      <div style={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden" }}>
         <IconRail />
         <Sidebar
           workspaceName={project.name}
@@ -47,7 +55,48 @@ export default async function LeaderboardPage() {
           currentSection="/leaderboard"
         />
 
-        <main style={{ flex: 1, minWidth: 0, background: "#0f0f17" }}>
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            display: "flex",
+            flexDirection: "column",
+            background: "#0f0f17",
+            overflow: "hidden",
+          }}
+        >
+          <div style={{ width: "100%", flexShrink: 0 }}>
+            <div style={{ padding: "0 24px", boxSizing: "border-box" }}>
+              <div
+                style={{
+                  height: 64,
+                  display: "flex",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                <Topbar
+                  workspaceName={project.name}
+                  currentPage="Leaderboard"
+                  initials={initials}
+                  userName={user.name}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    left: -24,
+                    right: -24,
+                    bottom: 0,
+                    height: 1,
+                    background: "rgba(255, 255, 255, 0.05)",
+                    pointerEvents: "none",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <main style={{ flex: 1, minWidth: 0, background: "#0f0f17", overflow: "auto" }}>
           <div style={{ padding: 24 }}>
             <div style={{ marginBottom: 20 }}>
               <div
@@ -191,7 +240,8 @@ export default async function LeaderboardPage() {
               </div>
             </section>
           </div>
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );
