@@ -39,6 +39,12 @@ type IntegrationItem = {
   action: "connect" | "soon";
   muted?: boolean;
 };
+type CalendarCell = {
+  key: string;
+  dayNumber: number | null;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+};
 
 function getFirstName(name: string) {
   return name.trim().split(/\s+/)[0] || "Builder";
@@ -93,6 +99,47 @@ function formatBoardDate(value: string) {
     month: "short",
     day: "numeric",
   });
+}
+
+function startOfMonth(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function addMonths(date: Date, amount: number) {
+  return new Date(date.getFullYear(), date.getMonth() + amount, 1);
+}
+
+function getCalendarCells(monthDate: Date) {
+  const firstDay = startOfMonth(monthDate);
+  const firstWeekday = firstDay.getDay();
+  const daysInMonth = new Date(
+    monthDate.getFullYear(),
+    monthDate.getMonth() + 1,
+    0,
+  ).getDate();
+  const cells: CalendarCell[] = [];
+  const today = new Date();
+
+  for (let index = 0; index < 35; index += 1) {
+    const dayNumber = index - firstWeekday + 1;
+    const isCurrentMonth = dayNumber >= 1 && dayNumber <= daysInMonth;
+    const cellDate = isCurrentMonth
+      ? new Date(monthDate.getFullYear(), monthDate.getMonth(), dayNumber)
+      : null;
+
+    cells.push({
+      key: `${monthDate.getFullYear()}-${monthDate.getMonth()}-${index}`,
+      dayNumber: isCurrentMonth ? dayNumber : null,
+      isCurrentMonth,
+      isToday:
+        !!cellDate &&
+        cellDate.getDate() === today.getDate() &&
+        cellDate.getMonth() === today.getMonth() &&
+        cellDate.getFullYear() === today.getFullYear(),
+    });
+  }
+
+  return cells;
 }
 
 function getBoardColumnsWithOverrides(
@@ -538,6 +585,195 @@ function IntegrationsView() {
             grid-column: 2;
             justify-self: flex-start;
             margin-top: 4px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function ChevronLeft() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+  );
+}
+
+function ChevronRight() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}
+
+function CalendarView() {
+  const minMonth = new Date(2025, 0, 1);
+  const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(new Date()));
+  const monthLabel = visibleMonth.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  const cells = useMemo(() => getCalendarCells(visibleMonth), [visibleMonth]);
+  const canGoPrev = visibleMonth > minMonth;
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return (
+    <div className="calendar-view">
+      <div className="calendar-toolbar">
+        <div className="calendar-nav">
+          <button
+            type="button"
+            className="calendar-nav-btn"
+            onClick={() => canGoPrev && setVisibleMonth((current) => addMonths(current, -1))}
+            disabled={!canGoPrev}
+            aria-label="Previous month"
+          >
+            <ChevronLeft />
+          </button>
+          <h2>{monthLabel}</h2>
+          <button
+            type="button"
+            className="calendar-nav-btn"
+            onClick={() => setVisibleMonth((current) => addMonths(current, 1))}
+            aria-label="Next month"
+          >
+            <ChevronRight />
+          </button>
+        </div>
+      </div>
+
+      <div className="calendar-grid-wrap">
+        <div className="calendar-weekdays">
+          {weekdays.map((day) => (
+            <span key={day}>{day}</span>
+          ))}
+        </div>
+        <div className="calendar-grid">
+          {cells.map((cell) => (
+            <div
+              key={cell.key}
+              className={`calendar-cell ${cell.isCurrentMonth ? "filled" : "empty"} ${
+                cell.isToday ? "today" : ""
+              }`}
+            >
+              {cell.dayNumber ? <span className="calendar-day">{cell.dayNumber}</span> : null}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <style jsx>{`
+        .calendar-view {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          padding: 28px 24px 24px;
+          overflow-y: auto;
+        }
+        .calendar-toolbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 26px;
+        }
+        .calendar-nav {
+          display: flex;
+          align-items: center;
+          gap: 18px;
+        }
+        .calendar-nav h2 {
+          margin: 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: #eef1f8;
+          letter-spacing: -0.02em;
+          min-width: 140px;
+        }
+        .calendar-nav-btn {
+          width: 42px;
+          height: 42px;
+          border-radius: 11px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: linear-gradient(180deg, rgba(33, 33, 43, 0.96) 0%, rgba(29, 29, 38, 0.98) 100%);
+          color: #959ab3;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition:
+            border-color 0.14s ease,
+            color 0.14s ease,
+            background 0.14s ease;
+        }
+        .calendar-nav-btn:hover:not(:disabled) {
+          border-color: rgba(124, 110, 247, 0.18);
+          color: #c9ceea;
+          background: linear-gradient(180deg, rgba(38, 38, 50, 0.96) 0%, rgba(31, 31, 42, 0.98) 100%);
+        }
+        .calendar-nav-btn:disabled {
+          opacity: 0.35;
+          cursor: not-allowed;
+        }
+        .calendar-grid-wrap {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          min-height: 0;
+        }
+        .calendar-weekdays {
+          display: grid;
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+          gap: 6px;
+          padding: 0 4px;
+        }
+        .calendar-weekdays span {
+          text-align: center;
+          font-size: 11px;
+          color: #69708a;
+          font-family: var(--mono);
+          letter-spacing: 0.06em;
+        }
+        .calendar-grid {
+          display: grid;
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+          grid-template-rows: repeat(5, minmax(118px, 1fr));
+          gap: 4px;
+          min-height: 590px;
+        }
+        .calendar-cell {
+          position: relative;
+          border-radius: 12px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: linear-gradient(180deg, rgba(30, 30, 39, 0.98) 0%, rgba(27, 27, 36, 0.99) 100%);
+          padding: 12px;
+          overflow: hidden;
+        }
+        .calendar-cell.empty {
+          opacity: 0.4;
+        }
+        .calendar-cell.today {
+          border-color: rgba(124, 110, 247, 0.34);
+          background: linear-gradient(180deg, rgba(39, 33, 61, 0.96) 0%, rgba(32, 28, 48, 0.98) 100%);
+        }
+        .calendar-day {
+          font-size: 12px;
+          color: #8790ad;
+          font-family: var(--mono);
+        }
+        .calendar-cell.today .calendar-day {
+          color: #a195ff;
+        }
+        @media (max-width: 1180px) {
+          .calendar-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: none;
+            min-height: auto;
+          }
+          .calendar-weekdays {
+            display: none;
           }
         }
       `}</style>
@@ -1017,6 +1253,8 @@ export function DashboardClient({
               projectId={project.id}
               onMoveTask={handleBoardMove}
             />
+          ) : activeTab === "calendar" ? (
+            <CalendarView />
           ) : activeTab === "integrations" ? (
             <IntegrationsView />
           ) : (
