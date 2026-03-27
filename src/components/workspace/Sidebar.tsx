@@ -35,7 +35,9 @@ export function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const normalizedPathname =
-    pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+    pathname.length > 1 && pathname.endsWith("/")
+      ? pathname.slice(0, -1)
+      : pathname;
 
   const navItems = [
     {
@@ -64,7 +66,17 @@ export function Sidebar({
         <button type="button" className="workspace-switcher">
           <span className="workspace-avatar">{initials}</span>
           <span className="workspace-name">{workspaceName}</span>
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <path d="m4 6 4 4 4-4" />
           </svg>
         </button>
@@ -74,7 +86,9 @@ export function Sidebar({
               <span className="next-up-dot" />
               <span className="next-up-label">NEXT UP</span>
             </div>
-            <div className="next-up-task">{nextUpTask ?? "Everything shipped."}</div>
+            <div className="next-up-task">
+              {nextUpTask ?? "Everything shipped."}
+            </div>
             <div className="next-up-context">
               {nextUpContext ?? "All milestones are complete"}
             </div>
@@ -90,11 +104,15 @@ export function Sidebar({
             (href === "/dashboard" && normalizedPathname === "/");
           const fallbackActive =
             !currentSection &&
-            !navItems.some((item) =>
-              normalizedPathname === item.href || normalizedPathname.startsWith(`${item.href}/`),
+            !navItems.some(
+              (item) =>
+                normalizedPathname === item.href ||
+                normalizedPathname.startsWith(`${item.href}/`),
             ) &&
             index === 0;
-          const isActive = currentSection ? currentSection === href : derivedActive || fallbackActive;
+          const isActive = currentSection
+            ? currentSection === href
+            : derivedActive || fallbackActive;
 
           return (
             <Link
@@ -102,26 +120,25 @@ export function Sidebar({
               href={href}
               className={`nav-item ${isActive ? "active" : ""}`}
               aria-current={isActive ? "page" : undefined}
-              style={
-                {
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "8px",
-                  width: "100%",
-                  padding: "11px 14px",
-                  borderRadius: "10px",
-                  position: "relative",
-                  boxSizing: "border-box",
-                  textDecoration: "none",
-                  cursor: "pointer",
-                  color: isActive ? "#f3f3f8" : "#8c90a7",
-                  background: isActive ? "#242138" : "transparent",
-                  boxShadow: isActive
-                    ? "inset 0 0 0 1px rgba(124, 110, 247, 0.12), 0 0 0 1px rgba(139, 127, 255, 0.08), 0 10px 22px -20px rgba(139, 127, 255, 0.65)"
-                    : "none",
-                }
-              }
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "8px",
+                width: "100%",
+                height: "32px",
+                padding: "0 12px",
+                borderRadius: "10px",
+                position: "relative",
+                boxSizing: "border-box",
+                textDecoration: "none",
+                cursor: "pointer",
+                color: isActive ? "#f3f3f8" : "#8c90a7",
+                background: isActive ? "#242138" : "transparent",
+                boxShadow: isActive
+                  ? "inset 3px 0 0 #8b7fff, inset 0 0 0 1px rgba(124, 110, 247, 0.12), 0 0 0 1px rgba(139, 127, 255, 0.08), -6px 0 16px -12px rgba(139, 127, 255, 0.75), 0 10px 22px -20px rgba(139, 127, 255, 0.65)"
+                  : "none",
+              }}
             >
               <span className="nav-label">{label}</span>
               {badge ? (
@@ -132,27 +149,27 @@ export function Sidebar({
                   style={
                     badgeTone === "amber"
                       ? {
-                          minHeight: "28px",
-                          minWidth: "28px",
-                          padding: "2px 9px",
-                          borderRadius: "10px",
+                          height: "22px",
+                          minWidth: "22px",
+                          padding: "0 7px",
+                          borderRadius: "8px",
                           background: "#40351d",
                           color: "#e2a72a",
                         }
                       : isActive
                         ? {
-                            minHeight: "28px",
-                            minWidth: "28px",
-                            padding: "2px 9px",
-                            borderRadius: "10px",
+                            height: "22px",
+                            minWidth: "22px",
+                            padding: "0 7px",
+                            borderRadius: "8px",
                             background: "#2d2b3c",
                             color: "#8589a0",
                           }
                         : {
-                            minHeight: "28px",
-                            minWidth: "28px",
-                            padding: "2px 9px",
-                            borderRadius: "10px",
+                            height: "22px",
+                            minWidth: "22px",
+                            padding: "0 7px",
+                            borderRadius: "8px",
                             background: "#262633",
                             color: "#74788f",
                           }
@@ -272,7 +289,7 @@ export function Sidebar({
         }
         .next-up-card {
           background: rgba(124, 110, 247, 0.08);
-          border: 1px solid rgba(124, 110, 247, 0.20);
+          border: 1px solid rgba(124, 110, 247, 0.2);
           border-radius: 8px;
           padding: 10px 12px 11px;
         }
@@ -315,11 +332,15 @@ export function Sidebar({
           overflow-y: auto;
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 2px;
         }
         .nav-item {
           position: relative;
-          transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          height: 32px;
+          transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            box-shadow 0.2s ease;
           margin-bottom: 0;
         }
         .nav-item:last-of-type {
@@ -334,17 +355,6 @@ export function Sidebar({
         .nav-item.active:hover {
           background: rgba(120, 100, 255, 0.14);
         }
-        .nav-item.active::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 5px;
-          bottom: 5px;
-          width: 3px;
-          border-radius: 0 999px 999px 0;
-          background: linear-gradient(180deg, #ab9fff 0%, #8b7fff 100%);
-          box-shadow: 0 0 10px rgba(139, 127, 255, 0.55);
-        }
         .nav-label {
           font-size: 12px;
           font-weight: 500;
@@ -356,11 +366,11 @@ export function Sidebar({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          min-height: 28px;
-          min-width: 28px;
+          min-height: 22px;
+          min-width: 22px;
           font-size: 12px;
-          padding: 2px 9px;
-          border-radius: 10px;
+          padding: 0 7px;
+          border-radius: 8px;
           background: #262633;
           color: #74788f;
           border: 0;
@@ -473,8 +483,13 @@ export function Sidebar({
           color: var(--text3);
         }
         @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.4;
+          }
         }
       `}</style>
     </aside>
