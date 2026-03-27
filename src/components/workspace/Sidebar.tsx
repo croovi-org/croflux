@@ -102,6 +102,26 @@ export function Sidebar({
               href={href}
               className={`nav-item ${isActive ? "active" : ""}`}
               aria-current={isActive ? "page" : undefined}
+              style={
+                {
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "8px",
+                  width: "100%",
+                  padding: "11px 14px",
+                  borderRadius: "10px",
+                  position: "relative",
+                  boxSizing: "border-box",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: isActive ? "#f3f3f8" : "#8c90a7",
+                  background: isActive ? "#242138" : "transparent",
+                  boxShadow: isActive
+                    ? "inset 0 0 0 1px rgba(124, 110, 247, 0.12), 0 0 0 1px rgba(139, 127, 255, 0.08), 0 10px 22px -20px rgba(139, 127, 255, 0.65)"
+                    : "none",
+                }
+              }
             >
               <span className="nav-label">{label}</span>
               {badge ? (
@@ -109,6 +129,34 @@ export function Sidebar({
                   className={`nav-badge ${isActive ? "active" : ""} ${
                     badgeTone === "amber" ? "amber" : ""
                   }`}
+                  style={
+                    badgeTone === "amber"
+                      ? {
+                          minHeight: "28px",
+                          minWidth: "28px",
+                          padding: "2px 9px",
+                          borderRadius: "10px",
+                          background: "#40351d",
+                          color: "#e2a72a",
+                        }
+                      : isActive
+                        ? {
+                            minHeight: "28px",
+                            minWidth: "28px",
+                            padding: "2px 9px",
+                            borderRadius: "10px",
+                            background: "#2d2b3c",
+                            color: "#8589a0",
+                          }
+                        : {
+                            minHeight: "28px",
+                            minWidth: "28px",
+                            padding: "2px 9px",
+                            borderRadius: "10px",
+                            background: "#262633",
+                            color: "#74788f",
+                          }
+                  }
                 >
                   {badge}
                 </span>
@@ -262,66 +310,44 @@ export function Sidebar({
           font-family: "Geist Mono", monospace;
         }
         .sidebar-nav {
-          padding: 12px 14px 8px;
+          padding: 14px 14px 8px;
           flex: 1;
           overflow-y: auto;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 4px;
         }
         .nav-item {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-          padding: 12px 16px;
-          width: 100%;
-          border-radius: 14px;
-          border: 0;
-          color: rgba(255, 255, 255, 0.65);
           position: relative;
           transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
           margin-bottom: 0;
-          cursor: pointer;
-          text-decoration: none;
-          box-sizing: border-box;
         }
         .nav-item:last-of-type {
           margin-bottom: 0;
         }
         .nav-item:hover {
-          background: rgba(255, 255, 255, 0.04);
-          color: rgba(255, 255, 255, 0.9);
+          background: rgba(255, 255, 255, 0.03);
+          color: #d6d8e4;
+          box-shadow: 0 0 14px -12px rgba(139, 127, 255, 0.45);
+          cursor: pointer;
         }
         .nav-item.active:hover {
-          background: rgba(120, 100, 255, 0.15);
-        }
-        .nav-item.active {
-          background: rgba(120, 100, 255, 0.12);
-          border-radius: 16px;
-          color: #f0f0f8 !important;
-          box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.03),
-            inset -1px 0 0 rgba(124, 110, 247, 0.28),
-            10px 0 18px -16px rgba(124, 110, 247, 0.6);
+          background: rgba(120, 100, 255, 0.14);
         }
         .nav-item.active::before {
           content: "";
           position: absolute;
-          left: 2px;
-          top: 6px;
-          bottom: 6px;
+          left: 0;
+          top: 5px;
+          bottom: 5px;
           width: 3px;
-          border-radius: 3px;
-          background: linear-gradient(
-            to bottom,
-            rgba(140, 120, 255, 0.9),
-            rgba(120, 100, 255, 0.6)
-          );
+          border-radius: 0 999px 999px 0;
+          background: linear-gradient(180deg, #ab9fff 0%, #8b7fff 100%);
+          box-shadow: 0 0 10px rgba(139, 127, 255, 0.55);
         }
         .nav-label {
           font-size: 12px;
-          font-weight: 400;
+          font-weight: 500;
           flex: 1;
           line-height: 1;
         }
@@ -330,23 +356,24 @@ export function Sidebar({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          min-height: 24px;
+          min-height: 28px;
+          min-width: 28px;
           font-size: 12px;
-          padding: 2px 8px;
-          border-radius: 8px;
-          background: rgba(255, 255, 255, 0.06);
-          color: rgba(255, 255, 255, 0.7);
+          padding: 2px 9px;
+          border-radius: 10px;
+          background: #262633;
+          color: #74788f;
           border: 0;
           font-family: "Geist Mono", monospace;
           line-height: 1.2;
         }
         .nav-badge.active {
-          background: rgba(255, 255, 255, 0.06);
-          color: rgba(255, 255, 255, 0.7);
+          background: #2d2b3c;
+          color: #8589a0;
         }
         .nav-badge.amber {
-          background: rgba(255, 200, 0, 0.12);
-          color: rgba(255, 200, 0, 0.9);
+          background: #40351d;
+          color: #e2a72a;
         }
         .milestones-label {
           padding: 15px 9px 4px;
