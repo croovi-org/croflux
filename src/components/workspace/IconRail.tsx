@@ -13,8 +13,8 @@ import { usePathname } from "next/navigation";
 
 const items = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/milestones", label: "Milestones", icon: CheckSquare },
-  { href: "/calendar", label: "Calendar", icon: Activity },
+  { href: "/milestones", label: "Milestone", icon: CheckSquare },
+  { href: "/calendar", label: "Activity", icon: Activity },
   { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
 ];
 
@@ -71,22 +71,22 @@ export function IconRail() {
                 color: active ? "#8b7fff" : "#70758d",
                 border: active
                   ? "1px solid rgba(124, 110, 247, 0.14)"
-                  : "1px solid rgba(255, 255, 255, 0.03)",
+                  : "1px solid transparent",
                 background: active
                   ? "linear-gradient(180deg, #211d36 0%, #1d1a31 100%)"
-                  : "rgba(255, 255, 255, 0.015)",
+                  : "transparent",
                 boxShadow: active
                   ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 8px 18px rgba(10, 10, 16, 0.22), 0 0 18px -14px rgba(124, 110, 247, 0.6)"
-                  : "inset 0 1px 0 rgba(255, 255, 255, 0.01)",
+                  : "none",
               }}
             >
               <span
                 className="rail-active-line"
                 style={{
                   position: "absolute",
-                  left: "-3px",
-                  top: "4px",
-                  bottom: "4px",
+                  left: "0",
+                  top: "5px",
+                  bottom: "5px",
                   width: "3px",
                   borderRadius: "0 999px 999px 0",
                   background: active
@@ -97,7 +97,8 @@ export function IconRail() {
                     : "none",
                 }}
               />
-              <IconComponent />
+              <IconComponent size={15} strokeWidth={1.7} />
+              <span className="rail-tooltip">{label}</span>
             </Link>
           );
         })}
@@ -123,12 +124,12 @@ export function IconRail() {
             appearance: "none",
             cursor: "pointer",
             color: "#70758d",
-            border: "1px solid rgba(255, 255, 255, 0.03)",
-            background: "rgba(255, 255, 255, 0.015)",
-            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.01)",
+            border: "1px solid transparent",
+            background: "transparent",
+            boxShadow: "none",
           }}
         >
-          <Settings />
+          <Settings size={15} strokeWidth={1.7} />
         </button>
       </div>
 
@@ -139,13 +140,15 @@ export function IconRail() {
           max-width: 64px;
           height: 100%;
           min-height: 0;
-          background: #13131e;
+          background: #0f0e13;
           border-right: 1px solid rgba(255, 255, 255, 0.05);
           display: flex;
           flex-direction: column;
           align-items: center;
           padding: 0 0 14px;
           position: relative;
+          overflow: visible;
+          z-index: 8;
           flex-shrink: 0;
         }
         .rail-top,
@@ -212,8 +215,8 @@ export function IconRail() {
           color: #70758d;
           position: relative;
           border: 1px solid transparent;
-          background: rgba(255, 255, 255, 0.015);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.01);
+          background: transparent;
+          box-shadow: none;
           box-sizing: border-box;
           flex-shrink: 0;
           text-decoration: none;
@@ -222,22 +225,60 @@ export function IconRail() {
             background 0.14s ease,
             color 0.14s ease,
             border-color 0.14s ease,
-            box-shadow 0.14s ease;
-          cursor: pointer;
+            box-shadow 0.14s ease,
+            transform 0.14s ease;
+          cursor: pointer !important;
         }
         .rail-btn :global(svg) {
-          width: 18px;
-          height: 18px;
+          width: 15px;
+          height: 15px;
           stroke: currentColor;
           stroke-width: 1.7;
           stroke-linecap: round;
           stroke-linejoin: round;
           fill: none;
+          pointer-events: none;
         }
         .rail-btn:hover {
-          background: rgba(124, 110, 247, 0.08);
-          border-color: rgba(124, 110, 247, 0.12);
+          background: rgba(124, 110, 247, 0.05);
+          border-color: transparent;
           color: #8a8fb0;
+        }
+        .rail-tooltip {
+          position: absolute;
+          left: calc(100% + 12px);
+          top: 50%;
+          transform: translateY(-50%) translateX(-4px);
+          padding: 6px 10px;
+          border-radius: 8px;
+          background: #17161d;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          color: #d7d9e6;
+          font-size: 12px;
+          font-weight: 500;
+          white-space: nowrap;
+          pointer-events: none;
+          opacity: 0;
+          visibility: hidden;
+          box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+          transition:
+            opacity 0.14s ease,
+            visibility 0.14s ease,
+            transform 0.14s ease;
+          z-index: 60;
+          cursor: pointer !important;
+        }
+        .rail-btn:hover .rail-tooltip,
+        .rail-btn:focus-visible .rail-tooltip {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(-50%) translateX(0);
+        }
+        .rail-btn,
+        .rail-btn:focus-visible,
+        .rail-btn:hover,
+        .rail-btn * {
+          cursor: pointer !important;
         }
         .rail-btn.active {
           background: linear-gradient(180deg, #211d36 0%, #1d1a31 100%);
@@ -249,9 +290,9 @@ export function IconRail() {
         }
         .rail-active-line {
           position: absolute;
-          left: -3px;
-          top: 4px;
-          bottom: 4px;
+          left: 0;
+          top: 5px;
+          bottom: 5px;
           width: 3px;
           border-radius: 0 999px 999px 0;
           background: transparent;
