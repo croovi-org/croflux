@@ -131,8 +131,15 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
             aria-haspopup="menu"
             onClick={() => setOpen((value) => !value)}
           >
-            <div className="tb-user-avatar">{initials}</div>
-            <span className="tb-user-dot" aria-hidden="true" />
+            <span className="tb-user-avatar-wrap">
+              <div className="tb-user-avatar">{initials}</div>
+              <span className="tb-user-dot" aria-hidden="true" />
+            </span>
+            <span className="tb-user-chevron" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m4 6 4 4 4-4" />
+              </svg>
+            </span>
           </button>
 
           {open ? (
@@ -266,13 +273,30 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           position: relative;
         }
         .tb-user-trigger {
-          position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
+          gap: 6px;
           padding: 0;
           border: 0;
           background: transparent;
+        }
+        .tb-user-avatar-wrap {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .tb-user-chevron {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #71758b;
+          transition: transform 0.16s ease, color 0.16s ease;
+        }
+        .tb-user-trigger.open .tb-user-chevron {
+          transform: rotate(180deg);
+          color: #9ca0b6;
         }
         .tb-user-dot,
         .tb-menu-dot {
@@ -284,78 +308,78 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           border: 2px solid #1a1a25;
         }
         .tb-user-dot {
-          right: -1px;
+          right: -2px;
           bottom: -1px;
         }
         .tb-menu {
           position: absolute;
           top: calc(100% + 12px);
           right: 0;
-          width: 320px;
-          border-radius: 18px;
+          width: 272px;
+          border-radius: 16px;
           background: #1a1a1b;
           border: 1px solid rgba(255, 255, 255, 0.08);
           box-shadow: 0 20px 48px rgba(0, 0, 0, 0.38);
-          padding: 12px 10px 10px;
+          padding: 10px 8px 8px;
           z-index: 40;
         }
         .tb-menu-head {
           display: flex;
           align-items: center;
-          gap: 12px;
-          padding: 8px 8px 14px;
+          gap: 10px;
+          padding: 6px 8px 10px;
         }
         .tb-menu-avatar-wrap {
           position: relative;
-          width: 56px;
-          height: 56px;
+          width: 48px;
+          height: 48px;
           flex-shrink: 0;
         }
         .tb-menu-avatar {
-          width: 56px;
-          height: 56px;
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
           background: #7c6ef7;
           color: #fff;
           display: grid;
           place-items: center;
-          font-size: 17px;
+          font-size: 15px;
           font-weight: 700;
           font-family: Inter, sans-serif;
         }
         .tb-menu-dot {
-          left: 40px;
-          bottom: 2px;
+          left: 34px;
+          bottom: 1px;
         }
         .tb-menu-user {
           min-width: 0;
         }
         .tb-menu-name {
-          font-size: 17px;
+          font-size: 14px;
           font-weight: 600;
           color: #f3f3f7;
           line-height: 1.15;
         }
         .tb-menu-status {
-          margin-top: 4px;
-          font-size: 14px;
+          margin-top: 3px;
+          font-size: 12px;
           color: #7f8792;
           line-height: 1;
         }
         .tb-status-chip {
           width: 100%;
-          height: 54px;
-          border-radius: 14px;
+          height: 44px;
+          border-radius: 12px;
           border: 1px solid rgba(255, 255, 255, 0.08);
           background: #1c1c1d;
           color: #d5d5dc;
           display: flex;
           align-items: center;
-          gap: 12px;
-          padding: 0 16px;
-          font-size: 18px;
+          gap: 10px;
+          padding: 0 14px;
+          font-size: 14px;
           font-weight: 500;
-          margin-bottom: 10px;
+          margin-bottom: 8px;
         }
         .tb-status-chip:hover {
           background: #212123;
@@ -363,22 +387,22 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
         }
         .tb-menu-list {
           border-top: 1px solid rgba(255, 255, 255, 0.06);
-          padding-top: 10px;
+          padding-top: 8px;
           display: grid;
           gap: 2px;
         }
         .tb-menu-item {
           width: 100%;
-          min-height: 54px;
+          min-height: 44px;
           border: 0;
           background: transparent;
           color: #e6e6ea;
-          border-radius: 12px;
+          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 14px;
-          font-size: 17px;
+          padding: 0 12px;
+          font-size: 14px;
           font-weight: 500;
           text-align: left;
         }
@@ -388,7 +412,7 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
         .tb-menu-item-left {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 10px;
         }
         .tb-menu-item :global(svg) {
           color: #b9bbc3;
