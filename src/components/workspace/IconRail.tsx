@@ -57,11 +57,11 @@ export function IconRail() {
                 aria-label={label}
                 title={label}
                 style={{
-                  width: "42px",
-                  height: "42px",
-                  minWidth: "42px",
-                  minHeight: "42px",
-                  borderRadius: "12px",
+                  width: "44px",
+                  height: "44px",
+                  minWidth: "44px",
+                  minHeight: "44px",
+                  borderRadius: "14px",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -73,13 +73,13 @@ export function IconRail() {
                   cursor: "pointer",
                   color: active ? "#8b7fff" : "#70758d",
                   border: active
-                    ? "1px solid rgba(124, 110, 247, 0.14)"
+                    ? "1px solid rgba(124, 110, 247, 0.18)"
                     : "1px solid transparent",
                   background: active
-                    ? "linear-gradient(180deg, #211d36 0%, #1d1a31 100%)"
+                    ? "linear-gradient(180deg, #221e38 0%, #1b1830 100%)"
                     : "transparent",
                   boxShadow: active
-                    ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 8px 18px rgba(10, 10, 16, 0.22), 0 0 18px -14px rgba(124, 110, 247, 0.6)"
+                    ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px rgba(124, 110, 247, 0.62)"
                     : "none",
                 }}
               >
@@ -88,19 +88,19 @@ export function IconRail() {
                   style={{
                     position: "absolute",
                     left: "0",
-                    top: "5px",
-                    bottom: "5px",
+                    top: "6px",
+                    bottom: "6px",
                     width: "3px",
                     borderRadius: "0 999px 999px 0",
                     background: active
                       ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
                       : "transparent",
                     boxShadow: active
-                      ? "0 0 10px rgba(124, 110, 247, 0.42)"
+                      ? "0 0 12px rgba(124, 110, 247, 0.46)"
                       : "none",
                   }}
                 />
-                <IconComponent size={15} strokeWidth={1.7} />
+                <IconComponent size={15} strokeWidth={1.8} />
                 <span className="rail-tooltip">{label}</span>
               </Link>
               <span className={`rail-caption ${active ? "active" : ""}`}>{label}</span>
@@ -117,9 +117,9 @@ export function IconRail() {
           title="Profile"
           style={{
             width: "46px",
-            height: "40px",
+            height: "44px",
             minWidth: "46px",
-            minHeight: "40px",
+            minHeight: "44px",
             borderRadius: "14px",
             display: "inline-flex",
             alignItems: "center",
@@ -132,13 +132,13 @@ export function IconRail() {
             textDecoration: "none",
             color: profileActive ? "#8b7fff" : "#70758d",
             border: profileActive
-              ? "1px solid rgba(124, 110, 247, 0.14)"
+              ? "1px solid rgba(124, 110, 247, 0.18)"
               : "1px solid transparent",
             background: profileActive
-              ? "linear-gradient(180deg, #211d36 0%, #1d1a31 100%)"
+              ? "linear-gradient(180deg, #221e38 0%, #1b1830 100%)"
               : "transparent",
             boxShadow: profileActive
-              ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 8px 18px rgba(10, 10, 16, 0.22), 0 0 18px -14px rgba(124, 110, 247, 0.6)"
+              ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px rgba(124, 110, 247, 0.62)"
               : "none",
           }}
         >
@@ -147,19 +147,19 @@ export function IconRail() {
             style={{
               position: "absolute",
               left: "0",
-              top: "5px",
-              bottom: "5px",
+              top: "6px",
+              bottom: "6px",
               width: "3px",
               borderRadius: "0 999px 999px 0",
               background: profileActive
                 ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
                 : "transparent",
               boxShadow: profileActive
-                ? "0 0 10px rgba(124, 110, 247, 0.42)"
+                ? "0 0 12px rgba(124, 110, 247, 0.46)"
                 : "none",
             }}
           />
-          <UserRound size={15} strokeWidth={1.7} />
+          <UserRound size={15} strokeWidth={1.8} />
           <span className="rail-tooltip">Profile</span>
         </Link>
         <button
@@ -168,7 +168,7 @@ export function IconRail() {
           aria-label="Settings"
           title="Settings"
         >
-          <Settings size={15} strokeWidth={1.7} />
+          <Settings size={15} strokeWidth={1.8} />
           <span className="rail-tooltip">Settings</span>
         </button>
       </div>
@@ -208,7 +208,7 @@ export function IconRail() {
         .rail-middle {
           flex: 1;
           justify-content: flex-start;
-          gap: 14px;
+          gap: 10px;
           min-height: 0;
           padding-top: 12px;
         }
@@ -217,7 +217,7 @@ export function IconRail() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 3px;
+          gap: 0;
           flex-shrink: 0;
         }
         .rail-logo {
@@ -249,15 +249,15 @@ export function IconRail() {
         }
         .rail-bottom {
           margin-top: auto;
-          padding-bottom: 6px;
-          gap: 12px;
+          padding-bottom: 10px;
+          gap: 14px;
         }
         .rail-btn {
-          width: 42px;
-          height: 42px;
-          min-width: 42px;
-          min-height: 42px;
-          border-radius: 12px;
+          width: 44px;
+          height: 44px;
+          min-width: 44px;
+          min-height: 44px;
+          border-radius: 14px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -282,32 +282,35 @@ export function IconRail() {
           width: 15px;
           height: 15px;
           stroke: currentColor;
-          stroke-width: 1.7;
+          stroke-width: 1.8;
           stroke-linecap: round;
           stroke-linejoin: round;
           fill: none;
           pointer-events: none;
         }
         .rail-btn:hover {
-          background: rgba(124, 110, 247, 0.05);
-          border-color: transparent;
-          color: #8a8fb0;
+          background: rgba(124, 110, 247, 0.065);
+          border-color: rgba(124, 110, 247, 0.08);
+          color: #9197b4;
         }
         .rail-caption {
-          max-width: 54px;
+          max-width: 58px;
+          min-height: 0;
+          padding: 0 1px;
+          margin-top: -1px;
+          text-align: center;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          text-align: center;
-          font-size: 8px;
+          font-size: 10px;
           line-height: 1;
-          letter-spacing: 0.02em;
-          font-weight: 600;
-          color: #6e738c;
+          letter-spacing: 0.01em;
+          font-weight: 700;
+          color: #7a809b;
           pointer-events: none;
         }
         .rail-caption.active {
-          color: #8b7fff;
+          color: #9a90ff;
         }
         .rail-tooltip {
           position: absolute;
@@ -346,25 +349,25 @@ export function IconRail() {
           cursor: pointer !important;
         }
         .rail-btn.active {
-          background: linear-gradient(180deg, #211d36 0%, #1d1a31 100%);
+          background: linear-gradient(180deg, #221e38 0%, #1b1830 100%);
           color: #8b7fff;
           box-shadow:
-            inset 0 0 0 1px rgba(124, 110, 247, 0.14),
-            0 8px 18px rgba(10, 10, 16, 0.22),
-            0 0 18px -14px rgba(124, 110, 247, 0.6);
+            inset 0 0 0 1px rgba(124, 110, 247, 0.16),
+            0 10px 22px rgba(8, 8, 14, 0.24),
+            0 0 20px -14px rgba(124, 110, 247, 0.62);
         }
         .rail-active-line {
           position: absolute;
           left: 0;
-          top: 5px;
-          bottom: 5px;
+          top: 6px;
+          bottom: 6px;
           width: 3px;
           border-radius: 0 999px 999px 0;
           background: transparent;
         }
         .rail-btn.active .rail-active-line {
           background: linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%);
-          box-shadow: 0 0 10px rgba(124, 110, 247, 0.42);
+          box-shadow: 0 0 12px rgba(124, 110, 247, 0.46);
         }
         .rail-bottom .rail-btn {
           color: #70758d;
