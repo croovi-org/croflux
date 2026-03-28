@@ -3,9 +3,9 @@
 import {
   BriefcaseBusiness,
   Github,
+  Instagram,
   Mail,
   MapPin,
-  NotebookText,
   Pencil,
   Phone,
   Twitter,
@@ -194,12 +194,12 @@ export function ProfileClient({
                 <MetaRow icon={<Phone size={15} />} label="Phone" value={profile.phone || "Not provided"} />
                 <MetaRow icon={<MapPin size={15} />} label="Location" value={profile.location || "Not provided"} />
                 <MetaRow icon={<BriefcaseBusiness size={15} />} label="Role" value={profile.role || "Founder"} />
-                <MetaRow icon={<Github size={15} />} label="GitHub" value={profile.githubUrl || "Not connected"} />
-                <MetaRow icon={<Twitter size={15} />} label="Twitter / X" value={profile.twitterUrl || "Not connected"} />
+                <MetaRow icon={<Github size={15} />} label="GitHub" value={profile.githubUrl || "@your-github"} />
+                <MetaRow icon={<Twitter size={15} />} label="Twitter / X" value={profile.twitterUrl || "@yourhandle"} />
                 <MetaRow
-                  icon={<NotebookText size={15} />}
-                  label="Notion"
-                  value={profile.notionConnected ? "Connected" : "Not connected"}
+                  icon={<Instagram size={15} />}
+                  label="Instagram"
+                  value="@yourinstagram"
                 />
               </div>
             </section>
@@ -280,7 +280,7 @@ export function ProfileClient({
           grid-template-columns: 268px minmax(0, 1fr);
           gap: 20px;
           align-items: start;
-          padding: 24px;
+          padding: 20px 24px 28px;
         }
         .profile-left {
           position: sticky;
@@ -301,16 +301,17 @@ export function ProfileClient({
           border-radius: 12px;
         }
         .identity-card {
-          padding: 18px;
+          padding: 0;
+          overflow: hidden;
         }
         .avatar-wrap {
           position: relative;
-          width: 72px;
-          margin-bottom: 14px;
+          width: 96px;
+          margin: 34px auto 16px;
         }
         .avatar-circle {
-          width: 72px;
-          height: 72px;
+          width: 96px;
+          height: 96px;
           border-radius: 999px;
           display: grid;
           place-items: center;
@@ -321,10 +322,10 @@ export function ProfileClient({
         }
         .avatar-edit {
           position: absolute;
-          right: -2px;
-          bottom: -2px;
-          width: 28px;
-          height: 28px;
+          right: 2px;
+          bottom: 4px;
+          width: 30px;
+          height: 30px;
           border-radius: 999px;
           border: 1px solid #252538;
           background: #1a1a28;
@@ -333,32 +334,35 @@ export function ProfileClient({
           place-items: center;
         }
         .identity-copy h1 {
-          margin: 0 0 4px;
-          font-size: 22px;
+          margin: 0 0 6px;
+          font-size: 18px;
           line-height: 1.1;
           font-weight: 600;
           color: #f0f0f8;
           letter-spacing: -0.02em;
+          text-align: center;
         }
         .identity-copy p {
           margin: 0;
-          font-size: 13px;
+          font-size: 12px;
           color: #8c90a7;
+          text-align: center;
         }
         .identity-badges {
           display: flex;
           flex-wrap: wrap;
+          justify-content: center;
           gap: 8px;
-          margin: 16px 0 18px;
+          margin: 16px 20px 22px;
         }
         .pill {
-          height: 28px;
+          height: 24px;
           padding: 0 10px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          font-size: 11px;
+          font-size: 10px;
           font-family: "Geist Mono", monospace;
           border: 1px solid transparent;
         }
@@ -379,34 +383,42 @@ export function ProfileClient({
         }
         .meta-list {
           display: grid;
-          gap: 12px;
+          border-top: 1px solid #252538;
         }
         .stats-card {
           padding: 18px;
+        }
+        :global(.meta-row) {
+          padding: 12px 18px;
+          border-top: 1px solid #252538;
+        }
+        :global(.meta-row:first-child) {
+          border-top: 0;
         }
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 10px;
-          margin-bottom: 16px;
+          margin-bottom: 18px;
         }
         .stat-box {
           border: 1px solid #252538;
           border-radius: 10px;
           background: #1a1a28;
-          padding: 10px;
+          padding: 12px 8px;
           display: flex;
           flex-direction: column;
           gap: 6px;
+          align-items: center;
+          justify-content: center;
         }
         .stat-box span {
           font-size: 10px;
           color: #5f5f7a;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.02em;
         }
         .stat-box strong {
-          font-size: 20px;
+          font-size: 18px;
           color: #f0f0f8;
           font-family: "Geist Mono", monospace;
         }
@@ -421,7 +433,7 @@ export function ProfileClient({
           justify-content: space-between;
           align-items: center;
           gap: 10px;
-          padding-top: 10px;
+          padding-top: 8px;
           border-top: 1px solid #252538;
         }
         .stats-list span {

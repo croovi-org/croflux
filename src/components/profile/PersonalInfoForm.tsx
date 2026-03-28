@@ -115,29 +115,27 @@ export function PersonalInfoForm({
         .section-head {
           display: flex;
           justify-content: space-between;
-          align-items: flex-start;
+          align-items: center;
           gap: 16px;
-          padding: 18px 18px 16px;
+          padding: 20px 22px;
           border-bottom: 1px solid #252538;
         }
         h2 {
-          margin: 0 0 4px;
+          margin: 0;
           font-size: 16px;
           font-weight: 600;
           color: #f0f0f8;
         }
         p {
-          margin: 0;
-          color: #6f7590;
-          font-size: 12px;
+          display: none;
         }
         .save-btn {
           height: 34px;
-          padding: 0 12px;
+          padding: 0 14px;
           border-radius: 8px;
-          border: 1px solid #252538;
-          background: #1a1a28;
-          color: #f0f0f8;
+          border: 1px solid rgba(124, 110, 247, 0.22);
+          background: rgba(124, 110, 247, 0.08);
+          color: #8f84ff;
           font-size: 12px;
           font-weight: 600;
           cursor: pointer;
@@ -145,8 +143,8 @@ export function PersonalInfoForm({
         .form-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 14px 16px;
-          padding: 18px;
+          gap: 18px 18px;
+          padding: 18px 28px 28px;
         }
         label {
           display: flex;
@@ -154,12 +152,15 @@ export function PersonalInfoForm({
           gap: 7px;
         }
         span {
-          font-size: 11px;
-          color: #7e839d;
+          font-size: 10px;
+          color: #5f5f7a;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          font-family: "Geist Mono", monospace;
         }
         input,
         select {
-          height: 40px;
+          height: 46px;
           border-radius: 8px;
           border: 1px solid #252538;
           background: #1a1a28;
@@ -172,7 +173,7 @@ export function PersonalInfoForm({
           color: #9095af;
         }
         .message {
-          padding: 0 18px 18px;
+          padding: 0 28px 22px;
           font-size: 11px;
           color: #22c55e;
         }
