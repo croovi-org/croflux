@@ -337,32 +337,32 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           position: absolute;
           top: calc(100% + 12px);
           right: 0;
-          width: 272px;
-          border-radius: 16px;
+          width: 244px;
+          border-radius: 14px;
           background: #1a1a1b;
           border: 1px solid rgba(255, 255, 255, 0.08);
           box-shadow: 0 20px 48px rgba(0, 0, 0, 0.38);
-          padding: 10px 8px 8px;
+          padding: 8px 7px 7px;
           z-index: 40;
         }
         .tb-menu-head {
           position: relative;
           display: flex;
           align-items: center;
-          gap: 10px;
-          padding: 6px 8px 10px;
+          gap: 8px;
+          padding: 4px 6px 8px;
         }
         .tb-menu-profile-link {
           position: absolute;
           top: -2px;
           right: 0;
-          height: 24px;
-          padding: 0 8px;
+          height: 22px;
+          padding: 0 7px;
           border-radius: 999px;
           border: 1px solid rgba(124, 110, 247, 0.2);
           background: rgba(124, 110, 247, 0.08);
           color: #9186ff;
-          font-size: 11px;
+          font-size: 10px;
           font-weight: 600;
           cursor: pointer;
         }
@@ -372,25 +372,25 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
         }
         .tb-menu-avatar-wrap {
           position: relative;
-          width: 48px;
-          height: 48px;
+          width: 42px;
+          height: 42px;
           flex-shrink: 0;
         }
         .tb-menu-avatar {
-          width: 48px;
-          height: 48px;
+          width: 42px;
+          height: 42px;
           border-radius: 50%;
           background: #7c6ef7;
           color: #fff;
           display: grid;
           place-items: center;
-          font-size: 15px;
+          font-size: 13px;
           font-weight: 700;
           font-family: Inter, sans-serif;
         }
         .tb-menu-dot {
-          left: 34px;
-          bottom: 1px;
+          left: 29px;
+          bottom: 0;
         }
         .tb-menu-user {
           min-width: 0;
@@ -398,9 +398,9 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           display: block;
           text-decoration: none;
           cursor: pointer;
-          border-radius: 10px;
-          padding: 6px 8px;
-          margin: -6px -8px;
+          border-radius: 9px;
+          padding: 5px 6px;
+          margin: -5px -6px;
           border: 1px solid transparent;
           transition:
             background 0.14s ease,
@@ -425,31 +425,31 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           color: #c6caf0;
         }
         .tb-menu-name {
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 600;
           color: #f3f3f7;
           line-height: 1.15;
         }
         .tb-menu-status {
-          margin-top: 3px;
-          font-size: 12px;
+          margin-top: 2px;
+          font-size: 11px;
           color: #7f8792;
           line-height: 1;
         }
         .tb-status-chip {
           width: 100%;
-          height: 44px;
-          border-radius: 12px;
+          height: 38px;
+          border-radius: 11px;
           border: 1px solid rgba(255, 255, 255, 0.08);
           background: #1c1c1d;
           color: #d5d5dc;
           display: flex;
           align-items: center;
-          gap: 10px;
-          padding: 0 14px;
-          font-size: 14px;
+          gap: 8px;
+          padding: 0 12px;
+          font-size: 13px;
           font-weight: 500;
-          margin-bottom: 8px;
+          margin-bottom: 6px;
         }
         .tb-status-chip:hover {
           background: #212123;
@@ -457,22 +457,22 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
         }
         .tb-menu-list {
           border-top: 1px solid rgba(255, 255, 255, 0.06);
-          padding-top: 8px;
+          padding-top: 6px;
           display: grid;
           gap: 2px;
         }
         .tb-menu-item {
           width: 100%;
-          min-height: 44px;
+          min-height: 38px;
           border: 0;
           background: transparent;
           color: #e6e6ea;
-          border-radius: 10px;
+          border-radius: 9px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 12px;
-          font-size: 14px;
+          padding: 0 10px;
+          font-size: 13px;
           font-weight: 500;
           text-align: left;
         }
@@ -482,7 +482,7 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
         .tb-menu-item-left {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 8px;
         }
         .tb-menu-item :global(svg) {
           color: #b9bbc3;
