@@ -106,14 +106,14 @@ function MetaRow({
       <style jsx>{`
         .meta-row {
           display: grid;
-          grid-template-columns: 34px minmax(0, 1fr);
-          gap: 10px;
+          grid-template-columns: 30px minmax(0, 1fr);
+          gap: 8px;
           align-items: start;
         }
         .meta-icon {
-          width: 34px;
-          height: 34px;
-          border-radius: 10px;
+          width: 30px;
+          height: 30px;
+          border-radius: 9px;
           display: grid;
           place-items: center;
           border: 1px solid #252538;
@@ -127,19 +127,17 @@ function MetaRow({
           gap: 2px;
         }
         .meta-copy span {
-          font-size: 10px;
+          font-size: 9px;
           color: #5f5f7a;
           letter-spacing: 0.05em;
           text-transform: uppercase;
           font-family: "Geist Mono", monospace;
         }
         .meta-copy strong {
-          font-size: 13px;
+          font-size: 12px;
           color: #f0f0f8;
           font-weight: 500;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          overflow-wrap: anywhere;
         }
       `}</style>
     </div>
@@ -277,23 +275,23 @@ export function ProfileClient({
         }
         .profile-grid {
           display: grid;
-          grid-template-columns: 268px minmax(0, 1fr);
-          gap: 20px;
+          grid-template-columns: 282px minmax(0, 1fr);
+          gap: 14px;
           align-items: start;
-          padding: 20px 24px 28px;
+          padding: 14px 18px 18px;
         }
         .profile-left {
           position: sticky;
-          top: 24px;
+          top: 16px;
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 12px;
           align-self: start;
         }
         .profile-right {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 12px;
         }
         .card {
           background: #13131e;
@@ -306,26 +304,26 @@ export function ProfileClient({
         }
         .avatar-wrap {
           position: relative;
-          width: 96px;
-          margin: 34px auto 16px;
+          width: 72px;
+          margin: 20px auto 10px;
         }
         .avatar-circle {
-          width: 96px;
-          height: 96px;
+          width: 72px;
+          height: 72px;
           border-radius: 999px;
           display: grid;
           place-items: center;
           background: linear-gradient(180deg, #8b7fff 0%, #6f60f2 100%);
           color: #fff;
-          font-size: 22px;
+          font-size: 16px;
           font-weight: 700;
         }
         .avatar-edit {
           position: absolute;
           right: 2px;
           bottom: 4px;
-          width: 30px;
-          height: 30px;
+          width: 22px;
+          height: 22px;
           border-radius: 999px;
           border: 1px solid #252538;
           background: #1a1a28;
@@ -335,7 +333,7 @@ export function ProfileClient({
         }
         .identity-copy h1 {
           margin: 0 0 6px;
-          font-size: 18px;
+          font-size: 15px;
           line-height: 1.1;
           font-weight: 600;
           color: #f0f0f8;
@@ -344,7 +342,7 @@ export function ProfileClient({
         }
         .identity-copy p {
           margin: 0;
-          font-size: 12px;
+          font-size: 10px;
           color: #8c90a7;
           text-align: center;
         }
@@ -352,17 +350,17 @@ export function ProfileClient({
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 8px;
-          margin: 16px 20px 22px;
+          gap: 5px;
+          margin: 10px 14px 14px;
         }
         .pill {
-          height: 24px;
-          padding: 0 10px;
+          height: 20px;
+          padding: 0 8px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          font-size: 10px;
+          font-size: 9px;
           font-family: "Geist Mono", monospace;
           border: 1px solid transparent;
         }
@@ -386,10 +384,10 @@ export function ProfileClient({
           border-top: 1px solid #252538;
         }
         .stats-card {
-          padding: 18px;
+          padding: 12px;
         }
         :global(.meta-row) {
-          padding: 12px 18px;
+          padding: 8px 12px;
           border-top: 1px solid #252538;
         }
         :global(.meta-row:first-child) {
@@ -398,27 +396,27 @@ export function ProfileClient({
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 10px;
-          margin-bottom: 18px;
+          gap: 6px;
+          margin-bottom: 12px;
         }
         .stat-box {
           border: 1px solid #252538;
           border-radius: 10px;
           background: #1a1a28;
-          padding: 12px 8px;
+          padding: 8px 4px;
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 4px;
           align-items: center;
           justify-content: center;
         }
         .stat-box span {
-          font-size: 10px;
+          font-size: 9px;
           color: #5f5f7a;
           letter-spacing: 0.02em;
         }
         .stat-box strong {
-          font-size: 18px;
+          font-size: 14px;
           color: #f0f0f8;
           font-family: "Geist Mono", monospace;
         }
@@ -426,22 +424,22 @@ export function ProfileClient({
         .stat-box strong.green { color: #22c55e; }
         .stats-list {
           display: grid;
-          gap: 12px;
+          gap: 8px;
         }
         .stats-list div {
           display: flex;
           justify-content: space-between;
           align-items: center;
           gap: 10px;
-          padding-top: 8px;
+          padding-top: 6px;
           border-top: 1px solid #252538;
         }
         .stats-list span {
-          font-size: 12px;
+          font-size: 10px;
           color: #8c90a7;
         }
         .stats-list strong {
-          font-size: 12px;
+          font-size: 10px;
           color: #f0f0f8;
           font-family: "Geist Mono", monospace;
           text-align: right;
