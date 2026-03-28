@@ -117,12 +117,12 @@ export function PersonalInfoForm({
           justify-content: space-between;
           align-items: center;
           gap: 16px;
-          padding: 20px 22px;
+          padding: 12px 14px;
           border-bottom: 1px solid #252538;
         }
         h2 {
           margin: 0;
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 600;
           color: #f0f0f8;
         }
@@ -130,29 +130,29 @@ export function PersonalInfoForm({
           display: none;
         }
         .save-btn {
-          height: 34px;
-          padding: 0 14px;
+          height: 28px;
+          padding: 0 10px;
           border-radius: 8px;
           border: 1px solid rgba(124, 110, 247, 0.22);
           background: rgba(124, 110, 247, 0.08);
           color: #8f84ff;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 600;
           cursor: pointer;
         }
         .form-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 18px 18px;
-          padding: 18px 28px 28px;
+          gap: 10px 12px;
+          padding: 12px 14px 14px;
         }
         label {
           display: flex;
           flex-direction: column;
-          gap: 7px;
+          gap: 4px;
         }
         span {
-          font-size: 10px;
+          font-size: 9px;
           color: #5f5f7a;
           text-transform: uppercase;
           letter-spacing: 0.08em;
@@ -160,21 +160,21 @@ export function PersonalInfoForm({
         }
         input,
         select {
-          height: 46px;
+          height: 36px;
           border-radius: 8px;
           border: 1px solid #252538;
           background: #1a1a28;
           color: #f0f0f8;
-          padding: 0 12px;
-          font-size: 13px;
+          padding: 0 10px;
+          font-size: 12px;
           outline: none;
         }
         input[readonly] {
           color: #9095af;
         }
         .message {
-          padding: 0 28px 22px;
-          font-size: 11px;
+          padding: 0 14px 12px;
+          font-size: 10px;
           color: #22c55e;
         }
         @media (max-width: 860px) {
