@@ -19,7 +19,7 @@ type SidebarProps = {
   rank: number | null;
   milestones: SidebarMilestone[];
   streak: number;
-  currentSection?: "/dashboard" | "/my-tasks" | "/leaderboard";
+  currentSection?: "/dashboard" | "/my-tasks" | "/leaderboard" | "/profile";
 };
 
 export function Sidebar({
