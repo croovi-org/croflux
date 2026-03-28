@@ -15,7 +15,7 @@ type SidebarMilestone = {
 type WorkspaceShellProps = {
   workspaceName: string;
   currentPage: string;
-  currentSection: "/dashboard" | "/my-tasks" | "/leaderboard";
+  currentSection: "/dashboard" | "/my-tasks" | "/leaderboard" | "/profile";
   initials: string;
   userName: string;
   nextUpTask: string | null;

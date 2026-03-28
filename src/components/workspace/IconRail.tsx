@@ -4,8 +4,8 @@ import {
   Activity,
   CheckSquare,
   LayoutDashboard,
-  Settings,
   Trophy,
+  UserRound,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +20,7 @@ const items = [
 
 export function IconRail() {
   const pathname = usePathname();
+  const profileActive = pathname.startsWith("/profile");
 
   return (
     <aside className="rail-shell">
@@ -108,11 +109,11 @@ export function IconRail() {
       </div>
 
       <div className="rail-bottom">
-        <button
-          type="button"
+        <Link
+          href="/profile"
           className="rail-btn"
-          aria-label="Settings"
-          title="Settings"
+          aria-label="Profile"
+          title="Profile"
           style={{
             width: "42px",
             height: "42px",
@@ -127,14 +128,39 @@ export function IconRail() {
             flexShrink: 0,
             appearance: "none",
             cursor: "pointer",
-            color: "#70758d",
-            border: "1px solid transparent",
-            background: "transparent",
-            boxShadow: "none",
+            textDecoration: "none",
+            color: profileActive ? "#8b7fff" : "#70758d",
+            border: profileActive
+              ? "1px solid rgba(124, 110, 247, 0.14)"
+              : "1px solid transparent",
+            background: profileActive
+              ? "linear-gradient(180deg, #211d36 0%, #1d1a31 100%)"
+              : "transparent",
+            boxShadow: profileActive
+              ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 8px 18px rgba(10, 10, 16, 0.22), 0 0 18px -14px rgba(124, 110, 247, 0.6)"
+              : "none",
           }}
         >
-          <Settings size={15} strokeWidth={1.7} />
-        </button>
+          <span
+            className="rail-active-line"
+            style={{
+              position: "absolute",
+              left: "0",
+              top: "5px",
+              bottom: "5px",
+              width: "3px",
+              borderRadius: "0 999px 999px 0",
+              background: profileActive
+                ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
+                : "transparent",
+              boxShadow: profileActive
+                ? "0 0 10px rgba(124, 110, 247, 0.42)"
+                : "none",
+            }}
+          />
+          <UserRound size={15} strokeWidth={1.7} />
+          <span className="rail-tooltip">Profile</span>
+        </Link>
       </div>
 
       <style jsx>{`

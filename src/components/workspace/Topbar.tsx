@@ -73,7 +73,14 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
   const closeMenu = () => setOpen(false);
   const menuItems: MenuItem[] = [
     { label: "Set status", icon: SmilePlus, onClick: closeMenu },
-    { label: "Settings", icon: Settings, onClick: closeMenu },
+    {
+      label: "Settings",
+      icon: Settings,
+      onClick: () => {
+        closeMenu();
+        router.push("/profile");
+      },
+    },
     { label: "Themes", icon: MoonStar, onClick: closeMenu },
     { label: "Mute notifications", icon: BellOff, trailing: "chevron", onClick: closeMenu },
     { label: "Create Task", icon: PlusSquare, onClick: closeMenu },
