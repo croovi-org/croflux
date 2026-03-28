@@ -70,19 +70,23 @@ export function TaskRow({
           display: flex;
           align-items: center;
           gap: 9px;
-          padding: 7px 0;
+          padding: 7px 8px;
           border-bottom: 1px solid var(--border);
           color: inherit;
           text-align: left;
           cursor: pointer;
-          transition: all 0.12s ease;
+          border-radius: 8px;
+          transform: translateX(0) translateY(0);
+          transition:
+            transform 0.18s ease,
+            background 0.18s ease,
+            box-shadow 0.18s ease,
+            border-color 0.18s ease;
         }
-        .task-row:hover {
-          background: rgba(255, 255, 255, 0.02);
-          padding-left: 5px;
-          margin-left: -5px;
-          margin-right: -5px;
-          border-radius: 4px;
+        .task-row:not(.done):hover {
+          background: rgba(255, 255, 255, 0.028);
+          transform: translateX(6px) translateY(-2px);
+          box-shadow: 0 10px 18px rgba(8, 8, 14, 0.18);
         }
         .task-row.last {
           border-bottom: none;
