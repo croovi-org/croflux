@@ -4,6 +4,7 @@ import {
   Activity,
   CheckSquare,
   LayoutDashboard,
+  Settings,
   Trophy,
   UserRound,
 } from "lucide-react";
@@ -115,11 +116,11 @@ export function IconRail() {
           aria-label="Profile"
           title="Profile"
           style={{
-            width: "42px",
-            height: "42px",
-            minWidth: "42px",
-            minHeight: "42px",
-            borderRadius: "12px",
+            width: "46px",
+            height: "40px",
+            minWidth: "46px",
+            minHeight: "40px",
+            borderRadius: "14px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -161,6 +162,15 @@ export function IconRail() {
           <UserRound size={15} strokeWidth={1.7} />
           <span className="rail-tooltip">Profile</span>
         </Link>
+        <button
+          type="button"
+          className="rail-btn rail-settings"
+          aria-label="Settings"
+          title="Settings"
+        >
+          <Settings size={15} strokeWidth={1.7} />
+          <span className="rail-tooltip">Settings</span>
+        </button>
       </div>
 
       <style jsx>{`
@@ -240,6 +250,7 @@ export function IconRail() {
         .rail-bottom {
           margin-top: auto;
           padding-bottom: 6px;
+          gap: 12px;
         }
         .rail-btn {
           width: 42px;
@@ -357,6 +368,11 @@ export function IconRail() {
         }
         .rail-bottom .rail-btn {
           color: #70758d;
+        }
+        .rail-settings {
+          background: transparent;
+          border-color: transparent;
+          box-shadow: none;
         }
       `}</style>
     </aside>

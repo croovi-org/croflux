@@ -13,14 +13,14 @@ const services = [
     name: "GitHub",
     description: "Sync repositories, issues, and pull requests with your roadmap.",
     features: ["PR completion", "Issue sync", "Milestones"],
-    status: "connected",
+    status: "connect",
     icon: Github,
   },
   {
     name: "Notion",
     description: "Import docs and push status updates back to your operating system.",
     features: ["PDS import", "Sync milestones", "Status push"],
-    status: "connected",
+    status: "connect",
     icon: NotebookText,
   },
   {

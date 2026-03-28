@@ -405,21 +405,24 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           transition:
             background 0.14s ease,
             border-color 0.14s ease,
-            box-shadow 0.14s ease;
+            box-shadow 0.14s ease,
+            filter 0.14s ease;
         }
         .tb-menu-user:hover {
-          background: rgba(124, 110, 247, 0.16);
-          border-color: rgba(124, 110, 247, 0.24);
+          background: rgba(124, 110, 247, 0.12);
+          border-color: rgba(124, 110, 247, 0.28);
           box-shadow:
             inset 0 0 0 1px rgba(124, 110, 247, 0.12),
-            0 0 0 1px rgba(124, 110, 247, 0.14),
-            0 0 20px -8px rgba(124, 110, 247, 0.85);
+            0 0 0 1px rgba(124, 110, 247, 0.16),
+            0 0 22px -6px rgba(124, 110, 247, 0.95);
+          filter: drop-shadow(0 0 10px rgba(124, 110, 247, 0.55));
         }
         .tb-menu-user:hover .tb-menu-name {
           color: #ffffff;
+          text-shadow: 0 0 10px rgba(124, 110, 247, 0.55);
         }
         .tb-menu-user:hover .tb-menu-status {
-          color: #a7aeb9;
+          color: #c6caf0;
         }
         .tb-menu-name {
           font-size: 14px;
