@@ -1,5 +1,6 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
 import {
   CalendarDays,
   Clock3,
@@ -8,7 +9,17 @@ import {
   Slack,
 } from "lucide-react";
 
-const services = [
+type IntegrationStatus = "connected" | "connect" | "soon";
+
+type IntegrationService = {
+  name: string;
+  description: string;
+  features: string[];
+  status: IntegrationStatus;
+  icon: LucideIcon;
+};
+
+const services: IntegrationService[] = [
   {
     name: "GitHub",
     description: "Sync repositories, issues, and pull requests with your roadmap.",
@@ -44,7 +55,7 @@ const services = [
     status: "soon",
     icon: Slack,
   },
-] as const;
+];
 
 export function IntegrationsPanel() {
   return (
