@@ -9,6 +9,7 @@ import {
   SmilePlus,
   Trash2,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -152,14 +153,28 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           {open ? (
             <div className="tb-menu" role="menu">
               <div className="tb-menu-head">
+                <button
+                  type="button"
+                  className="tb-menu-profile-link"
+                  onClick={() => {
+                    closeMenu();
+                    router.push("/profile");
+                  }}
+                >
+                  Profile
+                </button>
                 <div className="tb-menu-avatar-wrap">
                   <div className="tb-menu-avatar">{initials}</div>
                   <span className="tb-menu-dot" aria-hidden="true" />
                 </div>
-                <div className="tb-menu-user">
+                <Link
+                  href="/profile"
+                  className="tb-menu-user"
+                  onClick={() => setOpen(false)}
+                >
                   <div className="tb-menu-name">{userName}</div>
                   <div className="tb-menu-status">Online</div>
-                </div>
+                </Link>
               </div>
 
               <button type="button" className="tb-status-chip" onClick={closeMenu}>
@@ -331,10 +346,29 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           z-index: 40;
         }
         .tb-menu-head {
+          position: relative;
           display: flex;
           align-items: center;
           gap: 10px;
           padding: 6px 8px 10px;
+        }
+        .tb-menu-profile-link {
+          position: absolute;
+          top: -2px;
+          right: 0;
+          height: 24px;
+          padding: 0 8px;
+          border-radius: 999px;
+          border: 1px solid rgba(124, 110, 247, 0.2);
+          background: rgba(124, 110, 247, 0.08);
+          color: #9186ff;
+          font-size: 11px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .tb-menu-profile-link:hover {
+          background: rgba(124, 110, 247, 0.14);
+          color: #aca2ff;
         }
         .tb-menu-avatar-wrap {
           position: relative;
@@ -360,6 +394,32 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
         }
         .tb-menu-user {
           min-width: 0;
+          flex: 1;
+          display: block;
+          text-decoration: none;
+          cursor: pointer;
+          border-radius: 10px;
+          padding: 6px 8px;
+          margin: -6px -8px;
+          border: 1px solid transparent;
+          transition:
+            background 0.14s ease,
+            border-color 0.14s ease,
+            box-shadow 0.14s ease;
+        }
+        .tb-menu-user:hover {
+          background: rgba(124, 110, 247, 0.16);
+          border-color: rgba(124, 110, 247, 0.24);
+          box-shadow:
+            inset 0 0 0 1px rgba(124, 110, 247, 0.12),
+            0 0 0 1px rgba(124, 110, 247, 0.14),
+            0 0 20px -8px rgba(124, 110, 247, 0.85);
+        }
+        .tb-menu-user:hover .tb-menu-name {
+          color: #ffffff;
+        }
+        .tb-menu-user:hover .tb-menu-status {
+          color: #a7aeb9;
         }
         .tb-menu-name {
           font-size: 14px;
