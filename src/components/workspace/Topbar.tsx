@@ -2,11 +2,11 @@
 
 import {
   BellOff,
+  CircleDollarSign,
   LogOut,
   MoonStar,
   PlusSquare,
   Settings,
-  SmilePlus,
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
@@ -73,7 +73,18 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
 
   const closeMenu = () => setOpen(false);
   const menuItems: MenuItem[] = [
-    { label: "Set status", icon: SmilePlus, onClick: closeMenu },
+    { label: "Mute notifications", icon: BellOff, trailing: "chevron", onClick: closeMenu },
+    { label: "Create Task", icon: PlusSquare, onClick: closeMenu },
+    { label: "Trash", icon: Trash2, tone: "danger", onClick: closeMenu },
+    { label: "Themes", icon: MoonStar, onClick: closeMenu },
+    {
+      label: "Pricing",
+      icon: CircleDollarSign,
+      onClick: () => {
+        closeMenu();
+        router.push("/pricing");
+      },
+    },
     {
       label: "Settings",
       icon: Settings,
@@ -82,10 +93,6 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
         router.push("/profile");
       },
     },
-    { label: "Themes", icon: MoonStar, onClick: closeMenu },
-    { label: "Mute notifications", icon: BellOff, trailing: "chevron", onClick: closeMenu },
-    { label: "Create Task", icon: PlusSquare, onClick: closeMenu },
-    { label: "Trash", icon: Trash2, tone: "danger", onClick: closeMenu },
     { label: "Log out", icon: LogOut, tone: "danger", onClick: handleLogout },
   ];
 
@@ -176,14 +183,8 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
                   <div className="tb-menu-status">Online</div>
                 </Link>
               </div>
-
-              <button type="button" className="tb-status-chip" onClick={closeMenu}>
-                <SmilePlus size={18} />
-                <span>Set status</span>
-              </button>
-
               <div className="tb-menu-list">
-                {menuItems.slice(1).map(({ label, icon: Icon, trailing, tone, onClick }) => (
+                {menuItems.map(({ label, icon: Icon, trailing, tone, onClick }) => (
                   <button
                     key={label}
                     type="button"
@@ -435,25 +436,6 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           font-size: 11px;
           color: #7f8792;
           line-height: 1;
-        }
-        .tb-status-chip {
-          width: 100%;
-          height: 38px;
-          border-radius: 11px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: #1c1c1d;
-          color: #d5d5dc;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 0 12px;
-          font-size: 13px;
-          font-weight: 500;
-          margin-bottom: 6px;
-        }
-        .tb-status-chip:hover {
-          background: #212123;
-          border-color: rgba(255, 255, 255, 0.12);
         }
         .tb-menu-list {
           border-top: 1px solid rgba(255, 255, 255, 0.06);
