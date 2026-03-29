@@ -59,11 +59,11 @@ export function IconRail() {
                 aria-label={label}
                 title={label}
                 style={{
-                  width: "40px",
-                  height: "40px",
-                  minWidth: "40px",
-                  minHeight: "40px",
-                  borderRadius: "12px",
+                  width: "38px",
+                  height: "38px",
+                  minWidth: "38px",
+                  minHeight: "38px",
+                  borderRadius: "13px",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -112,11 +112,11 @@ export function IconRail() {
           aria-label="Pricing"
           title="Pricing"
           style={{
-            width: "40px",
-            height: "40px",
-            minWidth: "40px",
-            minHeight: "40px",
-            borderRadius: "12px",
+            width: "38px",
+            height: "38px",
+            minWidth: "38px",
+            minHeight: "38px",
+            borderRadius: "13px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -158,11 +158,11 @@ export function IconRail() {
           aria-label="Profile"
           title="Profile"
           style={{
-            width: "40px",
-            height: "40px",
-            minWidth: "40px",
-            minHeight: "40px",
-            borderRadius: "12px",
+            width: "38px",
+            height: "38px",
+            minWidth: "38px",
+            minHeight: "38px",
+            borderRadius: "13px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -249,11 +249,11 @@ export function IconRail() {
           padding-top: 12px;
         }
         .rail-item {
-          width: 100%;
+          width: 60px;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 0;
+          gap: 4px;
           flex-shrink: 0;
         }
         .rail-logo {
@@ -289,11 +289,11 @@ export function IconRail() {
           gap: 14px;
         }
         .rail-btn {
-          width: 40px;
-          height: 40px;
-          min-width: 40px;
-          min-height: 40px;
-          border-radius: 12px;
+          width: 38px;
+          height: 38px;
+          min-width: 38px;
+          min-height: 38px;
+          border-radius: 13px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -330,10 +330,14 @@ export function IconRail() {
           color: #9197b4;
         }
         .rail-caption {
-          max-width: 58px;
+          width: 60px;
+          max-width: 60px;
           min-height: 0;
-          padding: 0 1px;
-          margin-top: -1px;
+          padding: 0 4px;
+          margin-top: 0;
+          margin-left: auto;
+          margin-right: auto;
+          display: block;
           text-align: center;
           overflow: hidden;
           text-overflow: ellipsis;
