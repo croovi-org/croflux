@@ -72,9 +72,14 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
   };
 
   const closeMenu = () => setOpen(false);
+  const openTaskWorkspace = () => {
+    closeMenu();
+    router.push("/my-tasks");
+  };
+
   const menuItems: MenuItem[] = [
     { label: "Mute notifications", icon: BellOff, trailing: "chevron", onClick: closeMenu },
-    { label: "Create Task", icon: PlusSquare, onClick: closeMenu },
+    { label: "Create Task", icon: PlusSquare, onClick: openTaskWorkspace },
     { label: "Trash", icon: Trash2, tone: "danger", onClick: closeMenu },
     { label: "Themes", icon: PaintRoller, onClick: closeMenu },
     {
@@ -123,7 +128,7 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           </svg>
           <span>Search</span>
         </button>
-        <button type="button" className="tb-add">
+        <button type="button" className="tb-add" onClick={openTaskWorkspace}>
           <svg
             viewBox="0 0 24 24"
             width="12"
