@@ -43,7 +43,7 @@ export function ContactSidebar() {
         <div className="space-y-3">
           {expectationItems.map((item) => (
             <div key={item} className="flex items-start gap-3">
-              <span className="mt-[6px] h-[6px] w-[6px] shrink-0 rounded-full bg-[#7c6af7]" />
+              <span className="mt-[6px] h-[6px] w-[6px] shrink-0 rounded-full bg-[var(--accent)]" />
               <p className="text-[13px] leading-6 text-[#71717a]">{item}</p>
             </div>
           ))}

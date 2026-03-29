@@ -213,7 +213,7 @@ function ResetPasswordContent() {
               ) : null}
 
               {notice ? (
-                <p className="rounded-[var(--radius)] border border-[rgba(169,157,254,0.2)] bg-[rgba(169,157,254,0.08)] px-4 py-3 text-[13px] text-[var(--purple2)]">
+                <p className="rounded-[var(--radius)] border border-[var(--accent-muted)] bg-[var(--accent-subtle)] px-4 py-3 text-[13px] text-[var(--purple2)]">
                   {notice}
                 </p>
               ) : null}

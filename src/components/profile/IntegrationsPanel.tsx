@@ -184,7 +184,7 @@ export function IntegrationsPanel() {
           background: currentColor;
         }
         .status.connected { color: #22c55e; }
-        .status.connect { color: #7c6ef7; }
+        .status.connect { color: var(--accent); }
         .status.soon { color: #6a7088; }
         .chips {
           display: flex;
@@ -221,8 +221,8 @@ export function IntegrationsPanel() {
           border-color: rgba(34, 197, 94, 0.24);
         }
         .action.connect:hover {
-          color: #7c6ef7;
-          border-color: rgba(124, 110, 247, 0.22);
+          color: var(--accent);
+          border-color: var(--purple-border);
         }
         .action.soon {
           color: #6a7088;

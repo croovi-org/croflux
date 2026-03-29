@@ -39,7 +39,7 @@ export function ProgressBar({ progress, completedTasks, totalTasks }: ProgressBa
           position: relative;
           height: 100%;
           border-radius: 3px;
-          background: #7c6ef7;
+          background: var(--accent);
           transition: width 0.5s ease;
         }
         .lp-dot {
@@ -52,7 +52,7 @@ export function ProgressBar({ progress, completedTasks, totalTasks }: ProgressBa
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background: #7c6ef7;
+          background: var(--accent);
           box-shadow: none;
         }
         .lp-track::before {

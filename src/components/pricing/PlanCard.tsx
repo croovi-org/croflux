@@ -49,11 +49,11 @@ export function PlanCard({
   billingAnnual,
   badge,
 }: PlanCardProps) {
-  const accent = isTeam ? "#22d3ee" : "#7c6ef7";
+  const accent = isTeam ? "#22d3ee" : "var(--accent)";
   const accentBorder = isTeam
     ? "rgba(34, 211, 238, 0.34)"
-    : "rgba(124, 110, 247, 0.26)";
-  const checkTone = isTeam ? "#22c55e" : "#7c6ef7";
+    : "var(--purple-border)";
+  const checkTone = isTeam ? "#22c55e" : "var(--accent)";
 
   return (
     <article className={`plan-card ${isFeatured ? "featured" : ""} ${isTeam ? "team" : ""}`}>
@@ -134,7 +134,7 @@ export function PlanCard({
           border-color: #2e2e48;
         }
         .plan-card.featured {
-          border: 1.5px solid rgba(124, 110, 247, 0.92);
+          border: 1.5px solid var(--accent);
         }
         .plan-card.team {
           border-color: rgba(34, 211, 238, 0.2);
@@ -154,7 +154,7 @@ export function PlanCard({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          background: ${isTeam ? "#22d3ee" : "#7c6ef7"};
+          background: ${isTeam ? "#22d3ee" : "var(--accent)"};
           color: ${isTeam ? "#0f0f17" : "#ffffff"};
           font-size: 10px;
           font-weight: 600;
@@ -172,7 +172,7 @@ export function PlanCard({
           padding: 0 9px;
           border-radius: 4px;
           border: 1px solid ${accentBorder};
-          background: ${isTeam ? "rgba(34, 211, 238, 0.08)" : "rgba(124, 110, 247, 0.08)"};
+          background: ${isTeam ? "rgba(34, 211, 238, 0.08)" : "var(--accent-subtle)"};
           color: ${accent};
           font-size: 10px;
           font-family: "Geist Mono", monospace;
@@ -259,17 +259,17 @@ export function PlanCard({
           transition: all 0.15s ease;
         }
         :global(a.cta.secondary:hover) {
-          border-color: #7c6ef7;
-          color: #7c6ef7;
+          border-color: var(--accent);
+          color: var(--accent);
         }
         :global(a.cta.accent) {
-          background: #7c6ef7;
+          background: var(--accent);
           color: #ffffff;
-          border-color: #7c6ef7;
+          border-color: var(--accent);
         }
         :global(a.cta.accent:hover) {
-          background: #6357d4;
-          border-color: #6357d4;
+          background: var(--accent-hover);
+          border-color: var(--accent-hover);
         }
         :global(a.cta.team-secondary) {
           background: rgba(34, 211, 238, 0.08);
@@ -338,7 +338,7 @@ export function PlanCard({
           display: grid;
           place-items: center;
           margin-top: 1px;
-          background: ${isTeam ? "rgba(34, 197, 94, 0.08)" : "rgba(124, 110, 247, 0.08)"};
+          background: ${isTeam ? "rgba(34, 197, 94, 0.08)" : "var(--accent-subtle)"};
           border: 1px solid ${isTeam ? "rgba(34, 197, 94, 0.24)" : accentBorder};
           color: ${checkTone};
           flex-shrink: 0;

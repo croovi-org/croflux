@@ -133,8 +133,8 @@ export function PersonalInfoForm({
           height: 28px;
           padding: 0 10px;
           border-radius: 8px;
-          border: 1px solid rgba(124, 110, 247, 0.22);
-          background: rgba(124, 110, 247, 0.08);
+          border: 1px solid var(--purple-border);
+          background: var(--accent-subtle);
           color: #8f84ff;
           font-size: 11px;
           font-weight: 600;

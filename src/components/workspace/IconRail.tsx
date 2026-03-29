@@ -73,15 +73,13 @@ export function IconRail() {
                   textDecoration: "none",
                   appearance: "none",
                   cursor: "pointer",
-                  color: active ? "#8b7fff" : "#70758d",
-                  border: active
-                    ? "1px solid rgba(124, 110, 247, 0.18)"
-                    : "1px solid transparent",
+                  color: active ? "var(--accent-text)" : "#70758d",
+                  border: active ? "1px solid var(--purple-mid)" : "1px solid transparent",
                   background: active
-                    ? "linear-gradient(180deg, #221e38 0%, #1b1830 100%)"
+                    ? "linear-gradient(180deg, var(--accent-subtle) 0%, rgba(17, 17, 23, 0.92) 100%)"
                     : "transparent",
                   boxShadow: active
-                    ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px rgba(124, 110, 247, 0.62)"
+                    ? "inset 0 0 0 1px var(--accent-subtle), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px var(--accent-glow)"
                     : "none",
                 }}
               >
@@ -95,11 +93,9 @@ export function IconRail() {
                     width: "3px",
                     borderRadius: "0 999px 999px 0",
                     background: active
-                      ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
+                      ? "linear-gradient(180deg, var(--accent-line-start) 0%, var(--accent) 100%)"
                       : "transparent",
-                    boxShadow: active
-                      ? "0 0 12px rgba(124, 110, 247, 0.46)"
-                      : "none",
+                    boxShadow: active ? "0 0 12px var(--accent-glow)" : "none",
                   }}
                 />
                 <IconComponent size={15} strokeWidth={1.8} />
@@ -132,15 +128,13 @@ export function IconRail() {
             appearance: "none",
             cursor: "pointer",
             textDecoration: "none",
-            color: pricingActive ? "#8b7fff" : "#70758d",
-            border: pricingActive
-              ? "1px solid rgba(124, 110, 247, 0.18)"
-              : "1px solid transparent",
+            color: pricingActive ? "var(--accent-text)" : "#70758d",
+            border: pricingActive ? "1px solid var(--purple-mid)" : "1px solid transparent",
             background: pricingActive
-              ? "linear-gradient(180deg, #221e38 0%, #1b1830 100%)"
+              ? "linear-gradient(180deg, var(--accent-subtle) 0%, rgba(17, 17, 23, 0.92) 100%)"
               : "transparent",
             boxShadow: pricingActive
-              ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px rgba(124, 110, 247, 0.62)"
+              ? "inset 0 0 0 1px var(--accent-subtle), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px var(--accent-glow)"
               : "none",
           }}
         >
@@ -154,11 +148,9 @@ export function IconRail() {
               width: "3px",
               borderRadius: "0 999px 999px 0",
               background: pricingActive
-                ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
+                ? "linear-gradient(180deg, var(--accent-line-start) 0%, var(--accent) 100%)"
                 : "transparent",
-              boxShadow: pricingActive
-                ? "0 0 12px rgba(124, 110, 247, 0.46)"
-                : "none",
+              boxShadow: pricingActive ? "0 0 12px var(--accent-glow)" : "none",
             }}
           />
           <DollarSign size={15} strokeWidth={1.8} />
@@ -184,15 +176,13 @@ export function IconRail() {
             appearance: "none",
             cursor: "pointer",
             textDecoration: "none",
-            color: profileActive ? "#8b7fff" : "#70758d",
-            border: profileActive
-              ? "1px solid rgba(124, 110, 247, 0.18)"
-              : "1px solid transparent",
+            color: profileActive ? "var(--accent-text)" : "#70758d",
+            border: profileActive ? "1px solid var(--purple-mid)" : "1px solid transparent",
             background: profileActive
-              ? "linear-gradient(180deg, #221e38 0%, #1b1830 100%)"
+              ? "linear-gradient(180deg, var(--accent-subtle) 0%, rgba(17, 17, 23, 0.92) 100%)"
               : "transparent",
             boxShadow: profileActive
-              ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px rgba(124, 110, 247, 0.62)"
+              ? "inset 0 0 0 1px var(--accent-subtle), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px var(--accent-glow)"
               : "none",
           }}
         >
@@ -206,11 +196,9 @@ export function IconRail() {
               width: "3px",
               borderRadius: "0 999px 999px 0",
               background: profileActive
-                ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
+                ? "linear-gradient(180deg, var(--accent-line-start) 0%, var(--accent) 100%)"
                 : "transparent",
-              boxShadow: profileActive
-                ? "0 0 12px rgba(124, 110, 247, 0.46)"
-                : "none",
+              boxShadow: profileActive ? "0 0 12px var(--accent-glow)" : "none",
             }}
           />
           <UserRound size={15} strokeWidth={1.8} />
@@ -291,7 +279,7 @@ export function IconRail() {
           transition: filter 0.14s ease, transform 0.14s ease;
         }
         .rail-logo:hover {
-          filter: drop-shadow(0 0 10px rgba(124, 110, 247, 0.34));
+          filter: drop-shadow(0 0 10px var(--accent-muted));
           transform: scale(1.06);
         }
         .rail-logo-mark {
@@ -343,8 +331,8 @@ export function IconRail() {
           pointer-events: none;
         }
         .rail-btn:hover {
-          background: rgba(124, 110, 247, 0.065);
-          border-color: rgba(124, 110, 247, 0.08);
+          background: var(--accent-subtle);
+          border-color: var(--purple-mid);
           color: #9197b4;
         }
         .rail-caption {
@@ -404,11 +392,11 @@ export function IconRail() {
         }
         .rail-btn.active {
           background: linear-gradient(180deg, #221e38 0%, #1b1830 100%);
-          color: #8b7fff;
+          color: var(--accent);
           box-shadow:
-            inset 0 0 0 1px rgba(124, 110, 247, 0.16),
+            inset 0 0 0 1px var(--purple-mid),
             0 10px 22px rgba(8, 8, 14, 0.24),
-            0 0 20px -14px rgba(124, 110, 247, 0.62);
+            0 0 20px -14px var(--accent-muted);
         }
         .rail-active-line {
           position: absolute;
@@ -420,8 +408,8 @@ export function IconRail() {
           background: transparent;
         }
         .rail-btn.active .rail-active-line {
-          background: linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%);
-          box-shadow: 0 0 12px rgba(124, 110, 247, 0.46);
+          background: linear-gradient(180deg, var(--accent) 0%, var(--accent) 100%);
+          box-shadow: 0 0 12px var(--accent-muted);
         }
         .rail-bottom .rail-btn {
           color: #70758d;

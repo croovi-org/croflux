@@ -63,9 +63,9 @@ export function CurrentPlanCard() {
           border-radius: 12px;
           display: grid;
           place-items: center;
-          color: #7c6ef7;
-          background: rgba(124, 110, 247, 0.08);
-          border: 1px solid rgba(124, 110, 247, 0.24);
+          color: var(--accent);
+          background: var(--accent-subtle);
+          border: 1px solid var(--purple-border);
           flex-shrink: 0;
         }
         .plan-icon :global(svg) {
@@ -113,9 +113,9 @@ export function CurrentPlanCard() {
           width: 100%;
           height: 44px;
           border-radius: 12px;
-          border: 1px solid rgba(124, 110, 247, 0.24);
-          background: rgba(124, 110, 247, 0.08);
-          color: #7c6ef7;
+          border: 1px solid var(--purple-border);
+          background: var(--accent-subtle);
+          color: var(--accent);
           font-size: 13px;
           font-weight: 600;
           display: flex;
@@ -135,12 +135,12 @@ export function CurrentPlanCard() {
         }
         .pricing-btn:hover {
           transform: translateY(-2px);
-          background: rgba(124, 110, 247, 0.12);
-          border-color: rgba(124, 110, 247, 0.34);
-          color: #9186ff;
+          background: var(--accent-subtle);
+          border-color: var(--purple-border);
+          color: var(--accent);
           box-shadow:
             0 8px 18px rgba(8, 8, 14, 0.14),
-            0 0 18px -10px rgba(124, 110, 247, 0.65);
+            0 0 18px -10px var(--accent-muted);
         }
         @media (max-width: 900px) {
           .section-card {

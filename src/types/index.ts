@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   plan?: string | null;
+  theme_preference?: string | null;
   weekly_tasks_completed: number;
   streak: number;
   created_at: string;

@@ -284,7 +284,7 @@ function ViewTabs({ active, onSelect }: { active: TabId; onSelect: (t: TabId) =>
           font-family: Inter, sans-serif;
         }
         .vtab:hover { color: #9898b8; }
-        .vtab.active { color: #7c6ef7; border-bottom-color: #7c6ef7; }
+        .vtab.active { color: var(--accent); border-bottom-color: var(--accent); }
       `}</style>
     </div>
   );
@@ -552,11 +552,11 @@ function IntegrationsView() {
         }
         .integration-button {
           border: 0;
-          background: #7c6ef7;
+          background: var(--accent);
           color: #f5f2ff;
           box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.14),
-            0 12px 28px -20px rgba(124, 110, 247, 0.95);
+            0 12px 28px -20px var(--accent-muted);
           cursor: pointer;
         }
         .integration-soon {
@@ -857,7 +857,7 @@ function CalendarView() {
           outline: none;
         }
         .calendar-picker select:focus {
-          border-color: rgba(124, 110, 247, 0.22);
+          border-color: var(--purple-border);
         }
         .calendar-year-field {
           margin-bottom: 10px;
@@ -867,12 +867,12 @@ function CalendarView() {
           height: 34px;
           border-radius: 9px;
           border: 0;
-          background: #7c6ef7;
+          background: var(--accent);
           color: #f6f3ff;
           font-size: 12px;
           font-weight: 600;
           cursor: pointer;
-          box-shadow: 0 12px 24px -18px rgba(124, 110, 247, 0.9);
+          box-shadow: 0 12px 24px -18px var(--accent-muted);
         }
         .calendar-nav-btn {
           width: 42px;
@@ -891,7 +891,7 @@ function CalendarView() {
             background 0.14s ease;
         }
         .calendar-nav-btn:hover:not(:disabled) {
-          border-color: rgba(124, 110, 247, 0.18);
+          border-color: var(--purple-mid);
           color: #c9ceea;
           background: linear-gradient(180deg, rgba(38, 38, 50, 0.96) 0%, rgba(31, 31, 42, 0.98) 100%);
         }
@@ -937,12 +937,12 @@ function CalendarView() {
           opacity: 0.4;
         }
         .calendar-cell.today {
-          border-color: rgba(124, 110, 247, 0.34);
+          border-color: var(--purple-border);
           background: linear-gradient(180deg, rgba(39, 33, 61, 0.96) 0%, rgba(32, 28, 48, 0.98) 100%);
         }
         .calendar-cell.selected {
-          border-color: rgba(124, 110, 247, 0.4);
-          box-shadow: inset 0 0 0 1px rgba(124, 110, 247, 0.12);
+          border-color: var(--purple-border);
+          box-shadow: inset 0 0 0 1px var(--accent-subtle);
           background: linear-gradient(180deg, rgba(40, 35, 60, 0.98) 0%, rgba(33, 29, 49, 0.99) 100%);
         }
         .calendar-day {
@@ -1130,11 +1130,11 @@ function BoardView({
             background 0.16s ease;
         }
         .board-column.drop-active {
-          border-color: rgba(124, 110, 247, 0.22);
+          border-color: var(--purple-border);
           box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.02),
             0 18px 40px rgba(0, 0, 0, 0.16),
-            0 0 0 1px rgba(124, 110, 247, 0.12);
+            0 0 0 1px var(--accent-subtle);
         }
         .board-column-head {
           display: flex;
@@ -1195,7 +1195,7 @@ function BoardView({
         }
         .board-card:hover {
           transform: translateY(-2px);
-          border-color: rgba(124, 110, 247, 0.18);
+          border-color: var(--purple-mid);
           box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
         }
         .board-card h3 {
@@ -1224,9 +1224,9 @@ function BoardView({
           font-family: var(--mono);
         }
         .board-chip.milestone {
-          color: #8b7fff;
-          border: 1px solid rgba(124, 110, 247, 0.42);
-          background: rgba(124, 110, 247, 0.08);
+          color: var(--accent);
+          border: 1px solid var(--purple-border);
+          background: var(--accent-subtle);
         }
         .board-chip.subtle {
           color: #70758c;
@@ -1522,7 +1522,7 @@ export function DashboardClient({
           border-radius: 10px;
           background: #13131e;
           border: 1px solid #252538;
-          border-left: 3px solid #7c6ef7;
+          border-left: 3px solid var(--accent);
           padding: 11px 14px;
           box-shadow: 0 8px 24px rgba(0,0,0,0.4);
           opacity: 0;
@@ -1534,7 +1534,7 @@ export function DashboardClient({
         .toast-title {
           margin-bottom: 3px;
           font-size: 10px;
-          color: #7c6ef7;
+          color: var(--accent);
           letter-spacing: 0.06em;
           text-transform: uppercase;
           font-family: var(--mono);

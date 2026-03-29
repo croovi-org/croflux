@@ -152,8 +152,8 @@ const howWorkflows = [
 
 export function LandingPage() {
   const router = useRouter();
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [themeReady, setThemeReady] = useState(false);
+  const [appearance, setAppearance] = useState<"dark" | "light">("dark");
+  const [appearanceReady, setAppearanceReady] = useState(false);
   const [taskCount, setTaskCount] = useState(1284);
   const [ctaIndex, setCtaIndex] = useState(0);
   const [heroEntered, setHeroEntered] = useState(false);
@@ -172,10 +172,10 @@ export function LandingPage() {
   const featureProgressRef = useRef<HTMLDivElement | null>(null);
   const workflowTransitionRef = useRef<number | null>(null);
 
-  const applyTheme = (nextTheme: "dark" | "light") => {
-    setTheme(nextTheme);
-    document.documentElement.dataset.theme = nextTheme;
-    localStorage.setItem("croflux-theme", nextTheme);
+  const applyTheme = (nextAppearance: "dark" | "light") => {
+    setAppearance(nextAppearance);
+    document.documentElement.dataset.appearance = nextAppearance;
+    localStorage.setItem("croflux-appearance", nextAppearance);
 
     const href = "/croflux-mark.png";
     ["icon", "shortcut icon", "apple-touch-icon"].forEach((rel) => {
@@ -218,10 +218,10 @@ export function LandingPage() {
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
-      const currentTheme =
-        document.documentElement.dataset.theme === "light" ? "light" : "dark";
-      setTheme(currentTheme);
-      setThemeReady(true);
+      const currentAppearance =
+        document.documentElement.dataset.appearance === "light" ? "light" : "dark";
+      setAppearance(currentAppearance);
+      setAppearanceReady(true);
     });
 
     return () => {
@@ -440,15 +440,15 @@ export function LandingPage() {
               type="button"
               className="nav-theme-toggle"
               aria-label={
-                themeReady
-                  ? theme === "dark"
+                appearanceReady
+                  ? appearance === "dark"
                     ? "Switch to light mode"
                     : "Switch to dark mode"
                   : "Toggle theme"
               }
-              onClick={() => applyTheme(theme === "dark" ? "light" : "dark")}
+              onClick={() => applyTheme(appearance === "dark" ? "light" : "dark")}
             >
-              {theme === "dark" ? (
+              {appearance === "dark" ? (
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                   <circle
                     cx="10"
@@ -722,7 +722,7 @@ export function LandingPage() {
                     }}
                   >
                     <span style={{ color: "var(--text)" }}>Cro</span>
-                    <span style={{ color: "var(--brand-accent)" }}>Flux</span>
+                    <span style={{ color: "var(--accent)" }}>Flux</span>
                   </span>
                 </div>
                 <div className="pv-sb-section">Workspace</div>
@@ -1773,9 +1773,9 @@ export function LandingPage() {
               style={{
                 marginTop: 14,
                 color: "var(--purple2)",
-                borderColor: "rgba(169,157,254,0.28)",
+                borderColor: "var(--purple-border)",
                 background:
-                  "linear-gradient(180deg, rgba(169,157,254,0.12), rgba(169,157,254,0.06))",
+                  "linear-gradient(180deg, var(--accent-subtle), color-mix(in srgb, var(--accent) 6%, transparent))",
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
               }}
             >
@@ -1785,7 +1785,7 @@ export function LandingPage() {
                   height: 7,
                   borderRadius: "999px",
                   background: "var(--purple2)",
-                  boxShadow: "0 0 14px rgba(169,157,254,0.45)",
+                  boxShadow: "0 0 14px var(--accent-muted)",
                   flexShrink: 0,
                 }}
               />

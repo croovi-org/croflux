@@ -313,7 +313,7 @@ export function ProfileClient({
           border-radius: 999px;
           display: grid;
           place-items: center;
-          background: linear-gradient(180deg, #8b7fff 0%, #6f60f2 100%);
+          background: linear-gradient(180deg, var(--accent) 0%, var(--accent-hover) 100%);
           color: #fff;
           font-size: 16px;
           font-weight: 700;
@@ -375,9 +375,9 @@ export function ProfileClient({
           border-color: rgba(255, 183, 0, 0.2);
         }
         .pill.accent {
-          color: #7c6ef7;
-          background: rgba(124, 110, 247, 0.08);
-          border-color: rgba(124, 110, 247, 0.2);
+          color: var(--accent);
+          background: var(--accent-subtle);
+          border-color: var(--accent-muted);
         }
         .meta-list {
           display: grid;
@@ -420,7 +420,7 @@ export function ProfileClient({
           color: #f0f0f8;
           font-family: "Geist Mono", monospace;
         }
-        .stat-box strong.accent { color: #7c6ef7; }
+        .stat-box strong.accent { color: var(--accent); }
         .stat-box strong.green { color: #22c55e; }
         .stats-list {
           display: grid;

@@ -55,7 +55,7 @@ function SectionLabel({ label, tone = "accent" }: { label: string; tone?: "accen
           font-family: "Geist Mono", monospace;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: ${tone === "teal" ? "#22d3ee" : "#7c6ef7"};
+          color: ${tone === "teal" ? "#22d3ee" : "var(--accent)"};
         }
       `}</style>
     </div>
@@ -271,7 +271,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
           margin-bottom: 28px;
         }
         .eyebrow {
-          color: #7c6ef7;
+          color: var(--accent);
           font-size: 11px;
           font-family: "Geist Mono", monospace;
           letter-spacing: 0.14em;
@@ -286,7 +286,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
           font-weight: 600;
         }
         h1 span {
-          color: #7c6ef7;
+          color: var(--accent);
         }
         .pricing-header p {
           margin: 0;
@@ -348,7 +348,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
         .trust-card :global(svg) {
           width: 16px;
           height: 16px;
-          color: #7c6ef7;
+          color: var(--accent);
           margin-top: 2px;
           flex-shrink: 0;
         }
@@ -389,8 +389,8 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
           min-height: 38px;
           padding: 0 14px;
           border-radius: 8px;
-          border: 1px solid rgba(124, 110, 247, 0.24);
-          background: rgba(124, 110, 247, 0.08);
+          border: 1px solid var(--purple-border);
+          background: var(--accent-subtle);
           display: inline-flex;
           align-items: center;
           justify-content: center;

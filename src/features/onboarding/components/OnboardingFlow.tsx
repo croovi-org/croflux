@@ -251,7 +251,7 @@ export function OnboardingFlow() {
             inset: 18px;
             border-radius: 999px;
             background:
-              radial-gradient(circle, rgba(169, 157, 254, 0.38) 0%, rgba(169, 157, 254, 0.16) 42%, rgba(169, 157, 254, 0) 74%);
+              radial-gradient(circle, color-mix(in srgb, var(--accent) 38%, transparent) 0%, color-mix(in srgb, var(--accent) 16%, transparent) 42%, transparent 74%);
             filter: blur(18px);
             z-index: 1;
           }
@@ -339,7 +339,7 @@ export function OnboardingFlow() {
         className="pointer-events-none absolute left-1/2 top-[120px] h-[760px] w-[1180px] -translate-x-1/2 rounded-full opacity-55 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(169,157,254,0.32) 0%, rgba(169,157,254,0.16) 42%, rgba(169,157,254,0) 78%)",
+            "radial-gradient(circle, color-mix(in srgb, var(--accent) 32%, transparent) 0%, color-mix(in srgb, var(--accent) 16%, transparent) 42%, transparent 78%)",
         }}
       />
 
@@ -360,7 +360,7 @@ export function OnboardingFlow() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 18% 22%, rgba(169,157,254,0.12), transparent 26%), radial-gradient(circle at 82% 18%, rgba(169,157,254,0.08), transparent 22%), linear-gradient(180deg, rgba(255,255,255,0.015), transparent 18%)",
+            "radial-gradient(circle at 18% 22%, var(--accent-subtle), transparent 26%), radial-gradient(circle at 82% 18%, var(--accent-subtle), transparent 22%), linear-gradient(180deg, rgba(255,255,255,0.015), transparent 18%)",
         }}
       />
 
@@ -381,7 +381,7 @@ export function OnboardingFlow() {
             className="pointer-events-none absolute inset-[-42px] rounded-[52px] opacity-100 blur-3xl"
             style={{
               background:
-                "radial-gradient(circle at 50% 14%, rgba(169,157,254,0.2) 0%, rgba(169,157,254,0.09) 28%, rgba(169,157,254,0.04) 48%, rgba(169,157,254,0) 76%), radial-gradient(circle at 12% 50%, rgba(169,157,254,0.1) 0%, rgba(169,157,254,0.04) 24%, rgba(169,157,254,0) 56%), radial-gradient(circle at 88% 54%, rgba(169,157,254,0.09) 0%, rgba(169,157,254,0.04) 22%, rgba(169,157,254,0) 52%), radial-gradient(circle at 50% 94%, rgba(169,157,254,0.1) 0%, rgba(169,157,254,0.04) 26%, rgba(169,157,254,0) 60%)",
+                "radial-gradient(circle at 50% 14%, var(--accent-muted) 0%, color-mix(in srgb, var(--accent) 9%, transparent) 28%, color-mix(in srgb, var(--accent) 4%, transparent) 48%, transparent 76%), radial-gradient(circle at 12% 50%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, color-mix(in srgb, var(--accent) 4%, transparent) 24%, transparent 56%), radial-gradient(circle at 88% 54%, color-mix(in srgb, var(--accent) 9%, transparent) 0%, color-mix(in srgb, var(--accent) 4%, transparent) 22%, transparent 52%), radial-gradient(circle at 50% 94%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, color-mix(in srgb, var(--accent) 4%, transparent) 26%, transparent 60%)",
             }}
           />
           <div
@@ -389,12 +389,19 @@ export function OnboardingFlow() {
             className="pointer-events-none absolute inset-[-2px] rounded-[26px]"
             style={{
               background:
-                "linear-gradient(180deg, rgba(169,157,254,0.19) 0%, rgba(169,157,254,0.08) 24%, rgba(255,255,255,0.02) 48%, rgba(169,157,254,0.08) 100%)",
+                "linear-gradient(180deg, color-mix(in srgb, var(--accent) 19%, transparent) 0%, var(--accent-subtle) 24%, rgba(255,255,255,0.02) 48%, var(--accent-subtle) 100%)",
               boxShadow:
-                "0 0 0 1px rgba(169,157,254,0.05), 0 0 20px rgba(169,157,254,0.07)",
+                "0 0 0 1px color-mix(in srgb, var(--accent) 5%, transparent), 0 0 20px color-mix(in srgb, var(--accent) 7%, transparent)",
             }}
           />
-          <div className="relative overflow-hidden rounded-[24px] border border-[rgba(169,157,254,0.14)] bg-[var(--bg2)] shadow-[0_72px_180px_rgba(0,0,0,0.52),0_34px_84px_rgba(0,0,0,0.34),0_10px_22px_rgba(0,0,0,0.18),0_0_0_1px_rgba(255,255,255,0.02),0_0_48px_rgba(169,157,254,0.07)] backdrop-blur-sm lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
+          <div
+            className="relative overflow-hidden rounded-[24px] bg-[var(--bg2)] backdrop-blur-sm lg:grid lg:grid-cols-[260px_minmax(0,1fr)]"
+            style={{
+              border: "1px solid color-mix(in srgb, var(--accent) 14%, transparent)",
+              boxShadow:
+                "0 72px 180px rgba(0,0,0,0.52), 0 34px 84px rgba(0,0,0,0.34), 0 10px 22px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.02), 0 0 48px color-mix(in srgb, var(--accent) 7%, transparent)",
+            }}
+          >
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-[12%] top-[-160px] h-[420px] rounded-full opacity-45 blur-3xl"
@@ -405,7 +412,7 @@ export function OnboardingFlow() {
             className="pointer-events-none absolute -left-[8%] top-[14%] h-[320px] w-[320px] rounded-full opacity-18 blur-3xl"
             style={{
               background:
-                "radial-gradient(circle, rgba(169,157,254,0.24) 0%, rgba(169,157,254,0.1) 48%, rgba(169,157,254,0) 78%)",
+                "radial-gradient(circle, color-mix(in srgb, var(--accent) 24%, transparent) 0%, color-mix(in srgb, var(--accent) 10%, transparent) 48%, transparent 78%)",
             }}
           />
           <div
@@ -413,7 +420,7 @@ export function OnboardingFlow() {
             className="pointer-events-none absolute -right-[6%] bottom-[8%] h-[280px] w-[280px] rounded-full opacity-16 blur-3xl"
             style={{
               background:
-                "radial-gradient(circle, rgba(169,157,254,0.22) 0%, rgba(169,157,254,0.09) 50%, rgba(169,157,254,0) 78%)",
+                "radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent) 0%, color-mix(in srgb, var(--accent) 9%, transparent) 50%, transparent 78%)",
             }}
           />
           <OnboardingSidebar

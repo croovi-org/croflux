@@ -40,7 +40,7 @@ export default function ContactPage() {
                 href={item.href}
                 className={
                   item.active
-                    ? "text-[#7c6af7]"
+                    ? "text-[var(--accent)]"
                     : "text-[#a1a1aa] transition-colors duration-200 hover:text-white"
                 }
               >
@@ -51,7 +51,7 @@ export default function ContactPage() {
 
           <Link
             href="/signup"
-            className="inline-flex h-[40px] shrink-0 items-center justify-center rounded-[8px] bg-[#7c6af7] px-5 text-[14px] font-medium text-white transition-colors duration-200 hover:bg-[#6a57e8]"
+            className="inline-flex h-[40px] shrink-0 items-center justify-center rounded-[8px] bg-[var(--accent)] px-5 text-[14px] font-medium text-white transition-colors duration-200 hover:bg-[var(--accent-hover)]"
           >
             Get started <ArrowRight className="ml-1 size-4" />
           </Link>
@@ -60,11 +60,11 @@ export default function ContactPage() {
 
       <section className="mx-auto max-w-[1180px] px-6 pt-16 pb-20">
         <div className="mx-auto max-w-[560px] text-center">
-          <div className="inline-flex items-center rounded-full border border-[#2a2a35] bg-[#18181f] px-4 py-2 text-[13px] font-medium text-[#7c6af7]">
+          <div className="inline-flex items-center rounded-full border border-[#2a2a35] bg-[#18181f] px-4 py-2 text-[13px] font-medium text-[var(--accent)]">
             ✉️&nbsp; Get in touch
           </div>
           <h1 className="mt-6 text-[42px] leading-[1.05] font-bold tracking-[-1px] text-[#e4e4e7] max-md:text-[34px]">
-            Tell us what <span className="bg-linear-to-r from-[#7c6af7] to-[#a78bfa] bg-clip-text text-transparent">you need</span>
+            Tell us what <span className="bg-linear-to-r from-[var(--accent)] to-[#a78bfa] bg-clip-text text-transparent">you need</span>
           </h1>
           <p className="mt-5 text-[15px] leading-7 text-[#71717a]">
             For teams with specific needs, custom workflows, or early enterprise setup. We&apos;re

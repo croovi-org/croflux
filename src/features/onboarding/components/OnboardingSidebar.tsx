@@ -41,7 +41,7 @@ export function OnboardingSidebar({
               onClick={() => onStepSelect(index)}
               className={`group relative flex min-w-[170px] items-center gap-3 rounded-[12px] border px-4 py-3 text-left transition lg:min-w-0 lg:rounded-none lg:border-0 lg:px-5 lg:py-4 ${
                 active
-                  ? "border-[var(--purple-border)] bg-[var(--purple-dim)] lg:border-0 lg:bg-[rgba(169,157,254,0.08)]"
+                  ? "border-[var(--purple-border)] bg-[var(--purple-dim)] lg:border-0 lg:bg-[var(--accent-subtle)]"
                   : "border-transparent bg-transparent hover:border-[var(--border)] hover:bg-[rgba(255,255,255,0.02)] lg:hover:border-0 lg:hover:bg-[rgba(255,255,255,0.02)]"
               }`}
             >
@@ -53,7 +53,7 @@ export function OnboardingSidebar({
                   done
                     ? "border-[rgba(34,197,94,0.24)] bg-[var(--green-dim)] text-[var(--green)]"
                     : active
-                      ? "border-[var(--purple)] bg-[rgba(169,157,254,0.12)] text-[var(--purple2)]"
+                      ? "border-[var(--purple)] bg-[var(--accent-subtle)] text-[var(--purple2)]"
                       : "border-[var(--border2)] bg-[var(--bg4)] text-[var(--text3)] lg:bg-transparent"
                 }`}
               >
