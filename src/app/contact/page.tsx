@@ -1,9 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactSidebar } from "@/components/contact/ContactSidebar";
-import { Logo } from "@/components/shared/logo";
-import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { label: "Dashboard", href: "/dashboard" },
@@ -15,26 +14,46 @@ const navLinks = [
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[#0d0d0f] text-[#e4e4e7]">
-      <header className="border-b border-[#1e1e24]">
-        <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-6 px-6 py-5 max-md:flex-wrap">
-          <Logo href="/" />
+      <header className="sticky top-0 z-[100] border-b border-[#1e1e24] bg-[#0d0d0f]">
+        <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between px-12 py-[18px] max-md:flex-wrap max-md:justify-center max-md:gap-5 max-md:px-6">
+          <Link
+            href="/"
+            className="relative flex h-[34px] w-[84px] shrink-0 items-center justify-center"
+          >
+            <Image
+              src="/croflux-mark.png"
+              alt="CroFlux"
+              fill
+              sizes="84px"
+              className="object-contain"
+            />
+          </Link>
 
-          <nav className="flex items-center gap-7 text-[14px] text-[#71717a] max-md:order-3 max-md:w-full max-md:justify-center max-md:gap-5">
+          <div
+            role="navigation"
+            aria-label="Primary navigation"
+            className="flex items-center gap-8 text-[14px] text-[#a1a1aa] max-md:order-3 max-md:w-full max-md:justify-center max-md:gap-5"
+          >
             {navLinks.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={item.active ? "font-medium text-[#7c6af7]" : "hover:text-[#e4e4e7]"}
+                className={
+                  item.active
+                    ? "text-[#7c6af7]"
+                    : "text-[#a1a1aa] transition-colors duration-200 hover:text-white"
+                }
               >
                 {item.label}
               </Link>
             ))}
-          </nav>
+          </div>
 
-          <Link href="/signup">
-            <Button className="h-[42px] rounded-[10px] bg-[#7c6af7] px-5 text-[14px] font-semibold text-white hover:bg-[#6a57e8]">
-              Get started <ArrowRight className="size-4" />
-            </Button>
+          <Link
+            href="/signup"
+            className="inline-flex h-[40px] shrink-0 items-center justify-center rounded-[8px] bg-[#7c6af7] px-5 text-[14px] font-medium text-white transition-colors duration-200 hover:bg-[#6a57e8]"
+          >
+            Get started <ArrowRight className="ml-1 size-4" />
           </Link>
         </div>
       </header>

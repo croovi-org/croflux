@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import { IconRail } from "@/components/workspace/IconRail";
 import { Sidebar } from "@/components/workspace/Sidebar";
 import { Topbar } from "@/components/workspace/Topbar";
@@ -33,6 +33,9 @@ type WorkspaceShellProps = {
   children: ReactNode;
 };
 
+const SIDEBAR_STORAGE_KEY = "croflux-sidebar-collapsed";
+const SIDEBAR_EVENT = "croflux-sidebar-collapsed-change";
+
 export function WorkspaceShell({
   workspaceName,
   currentPage,
@@ -48,17 +51,32 @@ export function WorkspaceShell({
   headerBottom,
   children,
 }: WorkspaceShellProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.localStorage.getItem("croflux-sidebar-collapsed") === "1";
-  });
+  const sidebarCollapsed = useSyncExternalStore(
+    (onStoreChange) => {
+      const handleStorage = (event: StorageEvent) => {
+        if (event.key === SIDEBAR_STORAGE_KEY) {
+          onStoreChange();
+        }
+      };
 
-  useEffect(() => {
-    window.localStorage.setItem(
-      "croflux-sidebar-collapsed",
-      sidebarCollapsed ? "1" : "0",
-    );
-  }, [sidebarCollapsed]);
+      const handleCustom = () => onStoreChange();
+
+      window.addEventListener("storage", handleStorage);
+      window.addEventListener(SIDEBAR_EVENT, handleCustom);
+
+      return () => {
+        window.removeEventListener("storage", handleStorage);
+        window.removeEventListener(SIDEBAR_EVENT, handleCustom);
+      };
+    },
+    () => window.localStorage.getItem(SIDEBAR_STORAGE_KEY) === "1",
+    () => false,
+  );
+
+  const setSidebarCollapsed = (nextValue: boolean) => {
+    window.localStorage.setItem(SIDEBAR_STORAGE_KEY, nextValue ? "1" : "0");
+    window.dispatchEvent(new Event(SIDEBAR_EVENT));
+  };
 
   return (
     <div className="ws-shell">
@@ -76,7 +94,7 @@ export function WorkspaceShell({
             streak={streak}
             currentSection={currentSection}
             collapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed((value) => !value)}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
           />
         </div>
 
