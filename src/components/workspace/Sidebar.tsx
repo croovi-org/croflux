@@ -19,6 +19,8 @@ type SidebarProps = {
   rank: number | null;
   milestones: SidebarMilestone[];
   streak: number;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
   currentSection?:
     | "/dashboard"
     | "/my-tasks"
@@ -36,6 +38,8 @@ export function Sidebar({
   rank,
   milestones,
   streak,
+  collapsed = false,
+  onToggleCollapse,
   currentSection,
 }: SidebarProps) {
   const pathname = usePathname();
@@ -66,25 +70,32 @@ export function Sidebar({
   ];
 
   return (
-    <aside className="sidebar-shell">
+    <aside className={`sidebar-shell ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-top">
-        <button type="button" className="workspace-switcher">
+        <div className="workspace-switcher">
           <span className="workspace-avatar">{initials}</span>
           <span className="workspace-name">{workspaceName}</span>
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+          <button
+            type="button"
+            className="sidebar-collapse-btn"
+            aria-label="Close sidebar"
+            onClick={onToggleCollapse}
           >
-            <path d="m4 6 4 4 4-4" />
-          </svg>
-        </button>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m10 4-4 4 4 4" />
+            </svg>
+          </button>
+        </div>
         <div className="next-up-wrap">
           <div className="next-up-card">
             <div className="next-up-top">
@@ -231,6 +242,16 @@ export function Sidebar({
           display: flex;
           flex-direction: column;
           flex-shrink: 0;
+          opacity: 1;
+          transform: translateX(0);
+          transition:
+            opacity 0.18s ease,
+            transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .sidebar-shell.collapsed {
+          opacity: 0;
+          transform: translateX(-16px);
+          pointer-events: none;
         }
         .sidebar-top {
           padding: 0;
@@ -254,10 +275,6 @@ export function Sidebar({
           text-align: left;
           transition: background 0.12s ease;
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
-          cursor: pointer;
-        }
-        .workspace-switcher:hover {
-          background: rgba(255, 255, 255, 0.02);
         }
         .workspace-avatar {
           width: 24px;
@@ -280,10 +297,34 @@ export function Sidebar({
           white-space: nowrap;
           text-overflow: ellipsis;
         }
-        .workspace-switcher :global(svg) {
+        .sidebar-collapse-btn {
+          width: 26px;
+          height: 26px;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: #17161d;
+          color: var(--text3);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          cursor: pointer;
+          transition:
+            background 0.14s ease,
+            border-color 0.14s ease,
+            color 0.14s ease,
+            transform 0.14s ease;
+        }
+        .sidebar-collapse-btn:hover {
+          background: #1d1c24;
+          border-color: rgba(124, 110, 247, 0.16);
+          color: #8d83ff;
+          transform: translateX(-1px);
+        }
+        .sidebar-collapse-btn :global(svg) {
           width: 11px;
           height: 11px;
-          stroke: var(--text3);
+          stroke: currentColor;
           stroke-width: 1.8;
           fill: none;
           stroke-linecap: round;
