@@ -243,7 +243,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
                 <h2>Need something custom?</h2>
                 <p>Talk to us about larger teams, custom onboarding, or an early enterprise setup.</p>
               </div>
-              <a href="mailto:hello@croflux.app" className="enterprise-btn">
+              <a href="/contact" className="enterprise-btn">
                 Contact us
               </a>
             </div>
