@@ -109,7 +109,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
               id="builder"
               label="Solo builder"
               name="Builder"
-              description="Best for most solo builders shipping their first serious startup."
+              description="Best for most solo builders. Everything you need to ship consistently."
               price="$12"
               annualPrice="$9.60"
               annualSavings="$29"
@@ -125,11 +125,11 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
               ]}
               isFeatured
               badge="Most popular"
-              ctaLabel="Upgrade to Builder"
+              ctaLabel="Your current plan — Upgrade"
               ctaStyle="accent"
               perfectFor={["1 main startup", "1–2 side ideas"]}
               includesLabel="What's included"
-              currentPlan={normalizedPlan === "builder"}
+              currentPlan
               billingAnnual={annual}
             />
 
@@ -137,7 +137,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
               id="pro-builder"
               label="Solo builder"
               name="Pro Builder"
-              description="For serious builders shipping multiple products and iterating faster."
+              description="For serious builders shipping multiple products at once."
               price="$24"
               annualPrice="$19.20"
               annualSavings="$57"
@@ -259,7 +259,9 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
           background: #0f0f17;
         }
         .pricing-wrap {
-          padding: 26px 24px 40px;
+          padding: 24px 28px 40px;
+          max-width: 1368px;
+          margin: 0 auto;
         }
         .pricing-header {
           display: flex;
@@ -320,7 +322,8 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 16px;
-          margin-bottom: 26px;
+          margin-bottom: 36px;
+          align-items: start;
         }
         .footer-block {
           margin-top: 8px;
