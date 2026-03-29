@@ -59,11 +59,11 @@ export function IconRail() {
                 aria-label={label}
                 title={label}
                 style={{
-                  width: "44px",
-                  height: "44px",
-                  minWidth: "44px",
-                  minHeight: "44px",
-                  borderRadius: "14px",
+                  width: "40px",
+                  height: "40px",
+                  minWidth: "40px",
+                  minHeight: "40px",
+                  borderRadius: "12px",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -92,10 +92,8 @@ export function IconRail() {
                     bottom: "6px",
                     width: "3px",
                     borderRadius: "0 999px 999px 0",
-                    background: active
-                      ? "linear-gradient(180deg, var(--accent-line-start) 0%, var(--accent) 100%)"
-                      : "transparent",
-                    boxShadow: active ? "0 0 12px var(--accent-glow)" : "none",
+                    background: "transparent",
+                    boxShadow: "none",
                   }}
                 />
                 <IconComponent size={15} strokeWidth={1.8} />
@@ -114,11 +112,11 @@ export function IconRail() {
           aria-label="Pricing"
           title="Pricing"
           style={{
-            width: "46px",
-            height: "44px",
-            minWidth: "46px",
-            minHeight: "44px",
-            borderRadius: "14px",
+            width: "40px",
+            height: "40px",
+            minWidth: "40px",
+            minHeight: "40px",
+            borderRadius: "12px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -147,10 +145,8 @@ export function IconRail() {
               bottom: "6px",
               width: "3px",
               borderRadius: "0 999px 999px 0",
-              background: pricingActive
-                ? "linear-gradient(180deg, var(--accent-line-start) 0%, var(--accent) 100%)"
-                : "transparent",
-              boxShadow: pricingActive ? "0 0 12px var(--accent-glow)" : "none",
+              background: "transparent",
+              boxShadow: "none",
             }}
           />
           <DollarSign size={15} strokeWidth={1.8} />
@@ -162,11 +158,11 @@ export function IconRail() {
           aria-label="Profile"
           title="Profile"
           style={{
-            width: "46px",
-            height: "44px",
-            minWidth: "46px",
-            minHeight: "44px",
-            borderRadius: "14px",
+            width: "40px",
+            height: "40px",
+            minWidth: "40px",
+            minHeight: "40px",
+            borderRadius: "12px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -195,10 +191,8 @@ export function IconRail() {
               bottom: "6px",
               width: "3px",
               borderRadius: "0 999px 999px 0",
-              background: profileActive
-                ? "linear-gradient(180deg, var(--accent-line-start) 0%, var(--accent) 100%)"
-                : "transparent",
-              boxShadow: profileActive ? "0 0 12px var(--accent-glow)" : "none",
+              background: "transparent",
+              boxShadow: "none",
             }}
           />
           <UserRound size={15} strokeWidth={1.8} />
@@ -295,11 +289,11 @@ export function IconRail() {
           gap: 14px;
         }
         .rail-btn {
-          width: 44px;
-          height: 44px;
-          min-width: 44px;
-          min-height: 44px;
-          border-radius: 14px;
+          width: 40px;
+          height: 40px;
+          min-width: 40px;
+          min-height: 40px;
+          border-radius: 12px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -352,7 +346,7 @@ export function IconRail() {
           pointer-events: none;
         }
         .rail-caption.active {
-          color: #9a90ff;
+          color: var(--accent-text);
         }
         .rail-tooltip {
           position: absolute;
@@ -392,11 +386,11 @@ export function IconRail() {
         }
         .rail-btn.active {
           background: linear-gradient(180deg, #221e38 0%, #1b1830 100%);
-          color: var(--accent);
+          color: var(--accent-text);
           box-shadow:
             inset 0 0 0 1px var(--purple-mid),
             0 10px 22px rgba(8, 8, 14, 0.24),
-            0 0 20px -14px var(--accent-muted);
+            0 0 20px -14px var(--accent-glow);
         }
         .rail-active-line {
           position: absolute;
@@ -408,8 +402,8 @@ export function IconRail() {
           background: transparent;
         }
         .rail-btn.active .rail-active-line {
-          background: linear-gradient(180deg, var(--accent) 0%, var(--accent) 100%);
-          box-shadow: 0 0 12px var(--accent-muted);
+          background: transparent;
+          box-shadow: none;
         }
         .rail-bottom .rail-btn {
           color: #70758d;

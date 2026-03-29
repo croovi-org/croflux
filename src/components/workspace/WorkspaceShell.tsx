@@ -154,7 +154,7 @@ export function WorkspaceShell({
           position: absolute;
           inset: 0 0 auto;
           height: 1px;
-          background: var(--accent);
+          background: transparent;
           z-index: 10;
           pointer-events: none;
         }
