@@ -395,7 +395,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
           align-items: center;
           justify-content: center;
           text-decoration: none;
-          color: #9489ff;
+          color: var(--accent-text);
           font-size: 13px;
           font-weight: 600;
         }

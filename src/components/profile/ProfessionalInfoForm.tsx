@@ -116,7 +116,7 @@ export function ProfessionalInfoForm({
           border-radius: 8px;
           border: 1px solid var(--purple-border);
           background: var(--accent-subtle);
-          color: #8f84ff;
+          color: var(--accent-text);
           font-size: 11px;
           font-weight: 600;
           cursor: pointer;
