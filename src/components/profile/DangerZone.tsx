@@ -41,56 +41,56 @@ export function DangerZone() {
           background: #13131e;
           border: 1px solid rgba(239, 68, 68, 0.28);
           border-radius: 12px;
-          padding: 16px;
+          padding: 12px;
         }
         .danger-head {
-          padding: 0 0 14px;
+          padding: 0 0 10px;
         }
         h2 {
           margin: 0 0 4px;
-          font-size: 16px;
+          font-size: 14px;
           color: #ff5353;
         }
         .danger-head p {
           margin: 0;
-          font-size: 12px;
+          font-size: 11px;
           color: #7b8099;
         }
         .danger-rows {
           display: grid;
-          gap: 14px;
+          gap: 10px;
         }
         .danger-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          gap: 14px;
-          padding: 16px 18px;
-          border-radius: 14px;
+          gap: 12px;
+          padding: 12px 14px;
+          border-radius: 12px;
           border: 1px solid #252538;
           background: #1a1a28;
         }
         strong {
           display: block;
-          margin-bottom: 6px;
+          margin-bottom: 4px;
           color: #f0f0f8;
-          font-size: 15px;
+          font-size: 13px;
           font-weight: 600;
         }
         .danger-row p {
           margin: 0;
           color: #6f7590;
-          font-size: 12px;
+          font-size: 11px;
         }
         button {
-          min-width: 148px;
-          height: 42px;
-          padding: 0 14px;
-          border-radius: 10px;
+          min-width: 124px;
+          height: 36px;
+          padding: 0 12px;
+          border-radius: 9px;
           border: 1px solid rgba(239, 68, 68, 0.3);
           background: rgba(239, 68, 68, 0.04);
           color: #ff5353;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 600;
           cursor: pointer;
         }
