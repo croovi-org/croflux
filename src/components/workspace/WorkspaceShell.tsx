@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { IconRail } from "@/components/workspace/IconRail";
 import { Sidebar } from "@/components/workspace/Sidebar";
 import { Topbar } from "@/components/workspace/Topbar";
@@ -48,26 +48,64 @@ export function WorkspaceShell({
   headerBottom,
   children,
 }: WorkspaceShellProps) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("croflux-sidebar-collapsed") === "1";
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "croflux-sidebar-collapsed",
+      sidebarCollapsed ? "1" : "0",
+    );
+  }, [sidebarCollapsed]);
+
   return (
     <div className="ws-shell">
       <div className="ws-body-row">
         <IconRail />
-        <Sidebar
-          workspaceName={workspaceName}
-          initials={initials}
-          nextUpTask={nextUpTask}
-          nextUpContext={nextUpContext}
-          incompleteTaskCount={incompleteTaskCount}
-          rank={rank}
-          milestones={milestones}
-          streak={streak}
-          currentSection={currentSection}
-        />
+        <div className={`ws-sidebar-wrap ${sidebarCollapsed ? "collapsed" : ""}`}>
+          <Sidebar
+            workspaceName={workspaceName}
+            initials={initials}
+            nextUpTask={nextUpTask}
+            nextUpContext={nextUpContext}
+            incompleteTaskCount={incompleteTaskCount}
+            rank={rank}
+            milestones={milestones}
+            streak={streak}
+            currentSection={currentSection}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed((value) => !value)}
+          />
+        </div>
 
         <div className="ws-content-shell">
           <div className="ws-navbar">
             <div className="ws-navbar-inner">
               <div className="ws-navbar-top">
+                {sidebarCollapsed ? (
+                  <button
+                    type="button"
+                    className="ws-sidebar-reopen"
+                    aria-label="Open sidebar"
+                    onClick={() => setSidebarCollapsed(false)}
+                  >
+                    <svg
+                      viewBox="0 0 16 16"
+                      width="14"
+                      height="14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="m6 4 4 4-4 4" />
+                    </svg>
+                  </button>
+                ) : null}
                 <Topbar
                   workspaceName={workspaceName}
                   currentPage={currentPage}
@@ -134,6 +172,22 @@ export function WorkspaceShell({
           background: #0f0f17;
           overflow: hidden;
         }
+        .ws-sidebar-wrap {
+          width: 220px;
+          min-width: 220px;
+          max-width: 220px;
+          overflow: hidden;
+          flex-shrink: 0;
+          transition:
+            width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+            min-width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+            max-width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .ws-sidebar-wrap.collapsed {
+          width: 0;
+          min-width: 0;
+          max-width: 0;
+        }
         .ws-navbar {
           width: 100%;
           display: flex;
@@ -149,6 +203,7 @@ export function WorkspaceShell({
           height: 64px;
           display: flex;
           align-items: center;
+          gap: 12px;
           position: relative;
         }
         .ws-navbar-top::after {
@@ -170,6 +225,30 @@ export function WorkspaceShell({
           flex-direction: column;
           overflow: hidden;
           background: #0f0f17;
+        }
+        .ws-sidebar-reopen {
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          border: 1px solid rgba(124, 110, 247, 0.16);
+          background: rgba(124, 110, 247, 0.08);
+          color: #9186ff;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          cursor: pointer;
+          transition:
+            transform 0.16s ease,
+            background 0.16s ease,
+            border-color 0.16s ease,
+            box-shadow 0.16s ease;
+        }
+        .ws-sidebar-reopen:hover {
+          transform: translateX(2px);
+          background: rgba(124, 110, 247, 0.12);
+          border-color: rgba(124, 110, 247, 0.24);
+          box-shadow: 0 0 16px -8px rgba(124, 110, 247, 0.75);
         }
       `}</style>
     </div>
