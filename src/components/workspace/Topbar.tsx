@@ -4,7 +4,7 @@ import {
   BellOff,
   CircleDollarSign,
   LogOut,
-  MoonStar,
+  PaintRoller,
   PlusSquare,
   Settings,
   Trash2,
@@ -76,7 +76,7 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
     { label: "Mute notifications", icon: BellOff, trailing: "chevron", onClick: closeMenu },
     { label: "Create Task", icon: PlusSquare, onClick: closeMenu },
     { label: "Trash", icon: Trash2, tone: "danger", onClick: closeMenu },
-    { label: "Themes", icon: MoonStar, onClick: closeMenu },
+    { label: "Themes", icon: PaintRoller, onClick: closeMenu },
     {
       label: "Pricing",
       icon: CircleDollarSign,
