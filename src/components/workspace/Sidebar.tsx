@@ -150,9 +150,9 @@ export function Sidebar({
                 textDecoration: "none",
                 cursor: "pointer",
                 color: isActive ? "#f3f3f8" : "#8c90a7",
-                background: isActive ? "#242138" : "transparent",
+                background: isActive ? "var(--accent-subtle)" : "transparent",
                 boxShadow: isActive
-                  ? "inset 3px 0 0 #8b7fff, inset 0 0 0 1px rgba(124, 110, 247, 0.12), 0 0 0 1px rgba(139, 127, 255, 0.08), -6px 0 16px -12px rgba(139, 127, 255, 0.75), 0 10px 22px -20px rgba(139, 127, 255, 0.65)"
+                  ? "inset 3px 0 0 var(--accent-text), inset 0 0 0 1px var(--accent-subtle), 0 0 0 1px var(--purple-mid), -6px 0 16px -12px var(--accent-glow), 0 10px 22px -20px var(--accent-glow)"
                   : "none",
               }}
             >
@@ -317,8 +317,8 @@ export function Sidebar({
         }
         .sidebar-collapse-btn:hover {
           background: #1d1c24;
-          border-color: rgba(124, 110, 247, 0.16);
-          color: #8d83ff;
+          border-color: var(--purple-mid);
+          color: var(--accent-text);
           transform: translateX(-1px);
         }
         .sidebar-collapse-btn :global(svg) {
@@ -334,8 +334,8 @@ export function Sidebar({
           padding: 10px 8px 10px;
         }
         .next-up-card {
-          background: rgba(124, 110, 247, 0.08);
-          border: 1px solid rgba(124, 110, 247, 0.2);
+          background: var(--accent-subtle);
+          border: 1px solid var(--accent-muted);
           border-radius: 8px;
           padding: 10px 12px 11px;
         }
@@ -349,13 +349,13 @@ export function Sidebar({
           width: 5px;
           height: 5px;
           border-radius: 999px;
-          background: var(--accent);
+          background: var(--accent-text);
           flex-shrink: 0;
           animation: pulse 2s infinite;
         }
         .next-up-label {
           font-size: 10px;
-          color: var(--accent);
+          color: var(--accent-text);
           font-weight: 600;
           letter-spacing: 0.08em;
           font-family: "Geist Mono", monospace;

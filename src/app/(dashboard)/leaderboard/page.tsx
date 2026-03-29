@@ -50,7 +50,7 @@ export default async function LeaderboardPage() {
                   fontSize: 11,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  color: "#7c6ef7",
+                  color: "var(--accent)",
                 }}
               >
                 Weekly competition
@@ -102,14 +102,14 @@ export default async function LeaderboardPage() {
                         padding: "14px 16px",
                         borderRadius: 14,
                         border: isCurrentUser
-                          ? "1px solid rgba(124, 110, 247, 0.36)"
+                          ? "1px solid var(--purple-border)"
                           : "1px solid #252538",
                         background: isCurrentUser
-                          ? "rgba(124, 110, 247, 0.08)"
+                          ? "var(--accent-subtle)"
                           : "#101019",
                       }}
                     >
-                      <div style={{ fontSize: 20, fontWeight: 700, color: "#7c6ef7" }}>
+                      <div style={{ fontSize: 20, fontWeight: 700, color: "var(--accent)" }}>
                         #{entry.position}
                       </div>
                       <div

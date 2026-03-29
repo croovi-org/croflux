@@ -141,38 +141,20 @@ export function WorkspaceShell({
 
       <style jsx>{`
         .ws-shell {
-          --bg: #0a0a0f;
-          --bg2: #0f0f17;
-          --bg3: #13131e;
-          --bg4: #1a1a28;
-          --bg5: #1f1f30;
-          --border: #1e1e2e;
-          --border2: #252538;
-          --border3: #2e2e48;
-          --accent: #7c6ef7;
-          --accent2: #6357d4;
-          --accent-dim: rgba(124,110,247,0.08);
-          --text: #f0f0f8;
-          --text2: #9898b8;
-          --text3: #5f5f7a;
-          --green: #22c55e;
-          --amber: #ffb700;
-          --amber-dim: rgba(255,183,0,0.10);
-          --mono: "Geist Mono", monospace;
           position: fixed;
           inset: 0;
           display: flex;
           flex-direction: column;
           overflow: hidden;
-          background: #0a0a0f;
-          color: #f0f0f8;
+          background: #0f0f17;
+          color: var(--text);
         }
         .ws-shell::before {
           content: "";
           position: absolute;
           inset: 0 0 auto;
           height: 1px;
-          background: rgba(124, 110, 247, 0.7);
+          background: var(--accent);
           z-index: 10;
           pointer-events: none;
         }
@@ -248,9 +230,9 @@ export function WorkspaceShell({
           width: 28px;
           height: 28px;
           border-radius: 8px;
-          border: 1px solid rgba(124, 110, 247, 0.16);
-          background: rgba(124, 110, 247, 0.08);
-          color: #9186ff;
+          border: 1px solid var(--accent-subtle);
+          background: var(--accent-subtle);
+          color: var(--accent);
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -264,9 +246,9 @@ export function WorkspaceShell({
         }
         .ws-sidebar-reopen:hover {
           transform: translateX(2px);
-          background: rgba(124, 110, 247, 0.12);
-          border-color: rgba(124, 110, 247, 0.24);
-          box-shadow: 0 0 16px -8px rgba(124, 110, 247, 0.75);
+          background: var(--accent-subtle);
+          border-color: var(--accent-muted);
+          box-shadow: 0 0 16px -8px var(--accent-muted);
         }
       `}</style>
     </div>

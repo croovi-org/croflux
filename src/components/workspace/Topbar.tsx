@@ -1,18 +1,7 @@
 "use client";
 
-import {
-  BellOff,
-  CircleDollarSign,
-  LogOut,
-  PaintRoller,
-  PlusSquare,
-  Settings,
-  Trash2,
-} from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { AvatarMenu } from "@/components/AvatarMenu";
 
 type TopbarProps = {
   workspaceName: string;
@@ -21,85 +10,8 @@ type TopbarProps = {
   userName: string;
 };
 
-type MenuItem = {
-  label: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
-  trailing?: "chevron";
-  tone?: "default" | "danger";
-  onClick?: () => void | Promise<void>;
-};
-
-function ChevronRightIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="m6 3 4 5-4 5" />
-    </svg>
-  );
-}
-
 export function Topbar({ workspaceName, currentPage, initials, userName }: TopbarProps) {
-  const [open, setOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    function handlePointerDown(event: MouseEvent) {
-      if (!menuRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-
-    window.addEventListener("mousedown", handlePointerDown);
-    window.addEventListener("keydown", handleEscape);
-    return () => {
-      window.removeEventListener("mousedown", handlePointerDown);
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, []);
-
-  const handleLogout = async () => {
-    setLoggingOut(true);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    setOpen(false);
-    router.push("/");
-    router.refresh();
-  };
-
-  const closeMenu = () => setOpen(false);
-  const openTaskWorkspace = () => {
-    closeMenu();
-    router.push("/my-tasks");
-  };
-
-  const menuItems: MenuItem[] = [
-    { label: "Mute notifications", icon: BellOff, trailing: "chevron", onClick: closeMenu },
-    { label: "Create Task", icon: PlusSquare, onClick: openTaskWorkspace },
-    { label: "Trash", icon: Trash2, tone: "danger", onClick: closeMenu },
-    { label: "Themes", icon: PaintRoller, onClick: closeMenu },
-    {
-      label: "Pricing",
-      icon: CircleDollarSign,
-      onClick: () => {
-        closeMenu();
-        router.push("/pricing");
-      },
-    },
-    {
-      label: "Settings",
-      icon: Settings,
-      onClick: () => {
-        closeMenu();
-        router.push("/profile");
-      },
-    },
-    { label: "Log out", icon: LogOut, tone: "danger", onClick: handleLogout },
-  ];
 
   return (
     <header className="tb">
@@ -128,7 +40,7 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           </svg>
           <span>Search</span>
         </button>
-        <button type="button" className="tb-add" onClick={openTaskWorkspace}>
+        <button type="button" className="tb-add" onClick={() => router.push("/my-tasks")}>
           <svg
             viewBox="0 0 24 24"
             width="12"
@@ -143,72 +55,8 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           </svg>
           <span>Add task</span>
         </button>
-        <div className="tb-user-wrap" ref={menuRef}>
-          <button
-            type="button"
-            className={`tb-user-trigger ${open ? "open" : ""}`}
-            aria-expanded={open}
-            aria-haspopup="menu"
-            onClick={() => setOpen((value) => !value)}
-          >
-            <span className="tb-user-avatar-wrap">
-              <div className="tb-user-avatar">{initials}</div>
-              <span className="tb-user-dot" aria-hidden="true" />
-            </span>
-            <span className="tb-user-chevron" aria-hidden="true">
-              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m4 6 4 4 4-4" />
-              </svg>
-            </span>
-          </button>
 
-          {open ? (
-            <div className="tb-menu" role="menu">
-              <div className="tb-menu-head">
-                <button
-                  type="button"
-                  className="tb-menu-profile-link"
-                  onClick={() => {
-                    closeMenu();
-                    router.push("/profile");
-                  }}
-                >
-                  Profile
-                </button>
-                <div className="tb-menu-avatar-wrap">
-                  <div className="tb-menu-avatar">{initials}</div>
-                  <span className="tb-menu-dot" aria-hidden="true" />
-                </div>
-                <Link
-                  href="/profile"
-                  className="tb-menu-user"
-                  onClick={() => setOpen(false)}
-                >
-                  <div className="tb-menu-name">{userName}</div>
-                  <div className="tb-menu-status">Online</div>
-                </Link>
-              </div>
-              <div className="tb-menu-list">
-                {menuItems.map(({ label, icon: Icon, trailing, tone, onClick }) => (
-                  <button
-                    key={label}
-                    type="button"
-                    className={`tb-menu-item ${tone === "danger" ? "danger" : ""}`}
-                    role="menuitem"
-                    onClick={onClick}
-                    disabled={label === "Log out" && loggingOut}
-                  >
-                    <span className="tb-menu-item-left">
-                      <Icon size={19} />
-                      <span>{label === "Log out" && loggingOut ? "Logging out..." : label}</span>
-                    </span>
-                    {trailing === "chevron" ? <ChevronRightIcon /> : null}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : null}
-        </div>
+        <AvatarMenu initials={initials} userName={userName} />
       </div>
 
       <style jsx>{`
@@ -249,7 +97,9 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           font-family: Inter, sans-serif;
           line-height: 1;
         }
-        .tb-spacer { flex: 1; }
+        .tb-spacer {
+          flex: 1;
+        }
         .tb-right {
           display: flex;
           align-items: center;
@@ -266,7 +116,10 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           font-size: 11px;
           font-weight: 500;
           cursor: pointer;
-          transition: background 0.12s, border-color 0.12s, color 0.12s;
+          transition:
+            background-color 0.3s ease,
+            border-color 0.3s ease,
+            color 0.3s ease;
           font-family: Inter, sans-serif;
         }
         .tb-search {
@@ -278,205 +131,18 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           padding-left: 12px;
           padding-right: 12px;
         }
-        .tb-search:hover { border-color: #2e2e48; color: #f0f0f8; }
+        .tb-search:hover {
+          border-color: #2e2e48;
+          color: #f0f0f8;
+        }
         .tb-add {
-          background: #7c6ef7;
-          border: 1px solid #7c6ef7;
+          background: var(--accent);
+          border: 1px solid var(--accent);
           color: white;
         }
-        .tb-add:hover { background: #6357d4; border-color: #6357d4; }
-        .tb-user-avatar {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background: #7c6ef7;
-          color: white;
-          display: grid;
-          place-items: center;
-          font-size: 10px;
-          font-weight: 700;
-          font-family: Inter, sans-serif;
-        }
-        .tb-user-wrap {
-          position: relative;
-        }
-        .tb-user-trigger {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          padding: 0;
-          border: 0;
-          background: transparent;
-        }
-        .tb-user-avatar-wrap {
-          position: relative;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .tb-user-chevron {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #71758b;
-          transition: transform 0.16s ease, color 0.16s ease;
-        }
-        .tb-user-trigger.open .tb-user-chevron {
-          transform: rotate(180deg);
-          color: #9ca0b6;
-        }
-        .tb-user-dot,
-        .tb-menu-dot {
-          position: absolute;
-          width: 11px;
-          height: 11px;
-          border-radius: 999px;
-          background: #35c76f;
-          border: 2px solid #1a1a25;
-        }
-        .tb-user-dot {
-          right: -2px;
-          bottom: -1px;
-        }
-        .tb-menu {
-          position: absolute;
-          top: calc(100% + 12px);
-          right: 0;
-          width: 244px;
-          border-radius: 14px;
-          background: #1a1a1b;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          box-shadow: 0 20px 48px rgba(0, 0, 0, 0.38);
-          padding: 8px 7px 7px;
-          z-index: 40;
-        }
-        .tb-menu-head {
-          position: relative;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 4px 6px 8px;
-        }
-        .tb-menu-profile-link {
-          position: absolute;
-          top: -2px;
-          right: 0;
-          height: 22px;
-          padding: 0 7px;
-          border-radius: 999px;
-          border: 1px solid rgba(124, 110, 247, 0.2);
-          background: rgba(124, 110, 247, 0.08);
-          color: #9186ff;
-          font-size: 10px;
-          font-weight: 600;
-          cursor: pointer;
-        }
-        .tb-menu-profile-link:hover {
-          background: rgba(124, 110, 247, 0.14);
-          color: #aca2ff;
-        }
-        .tb-menu-avatar-wrap {
-          position: relative;
-          width: 42px;
-          height: 42px;
-          flex-shrink: 0;
-        }
-        .tb-menu-avatar {
-          width: 42px;
-          height: 42px;
-          border-radius: 50%;
-          background: #7c6ef7;
-          color: #fff;
-          display: grid;
-          place-items: center;
-          font-size: 13px;
-          font-weight: 700;
-          font-family: Inter, sans-serif;
-        }
-        .tb-menu-dot {
-          left: 29px;
-          bottom: 0;
-        }
-        .tb-menu-user {
-          min-width: 0;
-          flex: 1;
-          display: block;
-          text-decoration: none;
-          cursor: pointer;
-          border-radius: 9px;
-          padding: 5px 6px;
-          margin: -5px -6px;
-          border: 1px solid transparent;
-          transition:
-            background 0.14s ease,
-            border-color 0.14s ease,
-            box-shadow 0.14s ease,
-            filter 0.14s ease;
-        }
-        .tb-menu-user:hover {
-          background: rgba(124, 110, 247, 0.12);
-          border-color: rgba(124, 110, 247, 0.28);
-          box-shadow:
-            inset 0 0 0 1px rgba(124, 110, 247, 0.12),
-            0 0 0 1px rgba(124, 110, 247, 0.16),
-            0 0 22px -6px rgba(124, 110, 247, 0.95);
-          filter: drop-shadow(0 0 10px rgba(124, 110, 247, 0.55));
-        }
-        .tb-menu-user:hover .tb-menu-name {
-          color: #ffffff;
-          text-shadow: 0 0 10px rgba(124, 110, 247, 0.55);
-        }
-        .tb-menu-user:hover .tb-menu-status {
-          color: #c6caf0;
-        }
-        .tb-menu-name {
-          font-size: 12px;
-          font-weight: 600;
-          color: #f3f3f7;
-          line-height: 1.15;
-        }
-        .tb-menu-status {
-          margin-top: 2px;
-          font-size: 11px;
-          color: #7f8792;
-          line-height: 1;
-        }
-        .tb-menu-list {
-          border-top: 1px solid rgba(255, 255, 255, 0.06);
-          padding-top: 6px;
-          display: grid;
-          gap: 2px;
-        }
-        .tb-menu-item {
-          width: 100%;
-          min-height: 38px;
-          border: 0;
-          background: transparent;
-          color: #e6e6ea;
-          border-radius: 9px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 10px;
-          font-size: 13px;
-          font-weight: 500;
-          text-align: left;
-        }
-        .tb-menu-item:hover {
-          background: rgba(255, 255, 255, 0.04);
-        }
-        .tb-menu-item-left {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .tb-menu-item :global(svg) {
-          color: #b9bbc3;
-          flex-shrink: 0;
-        }
-        .tb-menu-item.danger {
-          color: #ececef;
+        .tb-add:hover {
+          background: var(--accent-hover);
+          border-color: var(--accent-hover);
         }
       `}</style>
     </header>

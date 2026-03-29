@@ -63,13 +63,15 @@ export function BillingToggle({ annual, onChange }: BillingToggleProps) {
         .switch {
           width: 44px;
           height: 24px;
-          border: 1px solid rgba(124, 110, 247, 0.26);
+          border: 1px solid var(--purple-border);
           border-radius: 999px;
-          background: rgba(124, 110, 247, 0.18);
+          background: var(--accent-muted);
           padding: 2px;
           position: relative;
           cursor: pointer;
-          transition: background 0.16s ease, border-color 0.16s ease;
+          transition:
+            background-color 0.3s ease,
+            border-color 0.3s ease;
         }
         .switch.monthly {
           background: #1a1a28;
@@ -80,7 +82,7 @@ export function BillingToggle({ annual, onChange }: BillingToggleProps) {
           height: 18px;
           border-radius: 999px;
           display: block;
-          background: #7c6ef7;
+          background: var(--accent);
           transform: translateX(20px);
           transition: transform 0.16s ease, background 0.16s ease;
         }

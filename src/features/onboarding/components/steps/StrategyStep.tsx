@@ -86,7 +86,7 @@ export function StrategyStep({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex min-h-[240px] w-full flex-col items-center justify-center rounded-[14px] border border-dashed border-[var(--border3)] bg-[var(--bg3)] px-6 text-center transition hover:border-[var(--purple)] hover:bg-[rgba(169,157,254,0.06)]"
+                className="flex min-h-[240px] w-full flex-col items-center justify-center rounded-[14px] border border-dashed border-[var(--border3)] bg-[var(--bg3)] px-6 text-center transition hover:border-[var(--purple)] hover:bg-[var(--accent-subtle)]"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] border border-[var(--border2)] bg-[var(--bg4)]">
                   <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none">

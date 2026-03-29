@@ -69,7 +69,7 @@ export function ContactForm() {
               name="subject"
               required
               defaultValue=""
-              className="h-[48px] w-full appearance-none rounded-[10px] border border-[#2a2a35] bg-[#0d0d0f] px-4 pr-11 text-[15px] text-[#e4e4e7] outline-none transition placeholder:text-[#3f3f4a] focus:border-[#7c6af7] focus:shadow-[0_0_0_3px_rgba(124,106,247,0.12)]"
+              className="h-[48px] w-full appearance-none rounded-[10px] border border-[#2a2a35] bg-[#0d0d0f] px-4 pr-11 text-[15px] text-[#e4e4e7] outline-none transition placeholder:text-[#3f3f4a] focus:border-[var(--accent)] focus:shadow-[0_0_0_3px_var(--accent-subtle)]"
             >
               <option value="" disabled>
                 Select a topic
@@ -91,7 +91,7 @@ export function ContactForm() {
             name="message"
             required
             placeholder="Tell us about your team, goals, or requirements…"
-            className="min-h-[130px] w-full resize-y rounded-[10px] border border-[#2a2a35] bg-[#0d0d0f] px-4 py-3 text-[15px] text-[#e4e4e7] outline-none transition placeholder:text-[#3f3f4a] focus:border-[#7c6af7] focus:shadow-[0_0_0_3px_rgba(124,106,247,0.12)]"
+            className="min-h-[130px] w-full resize-y rounded-[10px] border border-[#2a2a35] bg-[#0d0d0f] px-4 py-3 text-[15px] text-[#e4e4e7] outline-none transition placeholder:text-[#3f3f4a] focus:border-[var(--accent)] focus:shadow-[0_0_0_3px_var(--accent-subtle)]"
           />
         </Field>
 
@@ -104,7 +104,7 @@ export function ContactForm() {
             <Button
               type="submit"
               disabled={state === "loading"}
-              className="h-[52px] w-full rounded-[10px] border border-transparent bg-[#7c6af7] text-[15px] font-semibold text-white shadow-none hover:-translate-y-px hover:bg-[#6a57e8] active:translate-y-0 disabled:pointer-events-none disabled:opacity-70"
+              className="h-[52px] w-full rounded-[10px] border border-transparent bg-[var(--accent)] text-[15px] font-semibold text-white shadow-none hover:-translate-y-px hover:bg-[var(--accent-hover)] active:translate-y-0 disabled:pointer-events-none disabled:opacity-70"
             >
               {state === "loading" ? (
                 <>
@@ -152,7 +152,7 @@ function Input({
       type={type}
       required={required}
       placeholder={placeholder}
-      className="h-[48px] w-full rounded-[10px] border border-[#2a2a35] bg-[#0d0d0f] px-4 text-[15px] text-[#e4e4e7] outline-none transition placeholder:text-[#3f3f4a] focus:border-[#7c6af7] focus:shadow-[0_0_0_3px_rgba(124,106,247,0.12)]"
+      className="h-[48px] w-full rounded-[10px] border border-[#2a2a35] bg-[#0d0d0f] px-4 text-[15px] text-[#e4e4e7] outline-none transition placeholder:text-[#3f3f4a] focus:border-[var(--accent)] focus:shadow-[0_0_0_3px_var(--accent-subtle)]"
     />
   );
 }

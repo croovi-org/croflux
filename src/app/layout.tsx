@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import Script from "next/script";
+import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
 const inter = Inter({
@@ -50,9 +51,11 @@ export default function RootLayout({
           {`
             (function () {
               try {
-                var stored = localStorage.getItem("croflux-theme");
-                var theme = stored || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-                document.documentElement.dataset.theme = theme;
+                var accentTheme = localStorage.getItem("croflux-theme") || "purple";
+                var appearance = localStorage.getItem("croflux-appearance")
+                  || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+                document.documentElement.dataset.theme = accentTheme;
+                document.documentElement.dataset.appearance = appearance;
                 var href = "/croflux-mark.png";
                 ["icon", "shortcut icon", "apple-touch-icon"].forEach(function (rel) {
                   var link = document.querySelector('link[rel="' + rel + '"]');
@@ -67,7 +70,7 @@ export default function RootLayout({
             })();
           `}
         </Script>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
