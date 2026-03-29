@@ -20,7 +20,7 @@ type PlanCardProps = {
   isFeatured?: boolean;
   isTeam?: boolean;
   ctaLabel: string;
-  ctaStyle: "secondary" | "accent" | "teal";
+  ctaStyle: "secondary" | "accent" | "team-secondary" | "team-primary";
   teamSize?: string;
   perfectFor?: string[];
   includesLabel: string;
@@ -84,9 +84,11 @@ export function PlanCard({
           <div className="current-cta">Your current plan — Upgrade</div>
         ) : (
           <Link href={`/api/billing/checkout?plan=${id}`} className={`cta ${ctaStyle}`}>
-            {ctaStyle === "secondary" ? <ArrowUp size={16} /> : null}
+            {ctaStyle === "secondary" || ctaStyle === "team-secondary" || ctaStyle === "team-primary" ? (
+              <ArrowUp size={16} />
+            ) : null}
             <span>{ctaLabel}</span>
-            {ctaStyle !== "secondary" && ctaStyle !== "teal" ? <ArrowUpRight size={14} /> : null}
+            {ctaStyle === "accent" ? <ArrowUpRight size={14} /> : null}
           </Link>
         )}
       </div>
@@ -126,12 +128,19 @@ export function PlanCard({
           border-radius: 14px;
           overflow: hidden;
           min-height: 100%;
+          transition: border-color 0.15s ease;
+        }
+        .plan-card:hover {
+          border-color: #2e2e48;
         }
         .plan-card.featured {
           border: 1.5px solid rgba(124, 110, 247, 0.92);
         }
         .plan-card.team {
           border-color: rgba(34, 211, 238, 0.2);
+        }
+        .plan-card.team:hover {
+          border-color: rgba(34, 211, 238, 0.4);
         }
         .top-badge {
           position: absolute;
@@ -226,7 +235,7 @@ export function PlanCard({
         .annual-note span {
           color: #22c55e;
         }
-        .cta,
+        :global(a.cta),
         .current-cta {
           width: 100%;
           margin-top: 18px;
@@ -241,37 +250,47 @@ export function PlanCard({
           font-weight: 500;
           box-sizing: border-box;
         }
-        .cta {
+        :global(a.cta) {
           border: 1px solid #2e2e48;
           background: #1a1a28;
           color: #9a9fb9;
-          transition:
-            border-color 0.14s ease,
-            color 0.14s ease,
-            background 0.14s ease,
-            transform 0.16s ease;
+          cursor: pointer;
+          font-family: Inter, system-ui, sans-serif;
+          transition: all 0.15s ease;
         }
-        .cta:hover {
-          transform: translateY(-1px);
+        :global(a.cta.secondary:hover) {
+          border-color: #7c6ef7;
+          color: #7c6ef7;
         }
-        .cta.secondary:hover {
-          border-color: rgba(124, 110, 247, 0.26);
-          color: #a39dff;
+        :global(a.cta.accent) {
+          background: #7c6ef7;
+          color: #ffffff;
+          border-color: #7c6ef7;
         }
-        .cta.accent {
-          border-color: rgba(124, 110, 247, 0.24);
-          color: #9489ff;
+        :global(a.cta.accent:hover) {
+          background: #6357d4;
+          border-color: #6357d4;
         }
-        .cta.accent:hover {
-          background: rgba(124, 110, 247, 0.12);
+        :global(a.cta.team-secondary) {
+          background: rgba(34, 211, 238, 0.08);
+          color: #22d3ee;
+          border-color: rgba(34, 211, 238, 0.2);
         }
-        .cta.teal {
-          border-color: rgba(34, 211, 238, 0.28);
-          color: ${ctaStyle === "teal" && badge ? "#0f0f17" : "#22d3ee"};
-          background: ${ctaStyle === "teal" && badge ? "#22d3ee" : "#1a1a28"};
+        :global(a.cta.team-secondary:hover) {
+          background: rgba(34, 211, 238, 0.12);
         }
-        .cta.teal:hover {
-          background: ${ctaStyle === "teal" && badge ? "#38dded" : "rgba(34, 211, 238, 0.08)"};
+        :global(a.cta.team-primary) {
+          background: #22d3ee;
+          color: #04342c;
+          border-color: #22d3ee;
+        }
+        :global(a.cta.team-primary:hover) {
+          opacity: 0.9;
+        }
+        :global(a.cta svg) {
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
         }
         .current-cta {
           background: rgba(34, 197, 94, 0.1);

@@ -178,7 +178,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
               ]}
               isTeam
               ctaLabel="Upgrade to Team"
-              ctaStyle="teal"
+              ctaStyle="team-secondary"
               teamSize="Up to 3 members"
               includesLabel="Everything in Pro Builder, plus"
               currentPlan={normalizedPlan === "team-starter"}
@@ -205,7 +205,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
               isTeam
               badge="Best for scale"
               ctaLabel="Upgrade to Team Pro"
-              ctaStyle="teal"
+              ctaStyle="team-primary"
               teamSize="Up to 15 members"
               includesLabel="Everything in Team Starter, plus"
               currentPlan={normalizedPlan === "team-pro"}
