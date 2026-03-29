@@ -3,6 +3,7 @@
 import {
   Activity,
   CheckSquare,
+  DollarSign,
   LayoutDashboard,
   Settings,
   Trophy,
@@ -22,6 +23,7 @@ const items = [
 export function IconRail() {
   const pathname = usePathname();
   const profileActive = pathname.startsWith("/profile");
+  const pricingActive = pathname.startsWith("/pricing");
 
   return (
     <aside className="rail-shell">
@@ -110,6 +112,58 @@ export function IconRail() {
       </div>
 
       <div className="rail-bottom">
+        <Link
+          href="/pricing"
+          className="rail-btn"
+          aria-label="Pricing"
+          title="Pricing"
+          style={{
+            width: "46px",
+            height: "44px",
+            minWidth: "46px",
+            minHeight: "44px",
+            borderRadius: "14px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            boxSizing: "border-box",
+            flexShrink: 0,
+            appearance: "none",
+            cursor: "pointer",
+            textDecoration: "none",
+            color: pricingActive ? "#8b7fff" : "#70758d",
+            border: pricingActive
+              ? "1px solid rgba(124, 110, 247, 0.18)"
+              : "1px solid transparent",
+            background: pricingActive
+              ? "linear-gradient(180deg, #221e38 0%, #1b1830 100%)"
+              : "transparent",
+            boxShadow: pricingActive
+              ? "inset 0 0 0 1px rgba(124, 110, 247, 0.08), 0 10px 22px rgba(8, 8, 14, 0.24), 0 0 20px -14px rgba(124, 110, 247, 0.62)"
+              : "none",
+          }}
+        >
+          <span
+            className="rail-active-line"
+            style={{
+              position: "absolute",
+              left: "0",
+              top: "6px",
+              bottom: "6px",
+              width: "3px",
+              borderRadius: "0 999px 999px 0",
+              background: pricingActive
+                ? "linear-gradient(180deg, #9f92ff 0%, #7c6ef7 100%)"
+                : "transparent",
+              boxShadow: pricingActive
+                ? "0 0 12px rgba(124, 110, 247, 0.46)"
+                : "none",
+            }}
+          />
+          <DollarSign size={15} strokeWidth={1.8} />
+          <span className="rail-tooltip">Pricing</span>
+        </Link>
         <Link
           href="/profile"
           className="rail-btn"

@@ -2,6 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  plan?: string | null;
   weekly_tasks_completed: number;
   streak: number;
   created_at: string;
