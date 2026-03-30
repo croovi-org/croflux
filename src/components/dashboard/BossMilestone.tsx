@@ -74,7 +74,7 @@ export function BossMilestone({
           overflow: hidden;
           border: 1px solid rgba(255, 183, 0, 0.2);
           border-radius: 10px;
-          background: var(--bg3);
+          background: #12121e;
         }
         .boss-top {
           display: flex;

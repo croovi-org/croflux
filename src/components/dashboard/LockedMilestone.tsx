@@ -30,7 +30,7 @@ export function LockedMilestone({ title }: LockedMilestoneProps) {
           gap: 10px;
           border: 1px solid var(--border);
           border-radius: 10px;
-          background: var(--bg3);
+          background: #12121e;
           padding: 10px 15px;
           opacity: 0.42;
           pointer-events: none;
