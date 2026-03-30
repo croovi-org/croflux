@@ -112,7 +112,24 @@ export function WorkspaceClient({
                 <p>Track progress across all your startup projects.</p>
               </div>
 
-              <Link href="/onboarding" className="new-project-btn">
+              <Link
+                href="/onboarding"
+                className="new-project-btn"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                  gap: "10px",
+                  height: "47px",
+                  padding: "0 23px",
+                  borderRadius: "16px",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  whiteSpace: "nowrap",
+                  boxShadow: "0 8px 24px color-mix(in srgb, var(--accent) 22%, transparent)",
+                }}
+              >
                 <Plus size={14} />
                 <span>New Project</span>
               </Link>
@@ -192,7 +209,7 @@ export function WorkspaceClient({
           display: flex;
           align-items: center;
           gap: 10px;
-          min-height: 64px;
+          min-height: 61px;
           margin-bottom: 30px;
           padding: 0 20px;
           border: 1px solid var(--border2);
@@ -233,7 +250,7 @@ export function WorkspaceClient({
         .workspace-eyebrow {
           margin-bottom: 6px;
           color: var(--accent);
-          font-size: 11px;
+          font-size: 12px;
           font-weight: 600;
           letter-spacing: 0.08em;
           text-transform: uppercase;
@@ -242,32 +259,40 @@ export function WorkspaceClient({
         h1 {
           margin: 0;
           color: var(--text);
-          font-size: 22px;
+          font-size: 24px;
           font-weight: 600;
           letter-spacing: -0.025em;
         }
         p {
           margin: 0;
           color: var(--text3);
-          font-size: 13px;
+          font-size: 14px;
           line-height: 1.6;
         }
         .new-project-btn {
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 6px;
-          padding: 10px 18px;
+          min-height: 48px;
+          padding: 12px 22px;
           border-radius: 8px;
           background: var(--accent);
           color: #fff;
           text-decoration: none;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 500;
           flex-shrink: 0;
           white-space: nowrap;
+          box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 22%, transparent);
         }
         .new-project-btn:hover {
-          background: var(--accent-hover);
+          background: color-mix(in srgb, var(--accent) 90%, black 10%);
+        }
+        .new-project-btn :global(svg) {
+          width: 16px;
+          height: 16px;
+          flex-shrink: 0;
         }
         .summary-strip {
           display: flex;
@@ -315,30 +340,30 @@ export function WorkspaceClient({
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 14px;
+          margin-bottom: 16px;
         }
         .section-head span {
           color: var(--text);
-          font-size: 11px;
+          font-size: 12px;
           font-weight: 500;
         }
         .section-head strong {
           color: var(--text3);
-          font-size: 11px;
+          font-size: 12px;
           font-family: var(--mono);
           font-weight: 500;
         }
         .project-grid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 14px;
+          gap: 16px;
           align-items: stretch;
-          margin-bottom: 24px;
+          margin-bottom: 28px;
         }
         .new-project-card {
           width: 100%;
-          min-height: 200px;
-          padding: 32px 20px;
+          min-height: 220px;
+          padding: 35px 22px;
           border-radius: 12px;
           border: 1.5px dashed var(--border2);
           background: transparent;
@@ -359,9 +384,9 @@ export function WorkspaceClient({
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 40px;
-          height: 40px;
-          margin-bottom: 12px;
+          width: 44px;
+          height: 44px;
+          margin-bottom: 13px;
           border-radius: 10px;
           border: 1px solid var(--border2);
           background: var(--bg4);
@@ -374,9 +399,9 @@ export function WorkspaceClient({
           color: var(--accent);
         }
         .new-card-title {
-          margin-bottom: 4px;
+          margin-bottom: 5px;
           color: var(--text2);
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 500;
           transition: color 0.15s ease;
         }
@@ -385,7 +410,7 @@ export function WorkspaceClient({
         }
         .new-card-copy {
           color: var(--text3);
-          font-size: 11px;
+          font-size: 12px;
           line-height: 1.5;
         }
         @media (max-width: 1180px) {
