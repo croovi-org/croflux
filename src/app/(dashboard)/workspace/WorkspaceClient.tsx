@@ -66,6 +66,7 @@ export function WorkspaceClient({
   const [previewMode, setPreviewMode] = useState<"projects" | "empty">(
     projects.length > 0 ? "projects" : "empty",
   );
+  const [isNewProjectHovered, setIsNewProjectHovered] = useState(false);
   const activeProjectId =
     projects.find((project) => project.status === "active")?.id ?? projects[0]?.id ?? null;
 
@@ -177,12 +178,83 @@ export function WorkspaceClient({
                       />
                     ))}
 
-                    <Link href="/onboarding" className="new-project-card">
-                      <span className="new-card-icon">
+                    <Link
+                      href="/onboarding"
+                      className="new-project-card"
+                      onMouseEnter={() => setIsNewProjectHovered(true)}
+                      onMouseLeave={() => setIsNewProjectHovered(false)}
+                      style={{
+                        width: "100%",
+                        minHeight: "200px",
+                        padding: "32px 20px",
+                        borderRadius: "12px",
+                        border: isNewProjectHovered
+                          ? "1.5px dashed var(--accent)"
+                          : "1.5px dashed color-mix(in srgb, var(--accent) 18%, var(--border2))",
+                        background: isNewProjectHovered ? "var(--accent-subtle)" : "#13131e",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        boxSizing: "border-box",
+                        textDecoration: "none",
+                        transition: "all 0.18s ease",
+                        transform: isNewProjectHovered ? "translateY(-2px)" : "none",
+                      }}
+                    >
+                      <span
+                        className="new-card-icon"
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          margin: "0 0 12px",
+                          borderRadius: "10px",
+                          border: isNewProjectHovered
+                            ? "1px solid var(--accent)"
+                            : "1px solid color-mix(in srgb, var(--accent) 16%, var(--border2))",
+                          background: isNewProjectHovered
+                            ? "color-mix(in srgb, var(--accent) 14%, var(--bg4))"
+                            : "color-mix(in srgb, var(--accent) 7%, var(--bg4))",
+                          color: isNewProjectHovered
+                            ? "var(--accent)"
+                            : "color-mix(in srgb, var(--accent) 42%, white 20%)",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                          transition: "all 0.18s ease",
+                        }}
+                      >
                         <Plus size={18} />
                       </span>
-                      <span className="new-card-title">New project</span>
-                      <span className="new-card-copy">
+                      <span
+                        className="new-card-title"
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          marginBottom: "4px",
+                          textAlign: "center",
+                          color: isNewProjectHovered
+                            ? "var(--accent)"
+                            : "color-mix(in srgb, var(--accent) 30%, white 42%)",
+                          transition: "color 0.18s ease",
+                        }}
+                      >
+                        New project
+                      </span>
+                      <span
+                        className="new-card-copy"
+                        style={{
+                          display: "block",
+                          maxWidth: "420px",
+                          textAlign: "center",
+                          color: isNewProjectHovered
+                            ? "color-mix(in srgb, var(--accent) 28%, white 24%)"
+                            : "color-mix(in srgb, var(--accent) 18%, white 26%)",
+                          transition: "color 0.18s ease",
+                        }}
+                      >
                         Start a fresh roadmap and generate your next execution plan.
                       </span>
                     </Link>
@@ -374,7 +446,7 @@ export function WorkspaceClient({
           padding: 32px 20px;
           border-radius: 12px;
           border: 1.5px dashed color-mix(in srgb, var(--accent) 18%, var(--border2));
-          background: transparent;
+          background: #13131e;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -382,11 +454,16 @@ export function WorkspaceClient({
           text-align: center;
           text-decoration: none;
           cursor: pointer;
-          transition: all 0.18s ease;
+          box-sizing: border-box;
+          transition:
+            border-color 0.18s ease,
+            background-color 0.18s ease,
+            transform 0.18s ease;
         }
         .new-project-card:hover {
           border-color: color-mix(in srgb, var(--accent) 28%, var(--border2));
-          background: transparent;
+          background: #13131e;
+          transform: translateY(-2px);
         }
         .new-card-icon {
           display: inline-flex;
@@ -394,12 +471,13 @@ export function WorkspaceClient({
           justify-content: center;
           width: 40px;
           height: 40px;
-          margin: 0 auto 12px;
+          margin: 0 0 12px;
           border-radius: 10px;
           border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--border2));
           background: color-mix(in srgb, var(--accent) 7%, var(--bg4));
           color: color-mix(in srgb, var(--accent) 42%, white 20%);
           transition: all 0.15s ease;
+          flex-shrink: 0;
         }
         .new-project-card:hover .new-card-icon {
           border-color: color-mix(in srgb, var(--accent) 22%, var(--border2));
@@ -412,19 +490,25 @@ export function WorkspaceClient({
           stroke-width: 1.8;
         }
         .new-card-title {
+          display: block;
+          width: 100%;
           margin-bottom: 4px;
           color: color-mix(in srgb, var(--accent) 30%, white 42%);
           font-size: 13px;
           font-weight: 500;
+          text-align: center;
           transition: color 0.15s ease;
         }
         .new-project-card:hover .new-card-title {
           color: color-mix(in srgb, var(--accent) 34%, white 40%);
         }
         .new-card-copy {
+          display: block;
+          max-width: 420px;
           color: color-mix(in srgb, var(--accent) 18%, white 26%);
           font-size: 11px;
           line-height: 1.5;
+          text-align: center;
         }
         @media (max-width: 1180px) {
           .project-grid {
