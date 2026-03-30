@@ -11,20 +11,38 @@ export function ProjectCard({
   project: WorkspaceProjectSummary;
   active?: boolean;
 }) {
+  const statusClass = active ? "active" : project.status;
+  const statusLabel = active
+    ? "Active"
+    : project.status === "active"
+      ? "Active"
+      : project.status === "idle"
+        ? "Idle"
+        : "Not started";
+
   return (
     <Link
       href={project.href}
       className={`project-card ${active ? "active-card" : ""}`}
+      style={
+        active
+          ? {
+              border: "2px solid var(--accent)",
+              borderRadius: "22px",
+              background: "#13131e",
+            }
+          : {
+              border: "1px solid var(--border2)",
+              borderRadius: "12px",
+              background: "#13131e",
+            }
+      }
     >
       <div className="project-card-top">
         <div className="project-card-header">
           <div className="project-card-icon">{project.initial}</div>
-          <span className={`project-status ${project.status}`}>
-            {project.status === "active"
-              ? "Active"
-              : project.status === "idle"
-                ? "Idle"
-                : "Not started"}
+          <span className={`project-status ${statusClass}`}>
+            {statusLabel}
           </span>
         </div>
 
@@ -72,44 +90,44 @@ export function ProjectCard({
           flex-direction: column;
           width: 100%;
           min-width: 0;
-          background: #0f0e16;
-          border: 0;
-          border-radius: 0;
           padding: 0;
           overflow: hidden;
+          box-sizing: border-box;
           cursor: pointer;
           text-decoration: none;
-          transition:
-            box-shadow 0.18s ease,
-            transform 0.18s ease;
+          transition: all 0.18s;
         }
         .project-card.active-card {
-          box-shadow: none;
+          box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent);
         }
         .project-card:hover {
+          border-color: var(--accent);
           transform: translateY(-2px);
-          box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
         .project-card-top {
           padding: 20px 20px 16px;
           flex: 1;
-          background: #0f0e16;
+          background: #13131e;
+          border-top-left-radius: inherit;
+          border-top-right-radius: inherit;
         }
         .project-card-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
-          margin-bottom: 13px;
+          margin-bottom: 12px;
         }
         .project-card-icon {
           width: 35px;
           height: 35px;
-          border-radius: 9px;
+          border-radius: 8px;
           background: var(--bg4);
           border: 1px solid var(--border2);
           color: var(--accent);
-          display: grid;
-          place-items: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           font-size: 15px;
           font-weight: 700;
           flex-shrink: 0;
@@ -247,12 +265,14 @@ export function ProjectCard({
         }
         .project-card-footer {
           padding: 11px 20px;
-          border-top: 1px solid rgba(255, 255, 255, 0.04);
-          background: #0f0e16;
+          border-top: 1px solid var(--border);
+          background: #1a1a28;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 10px;
+          border-bottom-left-radius: inherit;
+          border-bottom-right-radius: inherit;
         }
         .project-footer-copy {
           font-size: 11px;
