@@ -28,7 +28,12 @@ export function IconRail() {
   return (
     <aside className="rail-shell">
       <div className="rail-top">
-        <Link href="/" className="rail-logo" aria-label="CroFlux home">
+        <Link
+          href="/workspace"
+          className="rail-logo"
+          aria-label="Workspace home"
+          title="Workspace home"
+        >
           <span className="rail-logo-mark" aria-hidden="true">
             <Image
               src="/croflux-mark.png"
@@ -38,6 +43,7 @@ export function IconRail() {
               className="object-contain"
             />
           </span>
+          <span className="rail-tooltip rail-logo-tooltip">Workspace home</span>
         </Link>
       </div>
 
@@ -271,6 +277,7 @@ export function IconRail() {
           cursor: pointer;
           border-radius: 10px;
           transition: filter 0.14s ease, transform 0.14s ease;
+          position: relative;
         }
         .rail-logo:hover {
           filter: drop-shadow(0 0 10px var(--accent-muted));
@@ -376,7 +383,13 @@ export function IconRail() {
           z-index: 60;
           cursor: pointer !important;
         }
+        .rail-logo-tooltip {
+          left: calc(100% + 12px);
+          top: 50%;
+          transform: translateY(-50%) translateX(-4px);
+        }
         .rail-btn:hover .rail-tooltip,
+        .rail-logo:hover .rail-tooltip,
         .rail-btn:focus-visible .rail-tooltip {
           opacity: 1;
           visibility: visible;

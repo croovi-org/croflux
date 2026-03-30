@@ -96,7 +96,7 @@ export function getIncompleteTaskCount(milestones: MilestoneWithTasks[]) {
   );
 }
 
-export async function getWorkspaceData() {
+export async function getWorkspaceData(selectedProjectId?: string | null) {
   const supabase = await createClient();
   const {
     data: { user: authUser },
@@ -106,18 +106,20 @@ export async function getWorkspaceData() {
     redirect("/login");
   }
 
-  const [{ data: projectData }, { data: profileData }] = await Promise.all([
+  const [{ data: projectsData }, { data: profileData }] = await Promise.all([
     supabase
       .from("projects")
       .select("*")
       .eq("user_id", authUser.id)
-      .order("created_at", { ascending: true })
-      .limit(1)
-      .maybeSingle(),
+      .order("created_at", { ascending: true }),
     supabase.from("users").select("*").eq("id", authUser.id).maybeSingle(),
   ]);
 
-  const project = projectData as Project | null;
+  const projects = (projectsData ?? []) as Project[];
+  const project =
+    (selectedProjectId
+      ? projects.find((item) => item.id === selectedProjectId)
+      : null) ?? projects[0] ?? null;
   const profile = profileData as User | null;
 
   if (!project) {
