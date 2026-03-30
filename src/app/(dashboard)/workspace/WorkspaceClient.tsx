@@ -66,6 +66,8 @@ export function WorkspaceClient({
   const [previewMode, setPreviewMode] = useState<"projects" | "empty">(
     projects.length > 0 ? "projects" : "empty",
   );
+  const activeProjectId =
+    projects.find((project) => project.status === "active")?.id ?? projects[0]?.id ?? null;
 
   return (
     <WorkspaceShell
@@ -167,8 +169,12 @@ export function WorkspaceClient({
                   </div>
 
                   <div className="project-grid">
-                    {projects.map((project, index) => (
-                      <ProjectCard key={project.id} project={project} active={index === 0} />
+                    {projects.map((project) => (
+                      <ProjectCard
+                        key={project.id}
+                        project={project}
+                        active={project.id === activeProjectId}
+                      />
                     ))}
 
                     <Link href="/onboarding" className="new-project-card">
@@ -195,6 +201,7 @@ export function WorkspaceClient({
           flex: 1;
           min-width: 0;
           overflow-y: auto;
+          overflow-x: hidden;
           background: #0f0f17;
         }
         .workspace-scale {
@@ -340,32 +347,33 @@ export function WorkspaceClient({
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 16px;
+          margin-bottom: 14px;
         }
         .section-head span {
           color: var(--text);
           font-size: 12px;
           font-weight: 500;
+          letter-spacing: 0.02em;
         }
         .section-head strong {
           color: var(--text3);
-          font-size: 12px;
+          font-size: 11px;
           font-family: var(--mono);
-          font-weight: 500;
+          font-weight: 400;
         }
         .project-grid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 16px;
+          gap: 14px;
           align-items: stretch;
-          margin-bottom: 28px;
+          margin-bottom: 24px;
         }
         .new-project-card {
           width: 100%;
-          min-height: 220px;
-          padding: 35px 22px;
+          min-height: 200px;
+          padding: 32px 20px;
           border-radius: 12px;
-          border: 1.5px dashed var(--border2);
+          border: 1.5px dashed color-mix(in srgb, var(--accent) 18%, var(--border2));
           background: transparent;
           display: flex;
           flex-direction: column;
@@ -377,40 +385,45 @@ export function WorkspaceClient({
           transition: all 0.18s ease;
         }
         .new-project-card:hover {
-          border-color: var(--accent);
-          background: var(--accent-subtle);
+          border-color: color-mix(in srgb, var(--accent) 28%, var(--border2));
+          background: transparent;
         }
         .new-card-icon {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 44px;
-          height: 44px;
-          margin-bottom: 13px;
+          width: 40px;
+          height: 40px;
+          margin: 0 auto 12px;
           border-radius: 10px;
-          border: 1px solid var(--border2);
-          background: var(--bg4);
-          color: var(--text3);
+          border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--border2));
+          background: color-mix(in srgb, var(--accent) 7%, var(--bg4));
+          color: color-mix(in srgb, var(--accent) 42%, white 20%);
           transition: all 0.15s ease;
         }
         .new-project-card:hover .new-card-icon {
-          border-color: var(--accent);
-          background: var(--accent-subtle);
-          color: var(--accent);
+          border-color: color-mix(in srgb, var(--accent) 22%, var(--border2));
+          background: color-mix(in srgb, var(--accent) 9%, var(--bg4));
+          color: color-mix(in srgb, var(--accent) 52%, white 18%);
+        }
+        .new-card-icon :global(svg) {
+          width: 18px;
+          height: 18px;
+          stroke-width: 1.8;
         }
         .new-card-title {
-          margin-bottom: 5px;
-          color: var(--text2);
-          font-size: 14px;
+          margin-bottom: 4px;
+          color: color-mix(in srgb, var(--accent) 30%, white 42%);
+          font-size: 13px;
           font-weight: 500;
           transition: color 0.15s ease;
         }
         .new-project-card:hover .new-card-title {
-          color: var(--accent);
+          color: color-mix(in srgb, var(--accent) 34%, white 40%);
         }
         .new-card-copy {
-          color: var(--text3);
-          font-size: 12px;
+          color: color-mix(in srgb, var(--accent) 18%, white 26%);
+          font-size: 11px;
           line-height: 1.5;
         }
         @media (max-width: 1180px) {
