@@ -1,7 +1,15 @@
 import { redirect } from "next/navigation";
 import { WorkspaceClient, type WorkspaceProjectSummary, type WorkspaceSummary } from "./WorkspaceClient";
 import { createClient } from "@/lib/supabase/server";
-import { getActiveMilestoneIndex, getBossHp, getInitials, type MilestoneWithTasks } from "@/lib/workspace/data";
+import {
+  getActiveMilestoneIndex,
+  getBossHp,
+  getIncompleteTaskCount,
+  getInitials,
+  getNextUpTask,
+  getSidebarMilestones,
+  type MilestoneWithTasks,
+} from "@/lib/workspace/data";
 import type { Milestone, Project, Task, User } from "@/types";
 
 type MilestoneRow = Milestone & {
@@ -193,6 +201,16 @@ export default async function WorkspacePage() {
     bossesDefeated: projectSummaryResult.totalBossesDefeated,
   };
 
+  const activeWorkspaceProject = projects[0] ?? null;
+  const activeWorkspaceMilestones = activeWorkspaceProject
+    ? groupedMilestones.get(activeWorkspaceProject.id) ?? []
+    : [];
+  const nextUp = getNextUpTask(activeWorkspaceMilestones);
+  const rank =
+    user.weekly_tasks_completed > 0
+      ? Math.max(1, 18 - user.weekly_tasks_completed)
+      : null;
+
   return (
     <WorkspaceClient
       initials={getInitials(user.name)}
@@ -200,6 +218,11 @@ export default async function WorkspacePage() {
       workspaceName={getWorkspaceName(user.name)}
       summary={summary}
       projects={projectSummaries}
+      nextUpTask={nextUp?.task.title ?? null}
+      nextUpContext={nextUp?.context ?? null}
+      incompleteTaskCount={getIncompleteTaskCount(activeWorkspaceMilestones)}
+      rank={rank}
+      milestones={getSidebarMilestones(activeWorkspaceMilestones)}
     />
   );
 }

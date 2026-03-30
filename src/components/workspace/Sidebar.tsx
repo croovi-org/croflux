@@ -63,6 +63,12 @@ export function Sidebar({
 
   const navItems = [
     {
+      href: "/workspace",
+      label: "Home",
+      badge: null as string | null,
+      badgeTone: "default" as const,
+    },
+    {
       href: "/dashboard",
       label: "Dashboard",
       badge: null as string | null,
