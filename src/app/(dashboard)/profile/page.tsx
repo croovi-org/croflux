@@ -81,7 +81,7 @@ async function saveProfessionalInfo(payload: SavePayload) {
 }
 
 export default async function ProfilePage() {
-  const { user, project, milestones, rank } = await getWorkspaceData();
+  const { user, project, milestones, rank, projectCount } = await getWorkspaceData();
   const rawUser = user as typeof user & {
     first_name?: string | null;
     last_name?: string | null;
@@ -143,6 +143,7 @@ export default async function ProfilePage() {
         rank,
         milestones: getSidebarMilestones(milestones),
         streak: user.streak,
+        projectCount,
       }}
       profile={{
         userId: user.id,

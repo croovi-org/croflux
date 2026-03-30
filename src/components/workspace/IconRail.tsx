@@ -15,6 +15,11 @@ import { usePathname } from "next/navigation";
 
 const items = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  {
+    href: "/projects",
+    label: "Projects",
+    iconPath: "M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z",
+  },
   { href: "/milestones", label: "Milestones", icon: CheckSquare },
   { href: "/calendar", label: "Activity", icon: Activity },
   { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
@@ -48,14 +53,16 @@ export function IconRail() {
       </div>
 
       <div className="rail-middle">
-        {items.map(({ href, label, icon }) => {
+        {items.map(({ href, label, icon, iconPath }) => {
           const IconComponent = icon;
           const active =
             href === "/dashboard"
               ? pathname === "/dashboard"
               : pathname.startsWith(href);
           const target =
-            href === "/dashboard" || href === "/leaderboard" ? href : "#";
+            href === "/dashboard" || href === "/projects" || href === "/leaderboard"
+              ? href
+              : "#";
 
           return (
             <div key={href} className="rail-item">
@@ -102,7 +109,20 @@ export function IconRail() {
                     boxShadow: "none",
                   }}
                 />
-                <IconComponent size={15} strokeWidth={1.8} />
+                {iconPath ? (
+                  <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                    <path
+                      d={iconPath}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : IconComponent ? (
+                  <IconComponent size={15} strokeWidth={1.8} />
+                ) : null}
                 <span className="rail-tooltip">{label}</span>
               </Link>
               <span className={`rail-caption ${active ? "active" : ""}`}>{label}</span>

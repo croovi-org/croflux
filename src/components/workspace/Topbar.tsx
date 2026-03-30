@@ -9,6 +9,8 @@ type TopbarProps = {
   initials: string;
   userName: string;
   hideAddTask?: boolean;
+  actionLabel?: string;
+  actionHref?: string;
 };
 
 export function Topbar({
@@ -17,6 +19,8 @@ export function Topbar({
   initials,
   userName,
   hideAddTask = false,
+  actionLabel = "Add task",
+  actionHref = "/my-tasks",
 }: TopbarProps) {
   const router = useRouter();
   const hasCurrentPage = Boolean(currentPage);
@@ -51,7 +55,7 @@ export function Topbar({
           <span>Search</span>
         </button>
         {!hideAddTask ? (
-          <button type="button" className="tb-add" onClick={() => router.push("/my-tasks")}>
+          <button type="button" className="tb-add" onClick={() => router.push(actionHref)}>
             <svg
               viewBox="0 0 24 24"
               width="12"
@@ -64,7 +68,7 @@ export function Topbar({
             >
               <path d="M12 5v14M5 12h14" />
             </svg>
-            <span>Add task</span>
+            <span>{actionLabel}</span>
           </button>
         ) : null}
 

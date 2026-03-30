@@ -24,6 +24,7 @@ type SidebarProps = {
   currentSection?:
     | "/workspace"
     | "/dashboard"
+    | "/projects"
     | "/my-tasks"
     | "/leaderboard"
     | "/profile"
@@ -36,6 +37,7 @@ type SidebarProps = {
     color: string;
   }>;
   activeProjectId?: string | null;
+  projectCount?: number;
 };
 
 export function Sidebar({
@@ -53,6 +55,7 @@ export function Sidebar({
   mode = "default",
   projects = [],
   activeProjectId = null,
+  projectCount,
 }: SidebarProps) {
   const pathname = usePathname();
   const normalizedPathname =
@@ -72,6 +75,15 @@ export function Sidebar({
       label: "Dashboard",
       badge: null as string | null,
       badgeTone: "default" as const,
+    },
+    {
+      href: "/projects",
+      label: "Projects",
+      badge:
+        typeof projectCount === "number" && projectCount > 0
+          ? String(projectCount)
+          : null,
+      badgeTone: "accent" as const,
     },
     {
       href: "/my-tasks",
@@ -178,7 +190,7 @@ export function Sidebar({
                 <span
                   className={`nav-badge ${isActive ? "active" : ""} ${
                     badgeTone === "amber" ? "amber" : ""
-                  }`}
+                  } ${badgeTone === "accent" ? "accent" : ""}`}
                   style={
                     badgeTone === "amber"
                       ? {
@@ -189,6 +201,28 @@ export function Sidebar({
                           background: "#40351d",
                           color: "#e2a72a",
                         }
+                      : badgeTone === "accent"
+                        ? isActive
+                          ? {
+                              height: "22px",
+                              minWidth: "22px",
+                              padding: "0 7px",
+                              borderRadius: "8px",
+                              background: "var(--accent-subtle)",
+                              color: "var(--accent-text)",
+                              border: "1px solid var(--accent-muted)",
+                            }
+                          : {
+                              height: "22px",
+                              minWidth: "22px",
+                              padding: "0 7px",
+                              borderRadius: "8px",
+                              background:
+                                "color-mix(in srgb, var(--accent) 12%, transparent)",
+                              color: "var(--accent-text)",
+                              border:
+                                "1px solid color-mix(in srgb, var(--accent) 24%, transparent)",
+                            }
                       : isActive
                         ? {
                             height: "22px",
@@ -230,7 +264,7 @@ export function Sidebar({
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "10px",
+                      justifyContent: "space-between",
                       width: "100%",
                       minHeight: "38px",
                       padding: "0 12px",
@@ -241,34 +275,60 @@ export function Sidebar({
                       background: isActive ? "var(--accent-subtle)" : "transparent",
                     }}
                   >
+                    {isActive ? (
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          position: "absolute",
+                          left: "0",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: "3px",
+                          height: "18px",
+                          borderRadius: "0 3px 3px 0",
+                          background: "var(--accent)",
+                        }}
+                      />
+                    ) : null}
                     <span
-                      className="project-row-dot"
                       style={{
-                        width: "9px",
-                        height: "9px",
-                        borderRadius: "999px",
-                        flexShrink: 0,
-                        background: isActive ? "var(--accent)" : project.color,
-                        animation: isActive ? "projectPulse 2.4s ease-in-out infinite" : "none",
-                      }}
-                    />
-                    <span
-                      className="project-row-name"
-                      style={{
-                        flex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
                         minWidth: 0,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        fontSize: "12px",
-                        color: isActive ? "var(--text)" : "var(--text2)",
+                        flex: 1,
                       }}
                     >
-                      {project.name}
+                      <span
+                        className="project-row-dot"
+                        style={{
+                          width: "9px",
+                          height: "9px",
+                          borderRadius: "999px",
+                          flexShrink: 0,
+                          background: isActive ? "var(--accent)" : project.color,
+                          animation: isActive ? "projectPulse 2.4s ease-in-out infinite" : "none",
+                        }}
+                      />
+                      <span
+                        className="project-row-name"
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          fontSize: "12px",
+                          color: isActive ? "var(--text)" : "var(--text2)",
+                        }}
+                      >
+                        {project.name}
+                      </span>
                     </span>
                     <span
                       className="project-row-progress"
                       style={{
+                        marginLeft: "12px",
                         flexShrink: 0,
                         fontSize: "11px",
                         color: "var(--text3)",

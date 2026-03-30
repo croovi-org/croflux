@@ -10,7 +10,7 @@ import {
 } from "@/lib/workspace/data";
 
 export default async function MyTasksPage() {
-  const { user, project, milestones, rank } = await getWorkspaceData();
+  const { user, project, milestones, rank, projectCount } = await getWorkspaceData();
   const initials = getInitials(user.name);
   const nextUp = getNextUpTask(milestones);
   const tasks = milestones.flatMap((milestone) =>
@@ -39,6 +39,7 @@ export default async function MyTasksPage() {
       rank={rank}
       milestones={getSidebarMilestones(milestones)}
       streak={user.streak}
+      projectCount={projectCount}
     >
       <main style={{ flex: 1, minWidth: 0, background: "#0f0f17", overflow: "auto" }}>
           <div style={{ padding: 24 }}>

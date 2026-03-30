@@ -15,6 +15,7 @@ export type WorkspaceData = {
   project: Project;
   milestones: MilestoneWithTasks[];
   rank: number | null;
+  projectCount: number;
 };
 
 function normalizeMilestones(rows: MilestoneRow[]) {
@@ -156,5 +157,6 @@ export async function getWorkspaceData(selectedProjectId?: string | null) {
     project,
     milestones,
     rank,
+    projectCount: projects.length,
   } satisfies WorkspaceData;
 }

@@ -17,6 +17,7 @@ type DashboardClientProps = {
   project: Project;
   milestones: MilestoneWithTasks[];
   initialRank: number | null;
+  projectCount: number;
 };
 
 type ToastState = { title: string; body: string };
@@ -1256,6 +1257,7 @@ export function DashboardClient({
   project,
   milestones: initialMilestones,
   initialRank,
+  projectCount,
 }: DashboardClientProps) {
   const [milestones, setMilestones] = useState(initialMilestones);
   const [toast, setToast] = useState<ToastState | null>(null);
@@ -1388,6 +1390,7 @@ export function DashboardClient({
         rank={rank}
         milestones={sidebarMilestones}
         streak={user.streak}
+        projectCount={projectCount}
         headerBottom={<div className="navbar-tabs"><ViewTabs active={activeTab} onSelect={setActiveTab} /></div>}
       >
         <main className="main">

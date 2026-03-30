@@ -223,6 +223,7 @@ export default async function WorkspacePage() {
       incompleteTaskCount={getIncompleteTaskCount(activeWorkspaceMilestones)}
       rank={rank}
       milestones={getSidebarMilestones(activeWorkspaceMilestones)}
+      projectCount={projects.length}
     />
   );
 }

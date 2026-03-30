@@ -26,6 +26,7 @@ type WorkspaceShellProps = {
   currentSection:
     | "/workspace"
     | "/dashboard"
+    | "/projects"
     | "/my-tasks"
     | "/leaderboard"
     | "/profile"
@@ -40,9 +41,12 @@ type WorkspaceShellProps = {
   streak: number;
   headerBottom?: ReactNode;
   hideAddTask?: boolean;
+  actionLabel?: string;
+  actionHref?: string;
   sidebarMode?: "default" | "workspaceHome";
   sidebarProjects?: SidebarProject[];
   activeProjectId?: string | null;
+  projectCount?: number;
   children: ReactNode;
 };
 
@@ -64,9 +68,12 @@ export function WorkspaceShell({
   streak,
   headerBottom,
   hideAddTask = false,
+  actionLabel,
+  actionHref,
   sidebarMode = "default",
   sidebarProjects = [],
   activeProjectId = null,
+  projectCount,
   children,
 }: WorkspaceShellProps) {
   const sidebarCollapsed = useSyncExternalStore(
@@ -116,6 +123,7 @@ export function WorkspaceShell({
             mode={sidebarMode}
             projects={sidebarProjects}
             activeProjectId={activeProjectId}
+            projectCount={projectCount}
           />
         </div>
 
@@ -151,6 +159,8 @@ export function WorkspaceShell({
                   initials={initials}
                   userName={userName}
                   hideAddTask={hideAddTask}
+                  actionLabel={actionLabel}
+                  actionHref={actionHref}
                 />
               </div>
               {headerBottom ? <div className="ws-navbar-bottom">{headerBottom}</div> : null}
