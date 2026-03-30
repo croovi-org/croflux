@@ -58,7 +58,7 @@ export function StatCards({
           margin-bottom: 20px;
         }
         .stat-card {
-          background: var(--bg3);
+          background: #12121e;
           border: 1px solid var(--border);
           border-radius: 10px;
           padding: 13px 15px;
