@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { EmptyProjects } from "@/components/workspace/EmptyProjects";
@@ -47,6 +48,9 @@ export function WorkspaceClient({
   summary,
   projects,
 }: WorkspaceClientProps) {
+  const [previewMode, setPreviewMode] = useState<"projects" | "empty">(
+    projects.length > 0 ? "projects" : "empty",
+  );
   const sidebarProjects = projects.map((project) => ({
     id: project.id,
     name: project.name,
@@ -73,71 +77,93 @@ export function WorkspaceClient({
       activeProjectId={projects[0]?.id ?? null}
     >
       <main className="workspace-main">
-        <div className="workspace-wrap">
-          <section className="workspace-header">
-            <div>
-              <div className="workspace-eyebrow">Your workspace</div>
-              <h1>Stay consistent. Ship faster.</h1>
-              <p>Track progress across all your startup projects.</p>
-            </div>
+        <div className="workspace-scale">
+          <div className="workspace-wrap">
+            <section className="preview-strip">
+              <span className="preview-label">Preview:</span>
+              <div className="preview-actions">
+                <button
+                  type="button"
+                  className={`preview-btn ${previewMode === "projects" ? "active" : ""}`}
+                  onClick={() => setPreviewMode("projects")}
+                >
+                  With projects
+                </button>
+                <button
+                  type="button"
+                  className={`preview-btn ${previewMode === "empty" ? "active" : ""}`}
+                  onClick={() => setPreviewMode("empty")}
+                >
+                  Empty state
+                </button>
+              </div>
+            </section>
 
-            <Link href="/onboarding" className="new-project-btn">
-              <Plus size={14} />
-              <span>New Project</span>
-            </Link>
-          </section>
+            <section className="workspace-header">
+              <div>
+                <div className="workspace-eyebrow">Your workspace</div>
+                <h1>Stay consistent. Ship faster.</h1>
+                <p>Track progress across all your startup projects.</p>
+              </div>
 
-          {projects.length > 0 ? (
-            <>
-              <section className="summary-strip">
-                <div className="summary-chip">
-                  <span className="summary-dot accent" />
-                  <strong>{summary.projectCount}</strong>
-                  <span>projects</span>
-                </div>
-                <div className="summary-chip">
-                  <span className="summary-dot green" />
-                  <strong>{summary.totalCompletedTasks}</strong>
-                  <span>tasks done</span>
-                </div>
-                <div className="summary-chip">
-                  <span className="summary-dot amber" />
-                  <strong>{summary.streakDays}</strong>
-                  <span>day streak</span>
-                </div>
-                <div className="summary-chip">
-                  <span className="summary-dot muted" />
-                  <strong>{summary.bossesDefeated}</strong>
-                  <span>bosses defeated</span>
-                </div>
-              </section>
+              <Link href="/onboarding" className="new-project-btn">
+                <Plus size={14} />
+                <span>New Project</span>
+              </Link>
+            </section>
 
-              <section>
-                <div className="section-head">
-                  <span>Projects</span>
-                  <strong>{projects.length} total</strong>
-                </div>
+            {previewMode === "projects" && projects.length > 0 ? (
+              <>
+                <section className="summary-strip">
+                  <div className="summary-chip">
+                    <span className="summary-dot accent" />
+                    <strong>{summary.projectCount}</strong>
+                    <span>projects</span>
+                  </div>
+                  <div className="summary-chip">
+                    <span className="summary-dot green" />
+                    <strong>{summary.totalCompletedTasks}</strong>
+                    <span>tasks done</span>
+                  </div>
+                  <div className="summary-chip">
+                    <span className="summary-dot amber" />
+                    <strong>{summary.streakDays}</strong>
+                    <span>day streak</span>
+                  </div>
+                  <div className="summary-chip">
+                    <span className="summary-dot muted" />
+                    <strong>{summary.bossesDefeated}</strong>
+                    <span>bosses defeated</span>
+                  </div>
+                </section>
 
-                <div className="project-grid">
-                  {projects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
-                  ))}
+                <section>
+                  <div className="section-head">
+                    <span>Projects</span>
+                    <strong>{projects.length} total</strong>
+                  </div>
 
-                  <Link href="/onboarding" className="new-project-card">
-                    <span className="new-card-icon">
-                      <Plus size={18} />
-                    </span>
-                    <span className="new-card-title">New project</span>
-                    <span className="new-card-copy">
-                      Start a fresh roadmap and generate your next execution plan.
-                    </span>
-                  </Link>
-                </div>
-              </section>
-            </>
-          ) : (
-            <EmptyProjects />
-          )}
+                  <div className="project-grid">
+                    {projects.map((project, index) => (
+                      <ProjectCard key={project.id} project={project} active={index === 0} />
+                    ))}
+
+                    <Link href="/onboarding" className="new-project-card">
+                      <span className="new-card-icon">
+                        <Plus size={18} />
+                      </span>
+                      <span className="new-card-title">New project</span>
+                      <span className="new-card-copy">
+                        Start a fresh roadmap and generate your next execution plan.
+                      </span>
+                    </Link>
+                  </div>
+                </section>
+              </>
+            ) : (
+              <EmptyProjects />
+            )}
+          </div>
         </div>
       </main>
 
@@ -148,15 +174,55 @@ export function WorkspaceClient({
           overflow-y: auto;
           background: #0f0f17;
         }
+        .workspace-scale {
+          width: 119.0476190476%;
+          transform: scale(0.84);
+          transform-origin: top left;
+        }
         .workspace-wrap {
           padding: 32px 36px;
+        }
+        .preview-strip {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          min-height: 64px;
+          margin-bottom: 30px;
+          padding: 0 20px;
+          border: 1px solid var(--border2);
+          border-radius: 14px;
+          background: rgba(19, 19, 30, 0.35);
+        }
+        .preview-label {
+          color: var(--text3);
+          font-size: 14px;
+        }
+        .preview-actions {
+          display: inline-flex;
+          gap: 8px;
+        }
+        .preview-btn {
+          height: 34px;
+          padding: 0 18px;
+          border-radius: 9px;
+          border: 1px solid var(--border2);
+          background: var(--bg3);
+          color: var(--text3);
+          font-size: 14px;
+          line-height: 1;
+        }
+        .preview-btn.active {
+          border-color: var(--purple-border);
+          background: var(--accent-subtle);
+          color: var(--accent);
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent);
         }
         .workspace-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
           gap: 20px;
-          margin-bottom: 28px;
+          margin-bottom: 32px;
         }
         .workspace-eyebrow {
           margin-bottom: 6px;
@@ -175,7 +241,7 @@ export function WorkspaceClient({
           letter-spacing: -0.025em;
         }
         p {
-          margin: 6px 0 0;
+          margin: 0;
           color: var(--text3);
           font-size: 13px;
           line-height: 1.6;
@@ -190,8 +256,9 @@ export function WorkspaceClient({
           color: #fff;
           text-decoration: none;
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 500;
           flex-shrink: 0;
+          white-space: nowrap;
         }
         .new-project-btn:hover {
           background: var(--accent-hover);
@@ -259,8 +326,11 @@ export function WorkspaceClient({
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 14px;
+          align-items: stretch;
+          margin-bottom: 24px;
         }
         .new-project-card {
+          width: 100%;
           min-height: 200px;
           padding: 32px 20px;
           border-radius: 12px;
@@ -272,15 +342,12 @@ export function WorkspaceClient({
           justify-content: center;
           text-align: center;
           text-decoration: none;
-          transition:
-            border-color 0.18s ease,
-            background-color 0.18s ease,
-            transform 0.18s ease;
+          cursor: pointer;
+          transition: all 0.18s ease;
         }
         .new-project-card:hover {
           border-color: var(--accent);
           background: var(--accent-subtle);
-          transform: translateY(-2px);
         }
         .new-card-icon {
           display: inline-flex;
@@ -293,6 +360,7 @@ export function WorkspaceClient({
           border: 1px solid var(--border2);
           background: var(--bg4);
           color: var(--text3);
+          transition: all 0.15s ease;
         }
         .new-project-card:hover .new-card-icon {
           border-color: var(--accent);
@@ -304,6 +372,7 @@ export function WorkspaceClient({
           color: var(--text2);
           font-size: 13px;
           font-weight: 500;
+          transition: color 0.15s ease;
         }
         .new-project-card:hover .new-card-title {
           color: var(--accent);
@@ -321,6 +390,11 @@ export function WorkspaceClient({
         @media (max-width: 760px) {
           .workspace-wrap {
             padding: 24px 18px 28px;
+          }
+          .preview-strip {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 14px 16px;
           }
           .workspace-header {
             flex-direction: column;

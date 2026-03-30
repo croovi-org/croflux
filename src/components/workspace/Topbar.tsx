@@ -98,7 +98,7 @@ export function Topbar({
           line-height: 1;
         }
         .tb-ws-dim.root-only {
-          color: #f0f0f8;
+          color: var(--accent);
           font-weight: 500;
         }
         .tb-sep {

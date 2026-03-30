@@ -4,9 +4,18 @@ import Link from "next/link";
 import { CheckSquare, CheckCircle2, Shield } from "lucide-react";
 import type { WorkspaceProjectSummary } from "@/app/(dashboard)/workspace/WorkspaceClient";
 
-export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
+export function ProjectCard({
+  project,
+  active = false,
+}: {
+  project: WorkspaceProjectSummary;
+  active?: boolean;
+}) {
   return (
-    <Link href={project.href} className="project-card">
+    <Link
+      href={project.href}
+      className={`project-card ${active ? "active-card" : ""}`}
+    >
       <div className="project-card-top">
         <div className="project-card-header">
           <div className="project-card-icon">{project.initial}</div>
@@ -59,23 +68,30 @@ export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
 
       <style jsx>{`
         .project-card {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          min-width: 0;
           background: var(--bg3);
           border: 1px solid var(--border2);
           border-radius: 12px;
+          padding: 0;
           overflow: hidden;
+          cursor: pointer;
           text-decoration: none;
-          transition:
-            border-color 0.18s ease,
-            transform 0.18s ease,
-            box-shadow 0.18s ease;
+          transition: all 0.18s ease;
+        }
+        .project-card.active-card {
+          border-color: var(--accent);
         }
         .project-card:hover {
           border-color: var(--accent);
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
         .project-card-top {
           padding: 18px 18px 14px;
+          flex: 1;
         }
         .project-card-header {
           display: flex;
@@ -88,8 +104,8 @@ export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
           width: 32px;
           height: 32px;
           border-radius: 8px;
-          border: 1px solid var(--border2);
           background: var(--bg4);
+          border: 1px solid var(--border2);
           color: var(--accent);
           display: grid;
           place-items: center;
@@ -100,7 +116,6 @@ export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
         .project-status {
           display: inline-flex;
           align-items: center;
-          min-height: 18px;
           padding: 2px 7px;
           border-radius: 4px;
           font-size: 9px;
@@ -119,16 +134,16 @@ export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
           color: var(--text3);
         }
         .project-name {
-          margin-bottom: 4px;
-          color: var(--text);
           font-size: 14px;
           font-weight: 600;
+          margin-bottom: 4px;
+          color: var(--text);
           letter-spacing: -0.01em;
         }
         .project-idea {
+          font-size: 11px;
           margin-bottom: 14px;
           color: var(--text3);
-          font-size: 11px;
           line-height: 1.5;
           display: -webkit-box;
           -webkit-line-clamp: 2;
@@ -145,27 +160,28 @@ export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
           margin-bottom: 6px;
         }
         .project-progress-head span {
-          color: var(--text3);
           font-size: 10px;
+          color: var(--text3);
           letter-spacing: 0.04em;
         }
         .project-progress-head strong {
-          color: var(--text);
           font-size: 13px;
-          font-weight: 700;
+          font-weight: 600;
+          color: var(--text);
           font-family: var(--mono);
         }
         .project-progress-bar {
           height: 4px;
-          border-radius: 2px;
           background: var(--bg4);
+          border-radius: 2px;
           overflow: hidden;
         }
         .project-progress-fill {
-          position: relative;
           height: 100%;
+          position: relative;
           border-radius: 2px;
           background: var(--accent);
+          transition: width 0.4s ease;
         }
         .project-progress-fill::after {
           content: "";
@@ -186,16 +202,26 @@ export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
           margin-bottom: 4px;
         }
         .project-tasks {
+          font-size: 11px;
           display: inline-flex;
           align-items: center;
           gap: 5px;
           color: var(--text2);
-          font-size: 11px;
         }
         .project-tasks :global(svg) {
+          stroke: var(--text3);
+          fill: none;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          width: 12px;
+          height: 12px;
           color: var(--text3);
         }
         .project-streak {
+          display: flex;
+          align-items: center;
+          gap: 4px;
           color: var(--amber);
           font-size: 11px;
           font-weight: 500;
@@ -208,6 +234,10 @@ export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
           font-size: 10px;
           font-family: var(--mono);
         }
+        .project-boss :global(svg) {
+          width: 10px;
+          height: 10px;
+        }
         .project-boss.active {
           color: var(--amber);
         }
@@ -215,22 +245,25 @@ export function ProjectCard({ project }: { project: WorkspaceProjectSummary }) {
           color: var(--green);
         }
         .project-card-footer {
+          padding: 10px 18px;
+          border-top: 1px solid var(--border);
+          background: var(--bg4);
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 10px;
-          padding: 10px 18px;
-          border-top: 1px solid var(--border);
-          background: var(--bg4);
         }
         .project-footer-copy {
-          color: var(--text3);
           font-size: 10px;
+          color: var(--text3);
         }
         .project-footer-copy span {
           color: var(--text2);
         }
         .project-open {
+          display: flex;
+          align-items: center;
+          gap: 4px;
           color: var(--accent);
           font-size: 10px;
           font-weight: 500;
