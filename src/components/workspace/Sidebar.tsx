@@ -1,6 +1,5 @@
 "use client";
 
-import { Home, LayoutDashboard, Trophy } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -87,12 +86,6 @@ export function Sidebar({
       badgeTone: "amber" as const,
     },
   ];
-  const workspaceHomeNavItems = [
-    { href: "/workspace", label: "Home", icon: Home },
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
-  ] as const;
-
   return (
     <aside className={`sidebar-shell ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-top">
@@ -120,44 +113,24 @@ export function Sidebar({
             </svg>
           </button>
         </div>
-        {mode === "default" ? (
-          <div className="next-up-wrap">
-            <div className="next-up-card">
-              <div className="next-up-top">
-                <span className="next-up-dot" />
-                <span className="next-up-label">NEXT UP</span>
-              </div>
-              <div className="next-up-task">
-                {nextUpTask ?? "Everything shipped."}
-              </div>
-              <div className="next-up-context">
-                {nextUpContext ?? "All milestones are complete"}
-              </div>
+        <div className="next-up-wrap">
+          <div className="next-up-card">
+            <div className="next-up-top">
+              <span className="next-up-dot" />
+              <span className="next-up-label">NEXT UP</span>
+            </div>
+            <div className="next-up-task">
+              {nextUpTask ?? "Everything shipped."}
+            </div>
+            <div className="next-up-context">
+              {nextUpContext ?? "All milestones are complete"}
             </div>
           </div>
-        ) : null}
+        </div>
       </div>
 
       <div className="sidebar-nav">
-        {mode === "workspaceHome"
-          ? workspaceHomeNavItems.map(({ href, label, icon: Icon }) => {
-              const isActive = currentSection === href;
-
-              return (
-                <Link
-                  key={label}
-                  href={href}
-                  className={`ws-home-nav-item ${isActive ? "active" : ""}`}
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  <span className="ws-home-nav-icon">
-                    <Icon size={14} strokeWidth={1.8} />
-                  </span>
-                  <span className="nav-label">{label}</span>
-                </Link>
-              );
-            })
-          : navItems.map(({ href, label, badge, badgeTone }, index) => {
+        {navItems.map(({ href, label, badge, badgeTone }, index) => {
           const derivedActive =
             normalizedPathname === href ||
             normalizedPathname.startsWith(`${href}/`) ||
@@ -174,73 +147,73 @@ export function Sidebar({
             ? currentSection === href
             : derivedActive || fallbackActive;
 
-              return (
-                <Link
-                  key={label}
-                  href={href}
-                  className={`nav-item ${isActive ? "active" : ""}`}
-                  aria-current={isActive ? "page" : undefined}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "8px",
-                    width: "100%",
-                    height: "32px",
-                    padding: "0 12px",
-                    borderRadius: "10px",
-                    position: "relative",
-                    boxSizing: "border-box",
-                    textDecoration: "none",
-                    cursor: "pointer",
-                    color: isActive ? "#f3f3f8" : "#8c90a7",
-                    background: isActive ? "var(--accent-subtle)" : "transparent",
-                    boxShadow: isActive
-                      ? "inset 3px 0 0 var(--accent-text), inset 0 0 0 1px var(--accent-subtle), 0 0 0 1px var(--purple-mid), -6px 0 16px -12px var(--accent-glow), 0 10px 22px -20px var(--accent-glow)"
-                      : "none",
-                  }}
+          return (
+            <Link
+              key={label}
+              href={href}
+              className={`nav-item ${isActive ? "active" : ""}`}
+              aria-current={isActive ? "page" : undefined}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "8px",
+                width: "100%",
+                height: "32px",
+                padding: "0 12px",
+                borderRadius: "10px",
+                position: "relative",
+                boxSizing: "border-box",
+                textDecoration: "none",
+                cursor: "pointer",
+                color: isActive ? "#f3f3f8" : "#8c90a7",
+                background: isActive ? "var(--accent-subtle)" : "transparent",
+                boxShadow: isActive
+                  ? "inset 3px 0 0 var(--accent-text), inset 0 0 0 1px var(--accent-subtle), 0 0 0 1px var(--purple-mid), -6px 0 16px -12px var(--accent-glow), 0 10px 22px -20px var(--accent-glow)"
+                  : "none",
+              }}
+            >
+              <span className="nav-label">{label}</span>
+              {badge ? (
+                <span
+                  className={`nav-badge ${isActive ? "active" : ""} ${
+                    badgeTone === "amber" ? "amber" : ""
+                  }`}
+                  style={
+                    badgeTone === "amber"
+                      ? {
+                          height: "22px",
+                          minWidth: "22px",
+                          padding: "0 7px",
+                          borderRadius: "8px",
+                          background: "#40351d",
+                          color: "#e2a72a",
+                        }
+                      : isActive
+                        ? {
+                            height: "22px",
+                            minWidth: "22px",
+                            padding: "0 7px",
+                            borderRadius: "8px",
+                            background: "#2d2b3c",
+                            color: "#8589a0",
+                          }
+                        : {
+                            height: "22px",
+                            minWidth: "22px",
+                            padding: "0 7px",
+                            borderRadius: "8px",
+                            background: "#262633",
+                            color: "#74788f",
+                          }
+                  }
                 >
-                  <span className="nav-label">{label}</span>
-                  {badge ? (
-                    <span
-                      className={`nav-badge ${isActive ? "active" : ""} ${
-                        badgeTone === "amber" ? "amber" : ""
-                      }`}
-                      style={
-                        badgeTone === "amber"
-                          ? {
-                              height: "22px",
-                              minWidth: "22px",
-                              padding: "0 7px",
-                              borderRadius: "8px",
-                              background: "#40351d",
-                              color: "#e2a72a",
-                            }
-                          : isActive
-                            ? {
-                                height: "22px",
-                                minWidth: "22px",
-                                padding: "0 7px",
-                                borderRadius: "8px",
-                                background: "#2d2b3c",
-                                color: "#8589a0",
-                              }
-                            : {
-                                height: "22px",
-                                minWidth: "22px",
-                                padding: "0 7px",
-                                borderRadius: "8px",
-                                background: "#262633",
-                                color: "#74788f",
-                              }
-                      }
-                    >
-                      {badge}
-                    </span>
-                  ) : null}
-                </Link>
-              );
-            })}
+                  {badge}
+                </span>
+              ) : null}
+            </Link>
+          );
+        })}
 
         {mode === "workspaceHome" ? (
           <>

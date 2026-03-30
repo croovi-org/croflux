@@ -69,6 +69,12 @@ export function WorkspaceClient({
   const [isNewProjectHovered, setIsNewProjectHovered] = useState(false);
   const activeProjectId =
     projects.find((project) => project.status === "active")?.id ?? projects[0]?.id ?? null;
+  const sidebarProjects = projects.map((project) => ({
+    id: project.id,
+    name: project.name,
+    progress: project.progress,
+    color: project.color,
+  }));
 
   return (
     <WorkspaceShell
@@ -84,6 +90,9 @@ export function WorkspaceClient({
       milestones={milestones}
       streak={summary.streakDays}
       hideAddTask
+      sidebarMode="workspaceHome"
+      sidebarProjects={sidebarProjects}
+      activeProjectId={activeProjectId}
     >
       <main className="workspace-main">
         <div className="workspace-scale">
