@@ -162,7 +162,7 @@ export function ProjectRow({ project }: ProjectRowProps) {
           padding: 14px 16px;
           border-radius: 10px;
           border: 1px solid var(--border2);
-          background: var(--bg3);
+          background: #12121e;
           cursor: pointer;
           transition:
             border-color 0.3s ease,

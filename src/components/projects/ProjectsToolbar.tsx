@@ -132,7 +132,7 @@ export function ProjectsToolbar({
           padding: 0 11px;
           border-radius: 8px;
           border: 1px solid var(--border2);
-          background: var(--bg3);
+          background: #12121e;
           color: var(--text3);
           transition: border-color 0.3s ease;
         }
@@ -161,7 +161,7 @@ export function ProjectsToolbar({
           padding: 0 11px;
           border-radius: 8px;
           border: 1px solid var(--border2);
-          background: var(--bg3);
+          background: #12121e;
           color: var(--text2);
           font-size: 12px;
           cursor: pointer;
@@ -204,7 +204,7 @@ export function ProjectsToolbar({
           padding: 3px;
           border-radius: 999px;
           border: 1px solid var(--border2);
-          background: var(--bg3);
+          background: #12121e;
         }
         .view-btn {
           width: 28px;
