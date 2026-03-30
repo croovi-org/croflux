@@ -79,25 +79,34 @@ export function ProjectCard({
           overflow: hidden;
           cursor: pointer;
           text-decoration: none;
-          transition: all 0.18s ease;
+          outline: 1px solid transparent;
+          outline-offset: -1px;
+          transition:
+            border-color 0.18s ease,
+            outline-color 0.18s ease,
+            box-shadow 0.18s ease,
+            transform 0.18s ease;
         }
         .project-card.active-card {
           border-color: var(--accent);
+          outline-color: var(--accent);
+          box-shadow: none;
         }
         .project-card:hover {
           border-color: var(--accent);
+          outline-color: var(--accent);
           transform: translateY(-2px);
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
         .project-card-top {
           padding: 18px 18px 14px;
           flex: 1;
+          background: var(--bg3);
         }
         .project-card-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
-          gap: 12px;
           margin-bottom: 12px;
         }
         .project-card-icon {

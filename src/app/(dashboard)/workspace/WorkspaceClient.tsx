@@ -39,6 +39,16 @@ type WorkspaceClientProps = {
   workspaceName: string;
   summary: WorkspaceSummary;
   projects: WorkspaceProjectSummary[];
+  nextUpTask: string | null;
+  nextUpContext: string | null;
+  incompleteTaskCount: number;
+  rank: number | null;
+  milestones: Array<{
+    id: string;
+    title: string;
+    progress: number;
+    state: "active" | "locked" | "done";
+  }>;
 };
 
 export function WorkspaceClient({
@@ -47,16 +57,15 @@ export function WorkspaceClient({
   workspaceName,
   summary,
   projects,
+  nextUpTask,
+  nextUpContext,
+  incompleteTaskCount,
+  rank,
+  milestones,
 }: WorkspaceClientProps) {
   const [previewMode, setPreviewMode] = useState<"projects" | "empty">(
     projects.length > 0 ? "projects" : "empty",
   );
-  const sidebarProjects = projects.map((project) => ({
-    id: project.id,
-    name: project.name,
-    progress: project.progress,
-    color: project.color,
-  }));
 
   return (
     <WorkspaceShell
@@ -65,16 +74,13 @@ export function WorkspaceClient({
       currentSection="/workspace"
       initials={initials}
       userName={userName}
-      nextUpTask={null}
-      nextUpContext={null}
-      incompleteTaskCount={0}
-      rank={null}
-      milestones={[]}
+      nextUpTask={nextUpTask}
+      nextUpContext={nextUpContext}
+      incompleteTaskCount={incompleteTaskCount}
+      rank={rank}
+      milestones={milestones}
       streak={summary.streakDays}
       hideAddTask
-      sidebarMode="workspaceHome"
-      sidebarProjects={sidebarProjects}
-      activeProjectId={projects[0]?.id ?? null}
     >
       <main className="workspace-main">
         <div className="workspace-scale">
