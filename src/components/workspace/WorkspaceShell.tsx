@@ -12,10 +12,19 @@ type SidebarMilestone = {
   state: "active" | "locked" | "done";
 };
 
+type SidebarProject = {
+  id: string;
+  name: string;
+  progress: number;
+  color: string;
+};
+
 type WorkspaceShellProps = {
   workspaceName: string;
-  currentPage: string;
+  breadcrumbRoot?: string;
+  currentPage?: string;
   currentSection:
+    | "/workspace"
     | "/dashboard"
     | "/my-tasks"
     | "/leaderboard"
@@ -30,6 +39,10 @@ type WorkspaceShellProps = {
   milestones: SidebarMilestone[];
   streak: number;
   headerBottom?: ReactNode;
+  hideAddTask?: boolean;
+  sidebarMode?: "default" | "workspaceHome";
+  sidebarProjects?: SidebarProject[];
+  activeProjectId?: string | null;
   children: ReactNode;
 };
 
@@ -38,6 +51,7 @@ const SIDEBAR_EVENT = "croflux-sidebar-collapsed-change";
 
 export function WorkspaceShell({
   workspaceName,
+  breadcrumbRoot,
   currentPage,
   currentSection,
   initials,
@@ -49,6 +63,10 @@ export function WorkspaceShell({
   milestones,
   streak,
   headerBottom,
+  hideAddTask = false,
+  sidebarMode = "default",
+  sidebarProjects = [],
+  activeProjectId = null,
   children,
 }: WorkspaceShellProps) {
   const sidebarCollapsed = useSyncExternalStore(
@@ -95,6 +113,9 @@ export function WorkspaceShell({
             currentSection={currentSection}
             collapsed={sidebarCollapsed}
             onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            mode={sidebarMode}
+            projects={sidebarProjects}
+            activeProjectId={activeProjectId}
           />
         </div>
 
@@ -125,10 +146,11 @@ export function WorkspaceShell({
                   </button>
                 ) : null}
                 <Topbar
-                  workspaceName={workspaceName}
+                  breadcrumbRoot={breadcrumbRoot ?? workspaceName}
                   currentPage={currentPage}
                   initials={initials}
                   userName={userName}
+                  hideAddTask={hideAddTask}
                 />
               </div>
               {headerBottom ? <div className="ws-navbar-bottom">{headerBottom}</div> : null}

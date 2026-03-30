@@ -4,21 +4,31 @@ import { useRouter } from "next/navigation";
 import { AvatarMenu } from "@/components/AvatarMenu";
 
 type TopbarProps = {
-  workspaceName: string;
-  currentPage: string;
+  breadcrumbRoot: string;
+  currentPage?: string;
   initials: string;
   userName: string;
+  hideAddTask?: boolean;
 };
 
-export function Topbar({ workspaceName, currentPage, initials, userName }: TopbarProps) {
+export function Topbar({
+  breadcrumbRoot,
+  currentPage,
+  initials,
+  userName,
+  hideAddTask = false,
+}: TopbarProps) {
   const router = useRouter();
+  const hasCurrentPage = Boolean(currentPage);
 
   return (
     <header className="tb">
       <div className="tb-crumbs">
-        <span className="tb-ws-dim">{workspaceName}</span>
-        <span className="tb-sep">/</span>
-        <span className="tb-page">{currentPage}</span>
+        <span className={`tb-ws-dim ${!hasCurrentPage ? "root-only" : ""}`}>
+          {breadcrumbRoot}
+        </span>
+        {hasCurrentPage ? <span className="tb-sep">/</span> : null}
+        {hasCurrentPage ? <span className="tb-page">{currentPage}</span> : null}
       </div>
 
       <div className="tb-spacer" />
@@ -40,21 +50,23 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           </svg>
           <span>Search</span>
         </button>
-        <button type="button" className="tb-add" onClick={() => router.push("/my-tasks")}>
-          <svg
-            viewBox="0 0 24 24"
-            width="12"
-            height="12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          <span>Add task</span>
-        </button>
+        {!hideAddTask ? (
+          <button type="button" className="tb-add" onClick={() => router.push("/my-tasks")}>
+            <svg
+              viewBox="0 0 24 24"
+              width="12"
+              height="12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>Add task</span>
+          </button>
+        ) : null}
 
         <AvatarMenu initials={initials} userName={userName} />
       </div>
@@ -84,6 +96,10 @@ export function Topbar({ workspaceName, currentPage, initials, userName }: Topba
           color: #6f6f86;
           font-family: Inter, sans-serif;
           line-height: 1;
+        }
+        .tb-ws-dim.root-only {
+          color: #f0f0f8;
+          font-weight: 500;
         }
         .tb-sep {
           font-size: 12px;
