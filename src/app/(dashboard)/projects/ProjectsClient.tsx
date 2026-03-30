@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { EmptyProjects } from "@/components/projects/EmptyProjects";
-import { ProjectRow, type ProjectsPageRow } from "@/components/projects/ProjectRow";
+import {
+  ProjectRow,
+  type ProjectsPageRow,
+} from "@/components/projects/ProjectRow";
 import {
   ProjectsToolbar,
   type ProjectsSortOption,
@@ -51,6 +54,9 @@ export function ProjectsClient({
   stats,
   projects,
 }: ProjectsClientProps) {
+  const [previewMode, setPreviewMode] = useState<"projects" | "empty">(
+    projects.length > 0 ? "projects" : "empty",
+  );
   const [searchValue, setSearchValue] = useState("");
   const [sort, setSort] = useState<ProjectsSortOption>("recent");
   const [view, setView] = useState<"list" | "grid">("list");
@@ -60,7 +66,9 @@ export function ProjectsClient({
   const filteredProjects = useMemo(() => {
     const normalizedQuery = searchValue.trim().toLowerCase();
     const visible = normalizedQuery
-      ? projects.filter((project) => project.name.toLowerCase().includes(normalizedQuery))
+      ? projects.filter((project) =>
+          project.name.toLowerCase().includes(normalizedQuery),
+        )
       : projects;
 
     const sorted = [...visible];
@@ -71,7 +79,10 @@ export function ProjectsClient({
         case "name":
           return left.name.localeCompare(right.name);
         case "created":
-          return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime();
+          return (
+            new Date(right.createdAt).getTime() -
+            new Date(left.createdAt).getTime()
+          );
         case "recent":
         default:
           return right.updatedAtValue - left.updatedAtValue;
@@ -110,13 +121,59 @@ export function ProjectsClient({
     >
       <main className="projects-main">
         <div className="projects-wrap">
+          <section className="preview-strip">
+            <span className="preview-label">Preview:</span>
+            <div className="preview-actions">
+              <button
+                type="button"
+                className={`preview-btn ${previewMode === "projects" ? "active" : ""}`}
+                onClick={() => setPreviewMode("projects")}
+              >
+                With projects
+              </button>
+              <button
+                type="button"
+                className={`preview-btn ${previewMode === "empty" ? "active" : ""}`}
+                onClick={() => setPreviewMode("empty")}
+              >
+                Empty state
+              </button>
+            </div>
+          </section>
+
           <section className="projects-header">
             <div>
               <h1>Projects</h1>
               <p>Manage and organize all your startup projects.</p>
             </div>
-            <Link href="/onboarding" className="new-project-btn">
-              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+            <Link
+              href="/onboarding"
+              className="new-project-btn"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "row",
+                gap: "8px",
+                height: "40px",
+                padding: "0 19px",
+                borderRadius: "14px",
+                background: "var(--accent)",
+                color: "#fff",
+                whiteSpace: "nowrap",
+                textDecoration: "none",
+                fontSize: "14px",
+                fontWeight: 400,
+                boxShadow:
+                  "0 8px 24px color-mix(in srgb, var(--accent) 22%, transparent)",
+              }}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                aria-hidden="true"
+              >
                 <path
                   d="M12 5v14M5 12h14"
                   fill="none"
@@ -130,7 +187,7 @@ export function ProjectsClient({
             </Link>
           </section>
 
-          {projects.length === 0 ? (
+          {previewMode === "empty" || projects.length === 0 ? (
             <EmptyProjects />
           ) : (
             <>
@@ -215,6 +272,47 @@ export function ProjectsClient({
             justify-content: space-between;
             gap: 18px;
           }
+          .preview-strip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 49px;
+            padding: 0 16px;
+            border-radius: 11px;
+            border: 1px solid var(--border2);
+            background: rgba(19, 19, 30, 0.35);
+          }
+          .preview-label {
+            color: var(--text3);
+            font-size: 11px;
+          }
+          .preview-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .preview-btn {
+            height: 27px;
+            padding: 0 14px;
+            border-radius: 7px;
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            color: var(--text3);
+            font-size: 11px;
+            line-height: 1;
+            cursor: pointer;
+            transition:
+              background-color 0.3s ease,
+              border-color 0.3s ease,
+              color 0.3s ease;
+          }
+          .preview-btn.active {
+            border-color: var(--purple-border);
+            background: var(--accent-subtle);
+            color: var(--accent);
+            box-shadow: inset 0 0 0 1px
+              color-mix(in srgb, var(--accent) 10%, transparent);
+          }
           h1 {
             margin: 0;
             font-size: 20px;
@@ -229,21 +327,18 @@ export function ProjectsClient({
             color: var(--text3);
           }
           .new-project-btn {
-            height: 36px;
-            padding: 0 14px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--accent);
-            color: white;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
+            font-size: 8px;
+            font-weight: 400;
+            transition:
+              background-color 0.3s ease,
+              transform 0.18s ease,
+              box-shadow 0.18s ease;
           }
           .new-project-btn:hover {
             background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 26px
+              color-mix(in srgb, var(--accent) 26%, transparent);
           }
           .stats-strip {
             display: flex;
@@ -257,7 +352,7 @@ export function ProjectsClient({
             padding: 6px 12px;
             border-radius: 7px;
             border: 1px solid var(--border2);
-            background: var(--bg3);
+            background: #12121e;
             font-size: 11px;
             color: var(--text3);
           }

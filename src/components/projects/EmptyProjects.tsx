@@ -19,10 +19,30 @@ export function EmptyProjects() {
       </div>
       <h2>Create your first project</h2>
       <p>
-        Turn your idea into milestones and tasks. Paste your strategy and let AI build your
-        execution roadmap.
+        Turn your idea into milestones and tasks. Paste your strategy and let AI
+        build your execution roadmap.
       </p>
-      <Link href="/onboarding" className="empty-cta">
+      <Link
+        href="/onboarding"
+        className="empty-cta"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
+          marginTop: "24px",
+          gap: "8px",
+          height: "38px",
+          padding: "0 17px",
+          borderRadius: "13px",
+          background: "var(--accent)",
+          color: "#fff",
+          whiteSpace: "nowrap",
+          textDecoration: "none",
+          boxShadow:
+            "0 8px 24px color-mix(in srgb, var(--accent) 22%, transparent)",
+        }}
+      >
         <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
           <path
             d="M12 5v14M5 12h14"
@@ -41,7 +61,7 @@ export function EmptyProjects() {
           border: 1.5px dashed var(--border2);
           border-radius: 12px;
           background: var(--bg3);
-          padding: 56px 32px;
+          padding: 72px 32px 56px;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -71,22 +91,18 @@ export function EmptyProjects() {
           color: var(--text3);
         }
         .empty-cta {
-          margin-top: 20px;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          height: 38px;
-          padding: 0 16px;
-          border-radius: 10px;
-          background: var(--accent);
-          color: #fff;
-          text-decoration: none;
-          font-size: 12px;
-          font-weight: 600;
-          transition: background-color 0.3s ease;
+          font-size: 11px;
+          font-weight: 500;
+          transition:
+            background-color 0.3s ease,
+            transform 0.18s ease,
+            box-shadow 0.18s ease;
         }
         .empty-cta:hover {
           background: var(--accent-hover);
+          transform: translateY(-1px);
+          box-shadow: 0 10px 26px
+            color-mix(in srgb, var(--accent) 26%, transparent);
         }
       `}</style>
     </section>

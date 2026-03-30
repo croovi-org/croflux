@@ -70,7 +70,9 @@ export function WorkspaceClient({
   );
   const [isNewProjectHovered, setIsNewProjectHovered] = useState(false);
   const activeProjectId =
-    projects.find((project) => project.status === "active")?.id ?? projects[0]?.id ?? null;
+    projects.find((project) => project.status === "active")?.id ??
+    projects[0]?.id ??
+    null;
   const sidebarProjects = projects.map((project) => ({
     id: project.id,
     name: project.name,
@@ -142,7 +144,8 @@ export function WorkspaceClient({
                   background: "var(--accent)",
                   color: "#fff",
                   whiteSpace: "nowrap",
-                  boxShadow: "0 8px 24px color-mix(in srgb, var(--accent) 22%, transparent)",
+                  boxShadow:
+                    "0 8px 24px color-mix(in srgb, var(--accent) 22%, transparent)",
                 }}
               >
                 <Plus size={14} />
@@ -203,7 +206,9 @@ export function WorkspaceClient({
                         border: isNewProjectHovered
                           ? "1.5px dashed var(--accent)"
                           : "1.5px dashed color-mix(in srgb, var(--accent) 18%, var(--border2))",
-                        background: isNewProjectHovered ? "var(--accent-subtle)" : "#13131e",
+                        background: isNewProjectHovered
+                          ? "var(--accent-subtle)"
+                          : "#13131e",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
@@ -212,7 +217,9 @@ export function WorkspaceClient({
                         boxSizing: "border-box",
                         textDecoration: "none",
                         transition: "all 0.18s ease",
-                        transform: isNewProjectHovered ? "translateY(-2px)" : "none",
+                        transform: isNewProjectHovered
+                          ? "translateY(-2px)"
+                          : "none",
                       }}
                     >
                       <span
@@ -267,7 +274,8 @@ export function WorkspaceClient({
                           transition: "color 0.18s ease",
                         }}
                       >
-                        Start a fresh roadmap and generate your next execution plan.
+                        Start a fresh roadmap and generate your next execution
+                        plan.
                       </span>
                     </Link>
                   </div>
@@ -299,12 +307,12 @@ export function WorkspaceClient({
         .preview-strip {
           display: flex;
           align-items: center;
-          gap: 10px;
-          min-height: 61px;
+          gap: 8px;
+          min-height: 58px;
           margin-bottom: 30px;
-          padding: 0 20px;
+          padding: 0 16px;
           border: 1px solid var(--border2);
-          border-radius: 14px;
+          border-radius: 11px;
           background: rgba(19, 19, 30, 0.35);
         }
         .preview-label {
@@ -329,7 +337,8 @@ export function WorkspaceClient({
           border-color: var(--purple-border);
           background: var(--accent-subtle);
           color: var(--accent);
-          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent);
+          box-shadow: inset 0 0 0 1px
+            color-mix(in srgb, var(--accent) 10%, transparent);
         }
         .workspace-header {
           display: flex;
@@ -375,7 +384,8 @@ export function WorkspaceClient({
           font-weight: 500;
           flex-shrink: 0;
           white-space: nowrap;
-          box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 22%, transparent);
+          box-shadow: 0 8px 24px
+            color-mix(in srgb, var(--accent) 22%, transparent);
         }
         .new-project-btn:hover {
           background: color-mix(in srgb, var(--accent) 90%, black 10%);
@@ -457,7 +467,8 @@ export function WorkspaceClient({
           min-height: 200px;
           padding: 32px 20px;
           border-radius: 12px;
-          border: 1.5px dashed color-mix(in srgb, var(--accent) 18%, var(--border2));
+          border: 1.5px dashed
+            color-mix(in srgb, var(--accent) 18%, var(--border2));
           background: #13131e;
           display: flex;
           flex-direction: column;
@@ -485,7 +496,8 @@ export function WorkspaceClient({
           height: 40px;
           margin: 0 0 12px;
           border-radius: 10px;
-          border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--border2));
+          border: 1px solid
+            color-mix(in srgb, var(--accent) 16%, var(--border2));
           background: color-mix(in srgb, var(--accent) 7%, var(--bg4));
           color: color-mix(in srgb, var(--accent) 42%, white 20%);
           transition: all 0.15s ease;
