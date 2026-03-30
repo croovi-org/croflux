@@ -72,53 +72,45 @@ export function ProjectCard({
           flex-direction: column;
           width: 100%;
           min-width: 0;
-          background: var(--bg3);
-          border: 1px solid var(--border2);
-          border-radius: 12px;
+          background: #0f0e16;
+          border: 0;
+          border-radius: 0;
           padding: 0;
           overflow: hidden;
           cursor: pointer;
           text-decoration: none;
-          outline: 1px solid transparent;
-          outline-offset: -1px;
           transition:
-            border-color 0.18s ease,
-            outline-color 0.18s ease,
             box-shadow 0.18s ease,
             transform 0.18s ease;
         }
         .project-card.active-card {
-          border-color: var(--accent);
-          outline-color: var(--accent);
           box-shadow: none;
         }
         .project-card:hover {
-          border-color: var(--accent);
-          outline-color: var(--accent);
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
         }
         .project-card-top {
-          padding: 18px 18px 14px;
+          padding: 20px 20px 16px;
           flex: 1;
-          background: var(--bg3);
+          background: #0f0e16;
         }
         .project-card-header {
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
-          margin-bottom: 12px;
+          margin-bottom: 13px;
         }
         .project-card-icon {
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
+          width: 35px;
+          height: 35px;
+          border-radius: 9px;
           background: var(--bg4);
           border: 1px solid var(--border2);
           color: var(--accent);
           display: grid;
           place-items: center;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 700;
           flex-shrink: 0;
         }
@@ -143,15 +135,15 @@ export function ProjectCard({
           color: var(--text3);
         }
         .project-name {
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 600;
-          margin-bottom: 4px;
+          margin-bottom: 5px;
           color: var(--text);
           letter-spacing: -0.01em;
         }
         .project-idea {
-          font-size: 11px;
-          margin-bottom: 14px;
+          font-size: 12px;
+          margin-bottom: 15px;
           color: var(--text3);
           line-height: 1.5;
           display: -webkit-box;
@@ -160,27 +152,27 @@ export function ProjectCard({
           overflow: hidden;
         }
         .project-progress {
-          margin-bottom: 10px;
+          margin-bottom: 11px;
         }
         .project-progress-head {
           display: flex;
           align-items: baseline;
           justify-content: space-between;
-          margin-bottom: 6px;
+          margin-bottom: 7px;
         }
         .project-progress-head span {
-          font-size: 10px;
+          font-size: 11px;
           color: var(--text3);
           letter-spacing: 0.04em;
         }
         .project-progress-head strong {
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 600;
           color: var(--text);
           font-family: var(--mono);
         }
         .project-progress-bar {
-          height: 4px;
+          height: 5px;
           background: var(--bg4);
           border-radius: 2px;
           overflow: hidden;
@@ -196,22 +188,22 @@ export function ProjectCard({
           content: "";
           position: absolute;
           right: -1px;
-          top: -3px;
-          width: 10px;
-          height: 10px;
+          top: -2px;
+          width: 11px;
+          height: 11px;
           border-radius: 999px;
           background: var(--accent);
-          border: 2px solid var(--bg3);
+          border: 2px solid #0f0e16;
         }
         .project-meta-row {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 8px;
-          margin-bottom: 4px;
+          margin-bottom: 5px;
         }
         .project-tasks {
-          font-size: 11px;
+          font-size: 12px;
           display: inline-flex;
           align-items: center;
           gap: 5px;
@@ -223,8 +215,8 @@ export function ProjectCard({
           stroke-width: 2;
           stroke-linecap: round;
           stroke-linejoin: round;
-          width: 12px;
-          height: 12px;
+          width: 13px;
+          height: 13px;
           color: var(--text3);
         }
         .project-streak {
@@ -232,20 +224,20 @@ export function ProjectCard({
           align-items: center;
           gap: 4px;
           color: var(--amber);
-          font-size: 11px;
+          font-size: 12px;
           font-weight: 500;
         }
         .project-boss {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          margin-top: 4px;
-          font-size: 10px;
+          margin-top: 5px;
+          font-size: 11px;
           font-family: var(--mono);
         }
         .project-boss :global(svg) {
-          width: 10px;
-          height: 10px;
+          width: 11px;
+          height: 11px;
         }
         .project-boss.active {
           color: var(--amber);
@@ -254,16 +246,16 @@ export function ProjectCard({
           color: var(--green);
         }
         .project-card-footer {
-          padding: 10px 18px;
-          border-top: 1px solid var(--border);
-          background: var(--bg4);
+          padding: 11px 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.04);
+          background: #0f0e16;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 10px;
         }
         .project-footer-copy {
-          font-size: 10px;
+          font-size: 11px;
           color: var(--text3);
         }
         .project-footer-copy span {
@@ -274,7 +266,7 @@ export function ProjectCard({
           align-items: center;
           gap: 4px;
           color: var(--accent);
-          font-size: 10px;
+          font-size: 11px;
           font-weight: 500;
         }
       `}</style>

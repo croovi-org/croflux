@@ -14,7 +14,24 @@ export function EmptyProjects() {
         Turn your idea into a structured execution plan. Paste your strategy and let
         AI generate your roadmap in seconds.
       </p>
-      <Link href="/onboarding" className="empty-cta">
+      <Link
+        href="/onboarding"
+        className="empty-cta"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row",
+          gap: "10px",
+          height: "47px",
+          padding: "0 23px",
+          borderRadius: "16px",
+          background: "var(--accent)",
+          color: "#fff",
+          whiteSpace: "nowrap",
+          boxShadow: "0 8px 24px color-mix(in srgb, var(--accent) 22%, transparent)",
+        }}
+      >
         <Plus size={14} />
         <span>Create Project</span>
       </Link>
@@ -60,17 +77,24 @@ export function EmptyProjects() {
         .empty-cta {
           display: inline-flex;
           align-items: center;
-          gap: 7px;
-          padding: 11px 22px;
-          border-radius: 8px;
-          background: var(--accent);
+          justify-content: center;
+          gap: 10px;
+          min-height: 47px;
+          padding: 0 23px;
+          border-radius: 16px;
           color: #fff;
           text-decoration: none;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 500;
+          white-space: nowrap;
         }
         .empty-cta:hover {
-          background: var(--accent-hover);
+          background: color-mix(in srgb, var(--accent) 90%, black 10%);
+        }
+        .empty-cta :global(svg) {
+          width: 16px;
+          height: 16px;
+          flex-shrink: 0;
         }
       `}</style>
     </div>
