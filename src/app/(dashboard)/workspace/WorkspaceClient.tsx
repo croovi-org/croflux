@@ -43,6 +43,7 @@ type WorkspaceClientProps = {
   nextUpContext: string | null;
   incompleteTaskCount: number;
   rank: number | null;
+  projectCount: number;
   milestones: Array<{
     id: string;
     title: string;
@@ -61,6 +62,7 @@ export function WorkspaceClient({
   nextUpContext,
   incompleteTaskCount,
   rank,
+  projectCount,
   milestones,
 }: WorkspaceClientProps) {
   const [previewMode, setPreviewMode] = useState<"projects" | "empty">(
@@ -93,6 +95,7 @@ export function WorkspaceClient({
       sidebarMode="workspaceHome"
       sidebarProjects={sidebarProjects}
       activeProjectId={activeProjectId}
+      projectCount={projectCount}
     >
       <main className="workspace-main">
         <div className="workspace-scale">

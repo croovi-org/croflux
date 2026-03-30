@@ -10,7 +10,7 @@ import {
 import type { User } from "@/types";
 
 export default async function LeaderboardPage() {
-  const { user, project, milestones, rank } = await getWorkspaceData();
+  const { user, project, milestones, rank, projectCount } = await getWorkspaceData();
   const supabase = await createClient();
   const { data } = await supabase
     .from("users")
@@ -40,6 +40,7 @@ export default async function LeaderboardPage() {
       rank={rank}
       milestones={getSidebarMilestones(milestones)}
       streak={user.streak}
+      projectCount={projectCount}
     >
       <main style={{ flex: 1, minWidth: 0, background: "#0f0f17", overflow: "auto" }}>
           <div style={{ padding: 24 }}>

@@ -35,6 +35,7 @@ type ShellProps = {
   rank: number | null;
   milestones: SidebarMilestone[];
   streak: number;
+  projectCount: number;
 };
 
 type ProfileData = {
@@ -164,6 +165,7 @@ export function ProfileClient({
       rank={shell.rank}
       milestones={shell.milestones}
       streak={shell.streak}
+      projectCount={shell.projectCount}
     >
       <main className="profile-main">
         <div className="profile-grid">

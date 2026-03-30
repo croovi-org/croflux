@@ -8,7 +8,9 @@ type DashboardPageProps = {
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const params = searchParams ? await searchParams : {};
   const projectParam = Array.isArray(params.project) ? params.project[0] : params.project;
-  const { user, project, milestones, rank } = await getWorkspaceData(projectParam ?? null);
+  const { user, project, milestones, rank, projectCount } = await getWorkspaceData(
+    projectParam ?? null,
+  );
 
   return (
     <DashboardClient
@@ -16,6 +18,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       project={project}
       milestones={milestones}
       initialRank={rank}
+      projectCount={projectCount}
     />
   );
 }
