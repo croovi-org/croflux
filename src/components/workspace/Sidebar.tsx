@@ -227,13 +227,56 @@ export function Sidebar({
                     key={project.id}
                     href={`/dashboard?project=${project.id}`}
                     className={`project-row ${isActive ? "active" : ""}`}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      width: "100%",
+                      minHeight: "38px",
+                      padding: "0 12px",
+                      borderRadius: "14px",
+                      position: "relative",
+                      boxSizing: "border-box",
+                      textDecoration: "none",
+                      background: isActive ? "var(--accent-subtle)" : "transparent",
+                    }}
                   >
                     <span
                       className="project-row-dot"
-                      style={{ background: isActive ? "var(--accent)" : project.color }}
+                      style={{
+                        width: "9px",
+                        height: "9px",
+                        borderRadius: "999px",
+                        flexShrink: 0,
+                        background: isActive ? "var(--accent)" : project.color,
+                        animation: isActive ? "projectPulse 2.4s ease-in-out infinite" : "none",
+                      }}
                     />
-                    <span className="project-row-name">{project.name}</span>
-                    <span className="project-row-progress">{project.progress}%</span>
+                    <span
+                      className="project-row-name"
+                      style={{
+                        flex: 1,
+                        minWidth: 0,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        fontSize: "12px",
+                        color: isActive ? "var(--text)" : "var(--text2)",
+                      }}
+                    >
+                      {project.name}
+                    </span>
+                    <span
+                      className="project-row-progress"
+                      style={{
+                        flexShrink: 0,
+                        fontSize: "11px",
+                        color: "var(--text3)",
+                        fontFamily: '"Geist Mono", monospace',
+                      }}
+                    >
+                      {project.progress}%
+                    </span>
                   </Link>
                 );
               })}
@@ -524,22 +567,25 @@ export function Sidebar({
         .project-list {
           display: flex;
           flex-direction: column;
-          gap: 2px;
+          gap: 6px;
         }
         .project-row {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           width: 100%;
-          min-height: 30px;
-          padding: 0 9px;
-          border-radius: 7px;
+          min-height: 38px;
+          padding: 0 12px;
+          border-radius: 14px;
           position: relative;
           text-decoration: none;
-          transition: background-color 0.12s ease;
+          box-sizing: border-box;
+          transition:
+            background-color 0.12s ease,
+            color 0.12s ease;
         }
         .project-row:hover {
-          background: var(--bg4);
+          background: color-mix(in srgb, var(--accent) 5%, var(--bg4));
         }
         .project-row.active {
           background: var(--accent-subtle);
@@ -550,14 +596,14 @@ export function Sidebar({
           left: 0;
           top: 50%;
           transform: translateY(-50%);
-          width: 2px;
-          height: 14px;
-          border-radius: 0 2px 2px 0;
+          width: 3px;
+          height: 18px;
+          border-radius: 0 3px 3px 0;
           background: var(--accent);
         }
         .project-row-dot {
-          width: 7px;
-          height: 7px;
+          width: 12px;
+          height: 12px;
           border-radius: 999px;
           flex-shrink: 0;
         }
@@ -567,16 +613,17 @@ export function Sidebar({
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          font-size: 11px;
+          font-size: 12px;
           color: var(--text2);
         }
         .project-row.active .project-row-name {
           color: var(--text);
         }
         .project-row-progress {
-          font-size: 10px;
+          font-size: 11px;
           color: var(--text3);
           font-family: "Geist Mono", monospace;
+          flex-shrink: 0;
         }
         .milestones-list {
           display: flex;
@@ -675,6 +722,17 @@ export function Sidebar({
           }
           50% {
             opacity: 0.4;
+          }
+        }
+        @keyframes projectPulse {
+          0%,
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.55;
+            transform: scale(0.92);
           }
         }
       `}</style>
