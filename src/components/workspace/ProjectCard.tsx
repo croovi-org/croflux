@@ -193,7 +193,8 @@ export function ProjectCard({
           height: 5px;
           background: var(--bg4);
           border-radius: 2px;
-          overflow: hidden;
+          overflow: visible;
+          position: relative;
         }
         .project-progress-fill {
           height: 100%;
@@ -206,12 +207,13 @@ export function ProjectCard({
           content: "";
           position: absolute;
           right: -1px;
-          top: -2px;
-          width: 11px;
-          height: 11px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 14px;
+          height: 14px;
           border-radius: 999px;
           background: var(--accent);
-          border: 2px solid #0f0e16;
+          border: 0;
         }
         .project-meta-row {
           display: flex;
