@@ -302,8 +302,8 @@ export function Sidebar({
                       <span
                         className="project-row-dot"
                         style={{
-                          width: "9px",
-                          height: "9px",
+                          width: "6px",
+                          height: "6px",
                           borderRadius: "999px",
                           flexShrink: 0,
                           background: isActive ? "var(--accent)" : project.color,
