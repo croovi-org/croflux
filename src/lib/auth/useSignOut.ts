@@ -11,21 +11,24 @@ export function useSignOut() {
 
     setIsSigningOut(true);
 
-    try {
-      const supabase = createClient();
+    const supabase = createClient();
 
-      await Promise.all([
+    // Run signout calls without blocking redirect - use Promise.allSettled with timeout
+    const signOutWithTimeout = Promise.race([
+      Promise.allSettled([
         supabase.auth.signOut({ scope: "global" }),
         fetch("/api/logout", {
           method: "POST",
           credentials: "same-origin",
         }),
-      ]);
+      ]),
+      new Promise((resolve) => setTimeout(resolve, 3000)), // 3 second timeout
+    ]);
 
+    // Always redirect after attempting signout, don't block on result
+    signOutWithTimeout.finally(() => {
       window.location.href = "/login";
-    } catch {
-      setIsSigningOut(false);
-    }
+    });
   }, [isSigningOut]);
 
   return { signOut, isSigningOut };
