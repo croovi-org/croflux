@@ -73,12 +73,20 @@ export function AvatarMenu({ initials, userName }: AvatarMenuProps) {
   }, []);
 
   const handleLogout = async () => {
-    setLoggingOut(true);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    setOpen(false);
-    router.push("/");
-    router.refresh();
+    try {
+      setLoggingOut(true);
+      const supabase = createClient();
+      await Promise.allSettled([
+        supabase.auth.signOut({ scope: "global" }),
+        fetch("/api/logout", {
+          method: "POST",
+          credentials: "same-origin",
+        }),
+      ]);
+    } finally {
+      setOpen(false);
+      window.location.assign("/login");
+    }
   };
 
   const closeMenu = () => setOpen(false);
