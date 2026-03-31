@@ -383,17 +383,19 @@ function IntegrationsView() {
       icon: <GoogleCalendarIcon />,
       action: "connect",
     },
-    {
-      id: "apple-calendar",
-      name: "Apple Calendar",
-      description: "Sync tasks with Apple Calendar and keep your sessions scheduled natively.",
-      features: ["Task scheduling", "Calendar sync", "Focus blocks"],
-      icon: <AppleCalendarIcon />,
-      action: "connect",
-    },
   ];
 
   const comingSoon: IntegrationItem[] = [
+    {
+      id: "apple-calendar",
+      name: "Apple Calendar",
+      description:
+        "Sync tasks with Apple Calendar and keep your sessions scheduled natively.",
+      features: [],
+      icon: <AppleCalendarIcon />,
+      action: "soon",
+      muted: true,
+    },
     {
       id: "slack",
       name: "Slack",
