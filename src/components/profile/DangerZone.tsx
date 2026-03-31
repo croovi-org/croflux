@@ -1,5 +1,8 @@
 "use client";
 
+import { LogOut } from "lucide-react";
+import { useSignOut } from "@/lib/auth/useSignOut";
+
 const actions = [
   {
     label: "Reset workspace",
@@ -19,6 +22,8 @@ const actions = [
 ];
 
 export function DangerZone() {
+  const { signOut, isSigningOut } = useSignOut();
+
   return (
     <section className="danger-card">
       <div className="danger-head">
@@ -36,6 +41,25 @@ export function DangerZone() {
           </div>
         ))}
       </div>
+
+      <div className="signout-section">
+        <div className="signout-row">
+          <div className="signout-info">
+            <strong>Sign out</strong>
+            <p>End your current session and return to the login page.</p>
+          </div>
+          <button 
+            type="button" 
+            className="signout-btn"
+            onClick={signOut}
+            disabled={isSigningOut}
+          >
+            <LogOut size={14} />
+            <span>{isSigningOut ? "Signing out..." : "Sign out"}</span>
+          </button>
+        </div>
+      </div>
+
       <style jsx>{`
         .danger-card {
           background: #13131e;
@@ -97,6 +121,51 @@ export function DangerZone() {
         button:hover {
           background: rgba(239, 68, 68, 0.08);
           border-color: rgba(239, 68, 68, 0.38);
+        }
+        .signout-section {
+          margin-top: 16px;
+          padding-top: 16px;
+          border-top: 1px solid #252538;
+        }
+        .signout-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 14px;
+          border-radius: 12px;
+          border: 1px solid #252538;
+          background: #1a1a28;
+        }
+        .signout-info p {
+          margin: 0;
+          color: #6f7590;
+          font-size: 11px;
+        }
+        .signout-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          min-width: 124px;
+          height: 36px;
+          padding: 0 14px;
+          border-radius: 9px;
+          border: 1px solid #252538;
+          background: #1a1a28;
+          color: #f0f0f8;
+          font-size: 11px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .signout-btn:hover {
+          background: #252538;
+          border-color: #353550;
+        }
+        .signout-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
       `}</style>
     </section>

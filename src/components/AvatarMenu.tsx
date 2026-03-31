@@ -13,7 +13,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ThemeModal } from "@/components/ThemeModal";
-import { createClient } from "@/lib/supabase/client";
+import { useSignOut } from "@/lib/auth/useSignOut";
+
 
 type AvatarMenuProps = {
   initials: string;
@@ -48,10 +49,10 @@ function ChevronRightIcon() {
 
 export function AvatarMenu({ initials, userName }: AvatarMenuProps) {
   const [open, setOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
   const [themeModalOpen, setThemeModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+  const { signOut, isSigningOut } = useSignOut();
 
   useEffect(() => {
     function handlePointerDown(event: MouseEvent) {
@@ -71,23 +72,6 @@ export function AvatarMenu({ initials, userName }: AvatarMenuProps) {
       window.removeEventListener("keydown", handleEscape);
     };
   }, []);
-
-  const handleLogout = async () => {
-    try {
-      setLoggingOut(true);
-      const supabase = createClient();
-      await Promise.allSettled([
-        supabase.auth.signOut({ scope: "global" }),
-        fetch("/api/logout", {
-          method: "POST",
-          credentials: "same-origin",
-        }),
-      ]);
-    } finally {
-      setOpen(false);
-      window.location.assign("/login");
-    }
-  };
 
   const closeMenu = () => setOpen(false);
   const openTaskWorkspace = () => {
@@ -123,7 +107,15 @@ export function AvatarMenu({ initials, userName }: AvatarMenuProps) {
         router.push("/profile");
       },
     },
-    { label: "Log out", icon: LogOut, tone: "danger", onClick: handleLogout },
+    {
+      label: "Sign out",
+      icon: LogOut,
+      tone: "danger",
+      onClick: () => {
+        closeMenu();
+        signOut();
+      },
+    },
   ];
 
   return (
@@ -188,11 +180,11 @@ export function AvatarMenu({ initials, userName }: AvatarMenuProps) {
                   }`}
                   role="menuitem"
                   onClick={onClick}
-                  disabled={label === "Log out" && loggingOut}
+                  disabled={label === "Sign out" && isSigningOut}
                 >
                   <span className="tb-menu-item-left">
                     <Icon size={19} />
-                    <span>{label === "Log out" && loggingOut ? "Logging out..." : label}</span>
+                    <span>{label === "Sign out" && isSigningOut ? "Signing out..." : label}</span>
                   </span>
                   {trailing === "chevron" ? <ChevronRightIcon /> : null}
                 </button>
