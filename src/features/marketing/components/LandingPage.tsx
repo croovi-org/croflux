@@ -1949,7 +1949,7 @@ export function LandingPage() {
 
           .ecosystem-eyebrow {
             justify-content: center;
-            color: #51e7d7;
+            color: rgb(124, 110, 247);
           }
 
           .ecosystem-title {
@@ -2172,7 +2172,7 @@ export function LandingPage() {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(61, 232, 212, 0.3);
+            background: rgba(124, 110, 247, 0.3);
             border-radius: 999px;
           }
 
@@ -2196,7 +2196,7 @@ export function LandingPage() {
             width: 1px;
             height: 24px;
             transform: translateX(-50%);
-            background: linear-gradient(180deg, rgba(61, 232, 212, 0.48), rgba(61, 232, 212, 0.14));
+            background: linear-gradient(180deg, rgba(124, 110, 247, 0.48), rgba(124, 110, 247, 0.14));
           }
 
           .ecosystem-connector-rail {
@@ -2206,7 +2206,7 @@ export function LandingPage() {
             width: calc(100% - 160px);
             height: 1px;
             transform: translateX(-50%);
-            background: linear-gradient(90deg, transparent, rgba(61, 232, 212, 0.18) 12%, rgba(61, 232, 212, 0.18) 88%, transparent);
+            background: linear-gradient(90deg, transparent, rgba(124, 110, 247, 0.18) 12%, rgba(124, 110, 247, 0.18) 88%, transparent);
           }
 
           .ecosystem-grid::before,
@@ -2216,7 +2216,7 @@ export function LandingPage() {
             top: -30px;
             width: 1px;
             height: 30px;
-            background: linear-gradient(180deg, rgba(61, 232, 212, 0.38), rgba(61, 232, 212, 0.08));
+            background: linear-gradient(180deg, rgba(124, 110, 247, 0.38), rgba(124, 110, 247, 0.08));
           }
 
           .ecosystem-grid::before {
@@ -2233,8 +2233,8 @@ export function LandingPage() {
             right: 16px;
             padding: 5px 12px;
             border-radius: 999px;
-            background: #51e7d7;
-            color: #071513;
+            background: rgb(124, 110, 247);
+            color: rgb(232, 231, 255);
             font-family: var(--mono);
             font-size: 10px;
             font-weight: 700;
