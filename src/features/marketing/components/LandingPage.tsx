@@ -1863,13 +1863,13 @@ export function LandingPage() {
           <div className="ecosystem-grid">
             <article className="ecosystem-card ecosystem-card-croflux">
               <div className="ecosystem-badge">You&apos;re here</div>
-              <div className="ecosystem-icon ecosystem-icon-croflux">
+              <div className="ecosystem-logo-wrap ecosystem-logo-wrap-croflux">
                 <Image
-                  src="/croflux-mark.png"
+                  src="/brand/ecosystem/croflux-nb-1.png"
                   alt="CroFlux"
-                  width={22}
-                  height={22}
-                  className="ecosystem-mark"
+                  width={32}
+                  height={32}
+                  className="ecosystem-logo ecosystem-logo-croflux"
                 />
               </div>
               <div className="ecosystem-label ecosystem-label-croflux">Project &amp; execution</div>
@@ -1882,8 +1882,8 @@ export function LandingPage() {
             <article className="ecosystem-card ecosystem-card-crofx">
               <div className="ecosystem-logo-wrap ecosystem-logo-wrap-crofx">
                 <Image
-                  src="/brand/ecosystem/crofx-logo.png"
-                  alt="CroFx"
+                  src="/brand/ecosystem/croofx-nb.png"
+                  alt="CrooFx"
                   width={32}
                   height={32}
                   className="ecosystem-logo ecosystem-logo-crofx"
@@ -2070,6 +2070,11 @@ export function LandingPage() {
             height: 32px;
           }
 
+          .ecosystem-logo-wrap-croflux {
+            width: 32px;
+            height: 32px;
+          }
+
           .ecosystem-logo-wrap-crofx {
             width: 32px;
             height: 32px;
@@ -2098,6 +2103,11 @@ export function LandingPage() {
               contrast(1.14)
               saturate(1.06)
               drop-shadow(0 0 12px rgba(245, 158, 11, 0.16));
+          }
+
+          .ecosystem-logo-croflux {
+            transform: scale(1.22);
+            transform-origin: center;
           }
 
           .ecosystem-logo-crovew {

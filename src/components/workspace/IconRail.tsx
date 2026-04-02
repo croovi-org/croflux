@@ -43,7 +43,7 @@ export function IconRail() {
               alt=""
               fill
               sizes="40px"
-              className="object-contain"
+              className="object-contain rail-logo-image"
             />
           </span>
           <span className="rail-tooltip rail-logo-tooltip">Workspace home</span>
@@ -307,6 +307,10 @@ export function IconRail() {
           height: 26px;
           display: block;
           flex-shrink: 0;
+        }
+        .rail-logo-image {
+          mix-blend-mode: screen;
+          filter: brightness(1.06) contrast(1.08);
         }
         .rail-bottom {
           margin-top: auto;
