@@ -1825,6 +1825,481 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+      <section className="ecosystem-section reveal" aria-labelledby="ecosystem-title">
+        <div className="ecosystem-shell">
+          <div className="section-eyebrow ecosystem-eyebrow">Ecosystem</div>
+          <h2 className="section-h ecosystem-title" id="ecosystem-title">
+            Part of the <span className="purple">Croovi suite.</span>
+          </h2>
+          <p className="section-sub ecosystem-sub">
+            CroFlux sits inside a connected set of tools built for how solo
+            founders actually plan, execute, automate, and observe their work.
+          </p>
+
+          <div className="ecosystem-parent-row">
+            <div className="ecosystem-card ecosystem-card-parent">
+              <div className="ecosystem-logo-wrap ecosystem-logo-wrap-croovi">
+                <Image
+                  src="/brand/ecosystem/croovi-symbol.png"
+                  alt="Croovi"
+                  width={120}
+                  height={120}
+                  className="ecosystem-logo ecosystem-logo-croovi"
+                />
+              </div>
+              <div className="ecosystem-label ecosystem-label-croovi">Platform layer</div>
+              <div className="ecosystem-name">Croovi</div>
+              <p className="ecosystem-desc">
+                The operating layer for planning, product context, and decision flow.
+              </p>
+            </div>
+          </div>
+
+          <div className="ecosystem-connector" aria-hidden="true">
+            <div className="ecosystem-connector-stem" />
+            <div className="ecosystem-connector-rail" />
+          </div>
+
+          <div className="ecosystem-grid">
+            <article className="ecosystem-card ecosystem-card-croflux">
+              <div className="ecosystem-badge">You&apos;re here</div>
+              <div className="ecosystem-icon ecosystem-icon-croflux">
+                <Image
+                  src="/croflux-mark.png"
+                  alt="CroFlux"
+                  width={22}
+                  height={22}
+                  className="ecosystem-mark"
+                />
+              </div>
+              <div className="ecosystem-label ecosystem-label-croflux">Project &amp; execution</div>
+              <div className="ecosystem-name">CroFlux</div>
+              <p className="ecosystem-desc">
+                Turns strategy into structured work, with projects, tasks, ownership, and execution flow.
+              </p>
+            </article>
+
+            <article className="ecosystem-card ecosystem-card-crofx">
+              <div className="ecosystem-logo-wrap ecosystem-logo-wrap-crofx">
+                <Image
+                  src="/brand/ecosystem/crofx-logo.png"
+                  alt="CroFx"
+                  width={32}
+                  height={32}
+                  className="ecosystem-logo ecosystem-logo-crofx"
+                />
+              </div>
+              <div className="ecosystem-label ecosystem-label-crofx">AI automation</div>
+              <div className="ecosystem-name">CroFx</div>
+              <p className="ecosystem-desc">
+                Automates repetitive dev workflows so your team moves faster with less overhead.
+              </p>
+            </article>
+
+            <article className="ecosystem-card ecosystem-card-crovew">
+              <div className="ecosystem-logo-wrap ecosystem-logo-wrap-crovew">
+                <Image
+                  src="/brand/ecosystem/crovew-logo-cropped.png"
+                  alt="CroVew"
+                  width={124}
+                  height={80}
+                  className="ecosystem-logo ecosystem-logo-crovew"
+                />
+              </div>
+              <div className="ecosystem-label ecosystem-label-crovew">Visibility</div>
+              <div className="ecosystem-name">CroVew</div>
+              <p className="ecosystem-desc">
+                Real-time behavioral analytics. See who&apos;s live, what they&apos;re doing, and where they drop off.
+              </p>
+              <Link
+                href="https://crovew.vercel.app/"
+                className="ecosystem-visit"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Visit ↗
+              </Link>
+            </article>
+          </div>
+        </div>
+        <style jsx>{`
+          .ecosystem-section {
+            position: relative;
+            overflow: hidden;
+            padding: 24px 40px 88px;
+            border-top: 1px solid var(--border);
+          }
+
+          .ecosystem-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+              radial-gradient(circle at 50% 8%, rgba(61, 232, 212, 0.08) 0%, transparent 36%),
+              radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.015) 0%, transparent 62%);
+            pointer-events: none;
+          }
+
+          .ecosystem-shell {
+            position: relative;
+            z-index: 1;
+            width: min(100%, 1120px);
+            margin: 0 auto;
+          }
+
+          .ecosystem-eyebrow {
+            justify-content: center;
+            color: #51e7d7;
+          }
+
+          .ecosystem-title {
+            text-align: center;
+          }
+
+          .ecosystem-sub {
+            max-width: 640px;
+            margin: 0 auto 52px;
+            text-align: center;
+          }
+
+          .ecosystem-parent-row {
+            display: flex;
+            justify-content: center;
+          }
+
+          .ecosystem-grid {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+          }
+
+          .ecosystem-card {
+            position: relative;
+            min-height: 286px;
+            padding: 30px 28px 24px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background:
+              linear-gradient(180deg, rgba(14, 16, 24, 0.96), rgba(11, 13, 19, 0.98)),
+              radial-gradient(circle at top, rgba(255, 255, 255, 0.02), transparent 56%);
+            text-align: center;
+            transition:
+              transform 0.22s ease,
+              border-color 0.22s ease,
+              box-shadow 0.22s ease;
+          }
+
+          .ecosystem-card:hover {
+            transform: translateY(-2px);
+          }
+
+          .ecosystem-card-parent {
+            width: min(100%, 352px);
+            min-height: 238px;
+            margin-bottom: 24px;
+            border-color: rgba(61, 232, 212, 0.14);
+          }
+
+          .ecosystem-card-parent:hover {
+            border-color: rgba(61, 232, 212, 0.26);
+            box-shadow: 0 0 0 1px rgba(61, 232, 212, 0.08);
+          }
+
+          .ecosystem-card-croflux {
+            border-color: color-mix(in srgb, var(--accent) 20%, rgba(255, 255, 255, 0.08));
+          }
+
+          .ecosystem-card-croflux:hover {
+            border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent);
+          }
+
+          .ecosystem-card-crofx:hover {
+            border-color: color-mix(in srgb, var(--amber) 36%, transparent);
+            box-shadow: 0 0 0 1px color-mix(in srgb, var(--amber) 10%, transparent);
+          }
+
+          .ecosystem-card-crovew {
+            border-color: rgba(61, 232, 212, 0.18);
+          }
+
+          .ecosystem-card-crovew:hover {
+            border-color: rgba(61, 232, 212, 0.34);
+            box-shadow: 0 0 0 1px rgba(61, 232, 212, 0.1);
+          }
+
+          .ecosystem-icon,
+          .ecosystem-logo-wrap {
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .ecosystem-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+          }
+
+          .ecosystem-icon-croovi,
+          .ecosystem-icon-croflux {
+            background: color-mix(in srgb, var(--accent) 10%, transparent);
+          }
+
+          .ecosystem-icon-crofx {
+            background: color-mix(in srgb, var(--amber) 11%, transparent);
+          }
+
+          .ecosystem-icon-crovew {
+            background: rgba(61, 232, 212, 0.08);
+          }
+
+          .ecosystem-mark {
+            width: 22px;
+            height: auto;
+          }
+
+          .ecosystem-logo-wrap {
+            background: transparent;
+          }
+
+          .ecosystem-logo-wrap-croovi {
+            width: 32px;
+            height: 32px;
+          }
+
+          .ecosystem-logo-wrap-crofx {
+            width: 32px;
+            height: 32px;
+          }
+
+          .ecosystem-logo-wrap-crovew {
+            width: 32px;
+            height: 32px;
+          }
+
+          .ecosystem-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: screen;
+            filter:
+              brightness(1.06)
+              contrast(1.04)
+              drop-shadow(0 0 18px rgba(124, 110, 247, 0.08));
+          }
+
+          .ecosystem-logo-crofx {
+            mix-blend-mode: screen;
+            filter:
+              brightness(1.08)
+              contrast(1.14)
+              saturate(1.06)
+              drop-shadow(0 0 12px rgba(245, 158, 11, 0.16));
+          }
+
+          .ecosystem-logo-crovew {
+            filter:
+              brightness(1.04)
+              contrast(1.08)
+              saturate(1.04)
+              drop-shadow(0 0 14px rgba(61, 232, 212, 0.16));
+          }
+
+          .ecosystem-label {
+            margin-bottom: 8px;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+          }
+
+          .ecosystem-label-croovi {
+            color: #8f84ff;
+          }
+
+          .ecosystem-label-croflux {
+            color: #a58cff;
+          }
+
+          .ecosystem-label-crofx {
+            color: #f6b546;
+          }
+
+          .ecosystem-label-crovew {
+            color: #51e7d7;
+          }
+
+          .ecosystem-name {
+            margin-bottom: 10px;
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text);
+          }
+
+          .ecosystem-desc {
+            max-width: 292px;
+            margin: 0 auto;
+            font-size: 15px;
+            line-height: 1.62;
+            color: var(--text2);
+          }
+
+          .ecosystem-connector {
+            position: relative;
+            height: 46px;
+            width: min(100%, 920px);
+            margin: 0 auto -2px;
+          }
+
+          .ecosystem-connector::before,
+          .ecosystem-connector::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(61, 232, 212, 0.3);
+            border-radius: 999px;
+          }
+
+          .ecosystem-connector::before {
+            top: 0;
+            width: 5px;
+            height: 5px;
+          }
+
+          .ecosystem-connector::after {
+            top: 22px;
+            width: 4px;
+            height: 4px;
+            opacity: 0.5;
+          }
+
+          .ecosystem-connector-stem {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 24px;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, rgba(61, 232, 212, 0.48), rgba(61, 232, 212, 0.14));
+          }
+
+          .ecosystem-connector-rail {
+            position: absolute;
+            left: 50%;
+            bottom: 16px;
+            width: calc(100% - 160px);
+            height: 1px;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, transparent, rgba(61, 232, 212, 0.18) 12%, rgba(61, 232, 212, 0.18) 88%, transparent);
+          }
+
+          .ecosystem-grid::before,
+          .ecosystem-grid::after {
+            content: "";
+            position: absolute;
+            top: -30px;
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(180deg, rgba(61, 232, 212, 0.38), rgba(61, 232, 212, 0.08));
+          }
+
+          .ecosystem-grid::before {
+            left: 16.666%;
+          }
+
+          .ecosystem-grid::after {
+            left: 83.333%;
+          }
+
+          .ecosystem-badge {
+            position: absolute;
+            top: -11px;
+            right: 16px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: #51e7d7;
+            color: #071513;
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+          }
+
+          .ecosystem-visit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 18px;
+            min-width: 94px;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(61, 232, 212, 0.16);
+            background: rgba(12, 24, 26, 0.56);
+            color: #9cefe5;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition:
+              color 0.2s ease,
+              border-color 0.2s ease,
+              background-color 0.2s ease,
+              transform 0.2s ease;
+          }
+
+          .ecosystem-card-crovew:hover .ecosystem-visit {
+            color: #e8fffb;
+            border-color: rgba(61, 232, 212, 0.34);
+            background: rgba(12, 31, 30, 0.72);
+            transform: translateY(-1px);
+          }
+
+          @media (max-width: 980px) {
+            .ecosystem-grid {
+              grid-template-columns: 1fr;
+            }
+
+            .ecosystem-card,
+            .ecosystem-card-parent {
+              width: 100%;
+              min-height: auto;
+            }
+
+            .ecosystem-connector,
+            .ecosystem-grid::before,
+            .ecosystem-grid::after {
+              display: none;
+            }
+          }
+
+          @media (max-width: 640px) {
+            .ecosystem-section {
+              padding: 16px 20px 72px;
+            }
+
+            .ecosystem-card {
+              padding: 24px 20px 22px;
+            }
+
+            .ecosystem-sub {
+              margin-bottom: 40px;
+            }
+
+            .ecosystem-badge {
+              right: 12px;
+            }
+          }
+        `}</style>
+      </section>
       <div className="cta-section" id="waitlist">
         <div className="cta-bg-word">BUILD</div>
         <div className="cta-inner reveal">
