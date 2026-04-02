@@ -3111,8 +3111,8 @@ nav {
   padding: 0 14px;
   border-radius: 8px;
   border: 1px solid rgba(61, 232, 212, 0.16);
-  background: rgba(12, 24, 26, 0.56);
-  color: #9cefe5;
+  background: rgb(12, 16, 23);
+  color: rgb(80, 94, 99);
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 600;
@@ -3126,9 +3126,9 @@ nav {
 }
 
 .ecosystem-card-crovew:hover .ecosystem-visit {
-  color: #e8fffb;
+  color: rgb(80, 94, 99);
   border-color: rgba(61, 232, 212, 0.34);
-  background: rgba(12, 31, 30, 0.72);
+  background: rgb(12, 16, 23);
   transform: translateY(-1px);
 }
 
