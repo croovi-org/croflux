@@ -211,7 +211,9 @@ export function LandingPage() {
     ) {
       const nextQuery = search.toString();
       const nextHash = hash ? `#${hash}` : "";
-      router.replace(`/reset-password${nextQuery ? `?${nextQuery}` : ""}${nextHash}`);
+      router.replace(
+        `/reset-password${nextQuery ? `?${nextQuery}` : ""}${nextHash}`,
+      );
       return;
     }
   }, [router]);
@@ -219,7 +221,9 @@ export function LandingPage() {
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
       const currentAppearance =
-        document.documentElement.dataset.appearance === "light" ? "light" : "dark";
+        document.documentElement.dataset.appearance === "light"
+          ? "light"
+          : "dark";
       setAppearance(currentAppearance);
       setAppearanceReady(true);
     });
@@ -446,7 +450,9 @@ export function LandingPage() {
                     : "Switch to dark mode"
                   : "Toggle theme"
               }
-              onClick={() => applyTheme(appearance === "dark" ? "light" : "dark")}
+              onClick={() =>
+                applyTheme(appearance === "dark" ? "light" : "dark")
+              }
             >
               {appearance === "dark" ? (
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -1825,7 +1831,10 @@ export function LandingPage() {
           </div>
         </div>
       </section>
-      <section className="ecosystem-section reveal" aria-labelledby="ecosystem-title">
+      <section
+        className="ecosystem-section reveal"
+        aria-labelledby="ecosystem-title"
+      >
         <div className="ecosystem-shell">
           <div className="section-eyebrow ecosystem-eyebrow">Ecosystem</div>
           <h2 className="section-h ecosystem-title" id="ecosystem-title">
@@ -1847,10 +1856,13 @@ export function LandingPage() {
                   className="ecosystem-logo ecosystem-logo-croovi"
                 />
               </div>
-              <div className="ecosystem-label ecosystem-label-croovi">Platform layer</div>
+              <div className="ecosystem-label ecosystem-label-croovi">
+                Platform layer
+              </div>
               <div className="ecosystem-name">Croovi</div>
               <p className="ecosystem-desc">
-                The operating layer for planning, product context, and decision flow.
+                The operating layer for planning, product context, and decision
+                flow.
               </p>
             </div>
           </div>
@@ -1872,10 +1884,13 @@ export function LandingPage() {
                   className="ecosystem-logo ecosystem-logo-croflux"
                 />
               </div>
-              <div className="ecosystem-label ecosystem-label-croflux">Project &amp; execution</div>
+              <div className="ecosystem-label ecosystem-label-croflux">
+                Project &amp; execution
+              </div>
               <div className="ecosystem-name">CroFlux</div>
               <p className="ecosystem-desc">
-                Turns strategy into structured work, with projects, tasks, ownership, and execution flow.
+                Turns strategy into structured work, with projects, tasks,
+                ownership, and execution flow.
               </p>
             </article>
 
@@ -1889,11 +1904,28 @@ export function LandingPage() {
                   className="ecosystem-logo ecosystem-logo-crofx"
                 />
               </div>
-              <div className="ecosystem-label ecosystem-label-crofx">AI automation</div>
-              <div className="ecosystem-name">CroFx</div>
+              <div className="ecosystem-label ecosystem-label-crofx">
+                AI automation
+              </div>
+              <div className="ecosystem-name">CrooFx</div>
               <p className="ecosystem-desc">
-                Automates repetitive dev workflows so your team moves faster with less overhead.
+                Automates repetitive dev workflows so your team moves faster
+                with less overhead.
               </p>
+              <Link
+                href="https://www.croovi.com/"
+                className="ecosystem-visit ecosystem-visit-crofx"
+                style={{
+                  color: "rgb(255, 155, 34)",
+                  background: "rgb(12, 16, 23)",
+                  borderColor: "rgb(255, 155, 34)",
+                  borderWidth: "0.25px",
+                }}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Visit ↗
+              </Link>
             </article>
 
             <article className="ecosystem-card ecosystem-card-crovew">
@@ -1906,14 +1938,21 @@ export function LandingPage() {
                   className="ecosystem-logo ecosystem-logo-crovew"
                 />
               </div>
-              <div className="ecosystem-label ecosystem-label-crovew">Visibility</div>
+              <div className="ecosystem-label ecosystem-label-crovew">
+                Visibility
+              </div>
               <div className="ecosystem-name">CroVew</div>
               <p className="ecosystem-desc">
-                Real-time behavioral analytics. See who&apos;s live, what they&apos;re doing, and where they drop off.
+                Real-time behavioral analytics. See who&apos;s live, what
+                they&apos;re doing, and where they drop off.
               </p>
               <Link
                 href="https://crovew.vercel.app/"
                 className="ecosystem-visit"
+                style={{
+                  color: "rgb(80, 94, 99)",
+                  background: "rgb(12, 16, 23)",
+                }}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -1935,8 +1974,12 @@ export function LandingPage() {
             position: absolute;
             inset: 0;
             background:
-              radial-gradient(circle at 50% 8%, rgba(61, 232, 212, 0.08) 0%, transparent 36%),
-              radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.015) 0%, transparent 62%);
+              var(--hero-glow),
+              radial-gradient(
+                circle at 50% 50%,
+                rgba(255, 255, 255, 0.015) 0%,
+                transparent 62%
+              );
             pointer-events: none;
           }
 
@@ -1981,8 +2024,16 @@ export function LandingPage() {
             border-radius: 18px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             background:
-              linear-gradient(180deg, rgba(14, 16, 24, 0.96), rgba(11, 13, 19, 0.98)),
-              radial-gradient(circle at top, rgba(255, 255, 255, 0.02), transparent 56%);
+              linear-gradient(
+                180deg,
+                rgba(14, 16, 24, 0.96),
+                rgba(11, 13, 19, 0.98)
+              ),
+              radial-gradient(
+                circle at top,
+                rgba(255, 255, 255, 0.02),
+                transparent 56%
+              );
             text-align: center;
             transition:
               transform 0.22s ease,
@@ -1998,26 +2049,37 @@ export function LandingPage() {
             width: min(100%, 352px);
             min-height: 238px;
             margin-bottom: 24px;
-            border-color: rgba(61, 232, 212, 0.14);
+            border-color: color-mix(
+              in srgb,
+              var(--accent) 20%,
+              rgba(255, 255, 255, 0.08)
+            );
           }
 
           .ecosystem-card-parent:hover {
-            border-color: rgba(61, 232, 212, 0.26);
-            box-shadow: 0 0 0 1px rgba(61, 232, 212, 0.08);
+            border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+            box-shadow: 0 0 0 1px
+              color-mix(in srgb, var(--accent) 12%, transparent);
           }
 
           .ecosystem-card-croflux {
-            border-color: color-mix(in srgb, var(--accent) 20%, rgba(255, 255, 255, 0.08));
+            border-color: color-mix(
+              in srgb,
+              var(--accent) 20%,
+              rgba(255, 255, 255, 0.08)
+            );
           }
 
           .ecosystem-card-croflux:hover {
             border-color: color-mix(in srgb, var(--accent) 42%, transparent);
-            box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent);
+            box-shadow: 0 0 0 1px
+              color-mix(in srgb, var(--accent) 12%, transparent);
           }
 
           .ecosystem-card-crofx:hover {
             border-color: color-mix(in srgb, var(--amber) 36%, transparent);
-            box-shadow: 0 0 0 1px color-mix(in srgb, var(--amber) 10%, transparent);
+            box-shadow: 0 0 0 1px
+              color-mix(in srgb, var(--amber) 10%, transparent);
           }
 
           .ecosystem-card-crovew {
@@ -2068,6 +2130,7 @@ export function LandingPage() {
           .ecosystem-logo-wrap-croovi {
             width: 32px;
             height: 32px;
+            transform: translateX(-3px);
           }
 
           .ecosystem-logo-wrap-croflux {
@@ -2090,18 +2153,13 @@ export function LandingPage() {
             height: 100%;
             object-fit: contain;
             mix-blend-mode: screen;
-            filter:
-              brightness(1.06)
-              contrast(1.04)
+            filter: brightness(1.06) contrast(1.04)
               drop-shadow(0 0 18px rgba(124, 110, 247, 0.08));
           }
 
           .ecosystem-logo-crofx {
             mix-blend-mode: screen;
-            filter:
-              brightness(1.08)
-              contrast(1.14)
-              saturate(1.06)
+            filter: brightness(1.08) contrast(1.14) saturate(1.06)
               drop-shadow(0 0 12px rgba(245, 158, 11, 0.16));
           }
 
@@ -2111,10 +2169,7 @@ export function LandingPage() {
           }
 
           .ecosystem-logo-crovew {
-            filter:
-              brightness(1.04)
-              contrast(1.08)
-              saturate(1.04)
+            filter: brightness(1.04) contrast(1.08) saturate(1.04)
               drop-shadow(0 0 14px rgba(61, 232, 212, 0.16));
           }
 
@@ -2196,7 +2251,11 @@ export function LandingPage() {
             width: 1px;
             height: 24px;
             transform: translateX(-50%);
-            background: linear-gradient(180deg, rgba(124, 110, 247, 0.48), rgba(124, 110, 247, 0.14));
+            background: linear-gradient(
+              180deg,
+              rgba(124, 110, 247, 0.48),
+              rgba(124, 110, 247, 0.14)
+            );
           }
 
           .ecosystem-connector-rail {
@@ -2206,7 +2265,13 @@ export function LandingPage() {
             width: calc(100% - 160px);
             height: 1px;
             transform: translateX(-50%);
-            background: linear-gradient(90deg, transparent, rgba(124, 110, 247, 0.18) 12%, rgba(124, 110, 247, 0.18) 88%, transparent);
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(124, 110, 247, 0.18) 12%,
+              rgba(124, 110, 247, 0.18) 88%,
+              transparent
+            );
           }
 
           .ecosystem-grid::before,
@@ -2216,7 +2281,11 @@ export function LandingPage() {
             top: -30px;
             width: 1px;
             height: 30px;
-            background: linear-gradient(180deg, rgba(124, 110, 247, 0.38), rgba(124, 110, 247, 0.08));
+            background: linear-gradient(
+              180deg,
+              rgba(124, 110, 247, 0.38),
+              rgba(124, 110, 247, 0.08)
+            );
           }
 
           .ecosystem-grid::before {
@@ -2246,30 +2315,53 @@ export function LandingPage() {
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
             margin-top: 18px;
-            min-width: 94px;
-            height: 34px;
-            padding: 0 14px;
-            border-radius: 8px;
-            border: 1px solid rgba(61, 232, 212, 0.16);
-            background: rgba(12, 24, 26, 0.56);
-            color: #9cefe5;
+            min-width: 112px;
+            height: 44px;
+            padding: 0 22px;
+            border-radius: 12px;
+            border: 1px solid rgba(47, 78, 156, 0.72);
+            background: rgb(12, 16, 23);
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.02),
+              0 0 0 1px rgba(22, 36, 68, 0.18);
+            color: rgb(80, 94, 99);
             font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             transition:
               color 0.2s ease,
               border-color 0.2s ease,
               background-color 0.2s ease,
+              box-shadow 0.2s ease,
               transform 0.2s ease;
           }
 
+          .ecosystem-visit-crofx {
+            border-color: rgb(255, 155, 34);
+            font-weight: 500;
+          }
+
           .ecosystem-card-crovew:hover .ecosystem-visit {
-            color: #e8fffb;
-            border-color: rgba(61, 232, 212, 0.34);
-            background: rgba(12, 31, 30, 0.72);
+            color: rgb(80, 94, 99);
+            border-color: rgba(72, 110, 212, 0.9);
+            background: rgb(12, 16, 23);
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.03),
+              0 0 0 1px rgba(43, 69, 128, 0.22);
+            transform: translateY(-1px);
+          }
+
+          .ecosystem-card-crofx:hover .ecosystem-visit-crofx {
+            color: rgb(80, 94, 99);
+            border-color: rgb(255, 155, 34);
+            background: rgb(12, 16, 23);
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.03),
+              0 0 0 1px rgba(43, 69, 128, 0.22);
             transform: translateY(-1px);
           }
 
