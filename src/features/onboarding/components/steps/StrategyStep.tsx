@@ -1,13 +1,16 @@
-import { RefObject } from "react";
+import { RefObject, useEffect, useId, useMemo, useRef, useState } from "react";
 
 type StrategyMode = "paste" | "upload" | "notion";
+type ProductStage = "idea_stage" | "mvp_stage" | "early_users" | "growth_stage";
 
 interface StrategyStepProps {
+  productStage: ProductStage;
   strategyMode: StrategyMode;
   strategyText: string;
   notionUrl: string;
   strategyFile: File | null;
   fileInputRef: RefObject<HTMLInputElement | null>;
+  onProductStageChange: (value: ProductStage) => void;
   onModeChange: (mode: StrategyMode) => void;
   onTextChange: (value: string) => void;
   onNotionChange: (value: string) => void;
@@ -20,17 +23,78 @@ const modeLabels: Array<{ id: StrategyMode; label: string }> = [
   { id: "notion", label: "Notion link" },
 ];
 
+const productStageOptions: Array<{
+  id: ProductStage;
+  label: string;
+  description: string;
+}> = [
+  {
+    id: "idea_stage",
+    label: "Idea stage",
+    description: "just exploring the concept, no product built yet",
+  },
+  {
+    id: "mvp_stage",
+    label: "MVP stage",
+    description: "currently building the first working version",
+  },
+  {
+    id: "early_users",
+    label: "Early users",
+    description: "product exists and has initial users or testers",
+  },
+  {
+    id: "growth_stage",
+    label: "Growth stage",
+    description: "product has traction and needs scaling roadmap",
+  },
+];
+
 export function StrategyStep({
+  productStage,
   strategyMode,
   strategyText,
   notionUrl,
   strategyFile,
   fileInputRef,
+  onProductStageChange,
   onModeChange,
   onTextChange,
   onNotionChange,
   onFileChange,
 }: StrategyStepProps) {
+  const [isStageMenuOpen, setIsStageMenuOpen] = useState(false);
+  const stageMenuRef = useRef<HTMLDivElement | null>(null);
+  const stageMenuId = useId();
+
+  const selectedStageOption = useMemo(
+    () => productStageOptions.find((option) => option.id === productStage),
+    [productStage],
+  );
+
+  useEffect(() => {
+    function handleDocumentClick(event: MouseEvent) {
+      if (!stageMenuRef.current) return;
+      if (!stageMenuRef.current.contains(event.target as Node)) {
+        setIsStageMenuOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsStageMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleDocumentClick);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleDocumentClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
   return (
     <div className="space-y-6">
       <div>
@@ -44,6 +108,92 @@ export function StrategyStep({
           Paste your Product Development Strategy, upload a document, or drop a
           Notion link. Pick whichever input method is fastest for you.
         </p>
+      </div>
+
+      <div className="grid gap-3">
+        <div>
+          <div className="text-[12px] font-medium text-[var(--text2)]">
+            Product stage
+          </div>
+          <p className="mt-2 text-[12px] leading-6 text-[var(--text3)]">
+            Select the current stage of your product so we can generate a more
+            relevant roadmap.
+          </p>
+        </div>
+
+        <fieldset className="grid gap-3">
+          <legend className="sr-only">Product stage</legend>
+          <div ref={stageMenuRef} className="relative">
+            <button
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded={isStageMenuOpen}
+              aria-controls={stageMenuId}
+              onClick={() => setIsStageMenuOpen((open) => !open)}
+              className="h-13 w-full rounded-[14px] border border-[var(--border2)] bg-[var(--bg3)] px-4 pr-10 text-left text-[14px] font-medium text-[var(--text)] outline-none transition focus:border-[var(--purple)] focus:bg-[var(--bg2)]"
+            >
+              {selectedStageOption?.label ?? "MVP stage"}
+            </button>
+            <input type="hidden" name="product-stage" value={productStage} />
+            <span
+              className={`pointer-events-none absolute inset-y-0 right-4 flex items-center text-[var(--text3)] transition duration-200 ${
+                isStageMenuOpen ? "rotate-180" : ""
+              }`}
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                className="h-4 w-4"
+                aria-hidden="true"
+              >
+                <path
+                  d="m5 7.5 5 5 5-5"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <div
+              id={stageMenuId}
+              role="listbox"
+              aria-label="Product stage"
+              className={`absolute top-[calc(100%+8px)] right-0 left-0 z-20 origin-top rounded-[14px] border border-[var(--border2)] bg-[var(--bg3)] p-1 shadow-[0_10px_35px_rgba(0,0,0,0.35)] transition duration-200 ${
+                isStageMenuOpen
+                  ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
+                  : "pointer-events-none -translate-y-1 scale-[0.98] opacity-0"
+              }`}
+            >
+              {productStageOptions.map((option) => {
+                const isSelected = productStage === option.id;
+
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    role="option"
+                    aria-selected={isSelected}
+                    onClick={() => {
+                      onProductStageChange(option.id);
+                      setIsStageMenuOpen(false);
+                    }}
+                    className={`w-full rounded-[10px] px-3 py-2 text-left transition ${
+                      isSelected
+                        ? "bg-[var(--purple-dim)] text-[var(--text)]"
+                        : "text-[var(--text2)] hover:bg-[var(--bg2)]"
+                    }`}
+                  >
+                    <div className="text-[13px] font-medium">{option.label}</div>
+                    <div className="mt-1 text-[11px] leading-5 text-[var(--text3)]">
+                      {option.description}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </fieldset>
       </div>
 
       <div className="overflow-hidden rounded-[16px] border border-[var(--border)] bg-[var(--bg2)]">
