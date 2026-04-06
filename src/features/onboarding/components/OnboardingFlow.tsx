@@ -11,6 +11,7 @@ import { StrategyStep } from "@/features/onboarding/components/steps/StrategySte
 import { WorkspaceStep } from "@/features/onboarding/components/steps/WorkspaceStep";
 
 type StrategyMode = "paste" | "upload" | "notion";
+type ProductStage = "idea_stage" | "mvp_stage" | "early_users" | "growth_stage";
 
 function slugify(value: string) {
   return value
@@ -32,12 +33,40 @@ export function OnboardingFlow() {
   const [workspaceName, setWorkspaceName] = useState("");
   const [slug, setSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
+  const [productStage, setProductStage] = useState<ProductStage>("mvp_stage");
   const [strategyMode, setStrategyMode] = useState<StrategyMode>("paste");
   const [strategyText, setStrategyText] = useState("");
   const [notionUrl, setNotionUrl] = useState("");
   const [strategyFile, setStrategyFile] = useState<File | null>(null);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [error, setError] = useState("");
+
+  const onboardingPayload = useMemo(
+    () => ({
+      startup_name: startupName.trim(),
+      one_liner: oneLiner.trim(),
+      workspace_name: workspaceName.trim(),
+      slug: slug.trim(),
+      product_stage: productStage,
+      strategy: {
+        mode: strategyMode,
+        text: strategyText.trim(),
+        notion_url: notionUrl.trim(),
+        file_name: strategyFile?.name ?? null,
+      },
+    }),
+    [
+      startupName,
+      oneLiner,
+      workspaceName,
+      slug,
+      productStage,
+      strategyMode,
+      strategyText,
+      notionUrl,
+      strategyFile,
+    ],
+  );
 
   const canGoBack = currentStep > 0;
   const isReviewStep = currentStep === 3;
@@ -174,11 +203,13 @@ export function OnboardingFlow() {
     if (currentStep === 2) {
       return (
         <StrategyStep
+          productStage={productStage}
           strategyMode={strategyMode}
           strategyText={strategyText}
           notionUrl={notionUrl}
           strategyFile={strategyFile}
           fileInputRef={fileInputRef}
+          onProductStageChange={setProductStage}
           onModeChange={setStrategyMode}
           onTextChange={setStrategyText}
           onNotionChange={setNotionUrl}
@@ -430,7 +461,10 @@ export function OnboardingFlow() {
           />
 
           <section className="min-h-[720px] px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
-            <div className="mx-auto flex min-h-full max-w-[760px] flex-col">
+            <div
+              className="mx-auto flex min-h-full max-w-[760px] flex-col"
+              data-product-stage={onboardingPayload.product_stage}
+            >
               {renderStep()}
 
               {error ? (
