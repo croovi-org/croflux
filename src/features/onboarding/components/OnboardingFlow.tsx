@@ -28,12 +28,6 @@ type UsageResponse = {
   limit: number;
 };
 
-function isUsageErrorPayload(
-  payload: UsageResponse | { error?: string } | null,
-): payload is { error?: string } {
-  return !payload || !("used" in payload);
-}
-
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -381,8 +375,8 @@ export function OnboardingFlow() {
   }
 
   function getStepGuardrailError(step: number) {
-    if (usage.remaining <= 0) {
-      return "Beta roadmap limit reached.";
+    if (step === 3 && usage.remaining <= 0) {
+      return "Beta limit reached. Upgrade to continue generating roadmaps.";
     }
 
     if (step !== 2) {
@@ -443,39 +437,6 @@ export function OnboardingFlow() {
     }
   }
 
-  async function incrementRoadmapUsage() {
-    const documentsUploaded = strategyMode === "upload" && strategyFile ? 1 : 0;
-    const response = await fetch("/api/onboarding/usage", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        wordsProcessed: activeStrategyWordCount,
-        documentsUploaded,
-      }),
-    });
-
-    const payload = (await response.json().catch(() => null)) as
-      | UsageResponse
-      | { error?: string }
-      | null;
-
-    if (!response.ok) {
-      const apiError = isUsageErrorPayload(payload) ? payload?.error : undefined;
-      throw new Error(
-        apiError ?? "Unable to update beta usage right now.",
-      );
-    }
-
-    const usagePayload = payload as UsageResponse;
-    setUsage({
-      used: Math.max(0, usagePayload.used ?? 0),
-      remaining: Math.max(0, usagePayload.remaining ?? 0),
-      limit: usagePayload.limit ?? ROADMAP_GENERATION_LIMIT,
-    });
-  }
-
   async function handleNext() {
     const validationError = validateStep(currentStep);
     const guardrailError = getStepGuardrailError(currentStep);
@@ -502,15 +463,7 @@ export function OnboardingFlow() {
     updateCompletion(currentStep);
 
     if (currentStep === 3) {
-      try {
-        await incrementRoadmapUsage();
-      } catch (incrementError) {
-        setError(
-          incrementError instanceof Error
-            ? incrementError.message
-            : "Unable to update beta usage right now.",
-        );
-      }
+      // Credit deduction must happen only after successful roadmap generation.
       return;
     }
 
@@ -564,7 +517,6 @@ export function OnboardingFlow() {
           notionHelperText="Concise strategies produce better roadmaps."
           notionStatusText={notionStatus || undefined}
           isNotionProcessing={isNotionProcessing}
-          remainingGenerations={usage.remaining}
         />
       );
     }
@@ -826,6 +778,21 @@ export function OnboardingFlow() {
               data-product-stage={onboardingPayload.product_stage}
             >
               {renderStep()}
+
+              {currentStep === 3 ? (
+                <div className="mt-6 rounded-[12px] border border-[var(--border2)] bg-[var(--bg3)] px-4 py-3">
+                  <div className="text-[12px] font-medium text-[var(--text2)]">
+                    Beta usage
+                  </div>
+                  <div className="mt-1 text-[12px] leading-6 text-[var(--text3)]">
+                    {usage.remaining} of {ROADMAP_GENERATION_LIMIT} roadmap
+                    generations remaining
+                  </div>
+                  <div className="mt-1 text-[12px] leading-6 text-[var(--text4)]">
+                    Generating a roadmap will use 1 credit.
+                  </div>
+                </div>
+              ) : null}
 
               {displayedError ? (
                 <div className="mt-6 rounded-[12px] border border-[rgba(239,68,68,0.22)] bg-[rgba(239,68,68,0.08)] px-4 py-3 text-[13px] text-[#fda4af]">
