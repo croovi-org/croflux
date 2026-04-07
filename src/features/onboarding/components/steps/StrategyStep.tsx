@@ -1,4 +1,9 @@
 import { RefObject, useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  ROADMAP_GENERATION_LIMIT,
+  STRATEGY_TEXT_WARNING_THRESHOLD,
+  STRATEGY_TEXT_WORD_LIMIT,
+} from "@/lib/onboarding/strategyLimits";
 
 type StrategyMode = "paste" | "upload" | "notion";
 type ProductStage = "idea_stage" | "mvp_stage" | "early_users" | "growth_stage";
@@ -7,6 +12,7 @@ interface StrategyStepProps {
   productStage: ProductStage;
   strategyMode: StrategyMode;
   strategyText: string;
+  strategyWordCount: number;
   notionUrl: string;
   strategyFile: File | null;
   fileInputRef: RefObject<HTMLInputElement | null>;
@@ -15,6 +21,13 @@ interface StrategyStepProps {
   onTextChange: (value: string) => void;
   onNotionChange: (value: string) => void;
   onFileChange: (file: File | null) => void;
+  uploadHelperText?: string;
+  uploadTooltip?: string | null;
+  isFileProcessing?: boolean;
+  notionHelperText?: string;
+  notionStatusText?: string | null;
+  isNotionProcessing?: boolean;
+  remainingGenerations: number;
 }
 
 const modeLabels: Array<{ id: StrategyMode; label: string }> = [
@@ -54,6 +67,7 @@ export function StrategyStep({
   productStage,
   strategyMode,
   strategyText,
+  strategyWordCount,
   notionUrl,
   strategyFile,
   fileInputRef,
@@ -62,6 +76,13 @@ export function StrategyStep({
   onTextChange,
   onNotionChange,
   onFileChange,
+  uploadHelperText,
+  uploadTooltip,
+  isFileProcessing,
+  notionHelperText,
+  notionStatusText,
+  isNotionProcessing,
+  remainingGenerations,
 }: StrategyStepProps) {
   const [isStageMenuOpen, setIsStageMenuOpen] = useState(false);
   const stageMenuRef = useRef<HTMLDivElement | null>(null);
@@ -71,6 +92,13 @@ export function StrategyStep({
     () => productStageOptions.find((option) => option.id === productStage),
     [productStage],
   );
+
+  const wordCountToneClass =
+    strategyWordCount >= STRATEGY_TEXT_WORD_LIMIT
+      ? "text-[#fda4af]"
+      : strategyWordCount >= STRATEGY_TEXT_WARNING_THRESHOLD
+        ? "text-[#facc15]"
+        : "text-[var(--text3)]";
 
   useEffect(() => {
     function handleDocumentClick(event: MouseEvent) {
@@ -107,6 +135,9 @@ export function StrategyStep({
         <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[var(--text2)]">
           Paste your Product Development Strategy, upload a document, or drop a
           Notion link. Pick whichever input method is fastest for you.
+        </p>
+        <p className="mt-2 text-[12px] leading-6 text-[var(--text3)]">
+          For best results, keep strategy concise. Recommended 100–800 words.
         </p>
       </div>
 
@@ -216,12 +247,24 @@ export function StrategyStep({
 
         <div className="p-5 sm:p-6">
           {strategyMode === "paste" ? (
-            <textarea
-              value={strategyText}
-              onChange={(event) => onTextChange(event.target.value)}
-              placeholder="Paste your Product Development Strategy here. Example: build the MVP, validate onboarding, add Stripe, launch publicly, and measure retention..."
-              className="min-h-[260px] w-full rounded-[14px] border border-[var(--border2)] bg-[var(--bg3)] px-4 py-4 font-mono text-[13px] leading-7 text-[var(--text2)] outline-none transition placeholder:text-[var(--text4)] focus:border-[var(--purple)] focus:bg-[var(--bg2)]"
-            />
+            <div className="space-y-3">
+              <div className="relative">
+                <textarea
+                  value={strategyText}
+                  onChange={(event) => onTextChange(event.target.value)}
+                  placeholder="Paste your Product Development Strategy here. Example: build the MVP, validate onboarding, add Stripe, launch publicly, and measure retention..."
+                  className="min-h-[260px] w-full rounded-[14px] border border-[var(--border2)] bg-[var(--bg3)] px-4 py-4 pb-10 font-mono text-[13px] leading-7 text-[var(--text2)] outline-none transition placeholder:text-[var(--text4)] focus:border-[var(--purple)] focus:bg-[var(--bg2)]"
+                />
+                <div
+                  className={`pointer-events-none absolute right-4 bottom-3 text-[11px] ${wordCountToneClass}`}
+                >
+                  {strategyWordCount} / {STRATEGY_TEXT_WORD_LIMIT} words
+                </div>
+              </div>
+              <p className="text-[12px] leading-6 text-[var(--text3)]">
+                Beta limit: 1200 words maximum
+              </p>
+            </div>
           ) : null}
 
           {strategyMode === "upload" ? (
@@ -229,7 +272,7 @@ export function StrategyStep({
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".pdf,.doc,.docx,.md,.txt"
+                accept=".pdf,.docx,.txt"
                 className="hidden"
                 onChange={(event) => onFileChange(event.target.files?.[0] ?? null)}
               />
@@ -253,10 +296,13 @@ export function StrategyStep({
                   {strategyFile ? strategyFile.name : "Upload your strategy document"}
                 </div>
                 <div className="mt-2 text-[12px] leading-6 text-[var(--text3)]">
-                  PDF, DOCX, MD, or TXT. Perfect for PRDs, notes, and planning docs.
+                  PDF, DOCX, TXT
+                </div>
+                <div className="mt-1 text-[12px] leading-6 text-[var(--text3)]">
+                  Max 10 pages or approx 5000 words
                 </div>
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
-                  {["PDF", "DOCX", "MD", "TXT"].map((type) => (
+                  {["PDF", "DOCX", "TXT"].map((type) => (
                     <span
                       key={type}
                       className="rounded-full border border-[var(--border2)] bg-[var(--bg4)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--text3)]"
@@ -266,6 +312,21 @@ export function StrategyStep({
                   ))}
                 </div>
               </button>
+              {isFileProcessing ? (
+                <p className="text-[12px] leading-6 text-[var(--text3)]">
+                  Processing file...
+                </p>
+              ) : null}
+              {uploadHelperText ? (
+                <p className="text-[12px] leading-6 text-[var(--text3)]">
+                  {uploadHelperText}
+                </p>
+              ) : null}
+              {uploadTooltip ? (
+                <div className="rounded-[12px] border border-[var(--border2)] bg-[var(--bg3)] px-3 py-2 text-[12px] leading-6 text-[var(--text2)]">
+                  {uploadTooltip}
+                </div>
+              ) : null}
             </div>
           ) : null}
 
@@ -283,11 +344,38 @@ export function StrategyStep({
                 />
               </div>
               <p className="text-[12px] leading-6 text-[var(--text3)]">
-                Paste a public or shared Notion URL. We’ll use it as the source
-                for milestone and task generation in the next phase.
+                We analyze the first 6000 words for roadmap generation
               </p>
+              {isNotionProcessing ? (
+                <p className="text-[12px] leading-6 text-[var(--text3)]">
+                  Fetching Notion content...
+                </p>
+              ) : null}
+              {notionStatusText ? (
+                <p className="text-[12px] leading-6 text-[var(--text3)]">{notionStatusText}</p>
+              ) : null}
+              {notionHelperText ? (
+                <p className="text-[12px] leading-6 text-[var(--text3)]">
+                  {notionHelperText}
+                </p>
+              ) : null}
             </div>
           ) : null}
+        </div>
+      </div>
+
+      <div className="rounded-[12px] border border-[var(--border2)] bg-[var(--bg3)] px-4 py-3">
+        <div className="text-[12px] font-medium text-[var(--text2)]">Beta usage</div>
+        <div className="mt-1 text-[12px] leading-6 text-[var(--text3)]">
+          {remainingGenerations} of {ROADMAP_GENERATION_LIMIT} roadmaps remaining
+        </div>
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg4)]">
+          <div
+            className="h-full rounded-full bg-[var(--purple)] transition-all"
+            style={{
+              width: `${(remainingGenerations / ROADMAP_GENERATION_LIMIT) * 100}%`,
+            }}
+          />
         </div>
       </div>
     </div>
