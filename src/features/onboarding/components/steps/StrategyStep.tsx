@@ -1,6 +1,5 @@
 import { RefObject, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
-  ROADMAP_GENERATION_LIMIT,
   STRATEGY_TEXT_WARNING_THRESHOLD,
   STRATEGY_TEXT_WORD_LIMIT,
 } from "@/lib/onboarding/strategyLimits";
@@ -27,7 +26,6 @@ interface StrategyStepProps {
   notionHelperText?: string;
   notionStatusText?: string | null;
   isNotionProcessing?: boolean;
-  remainingGenerations: number;
 }
 
 const modeLabels: Array<{ id: StrategyMode; label: string }> = [
@@ -82,7 +80,6 @@ export function StrategyStep({
   notionHelperText,
   notionStatusText,
   isNotionProcessing,
-  remainingGenerations,
 }: StrategyStepProps) {
   const [isStageMenuOpen, setIsStageMenuOpen] = useState(false);
   const stageMenuRef = useRef<HTMLDivElement | null>(null);
@@ -364,20 +361,6 @@ export function StrategyStep({
         </div>
       </div>
 
-      <div className="rounded-[12px] border border-[var(--border2)] bg-[var(--bg3)] px-4 py-3">
-        <div className="text-[12px] font-medium text-[var(--text2)]">Beta usage</div>
-        <div className="mt-1 text-[12px] leading-6 text-[var(--text3)]">
-          {remainingGenerations} of {ROADMAP_GENERATION_LIMIT} roadmaps remaining
-        </div>
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg4)]">
-          <div
-            className="h-full rounded-full bg-[var(--purple)] transition-all"
-            style={{
-              width: `${(remainingGenerations / ROADMAP_GENERATION_LIMIT) * 100}%`,
-            }}
-          />
-        </div>
-      </div>
     </div>
   );
 }
