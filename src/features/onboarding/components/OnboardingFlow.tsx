@@ -531,6 +531,8 @@ export function OnboardingFlow() {
         strategyText={strategyText}
         strategyFile={strategyFile}
         notionUrl={notionUrl}
+        activeStrategyText={activeStrategyText}
+        activeStrategyWordCount={activeStrategyWordCount}
       />
     );
   }
