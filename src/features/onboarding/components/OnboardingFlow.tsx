@@ -28,6 +28,12 @@ type UsageResponse = {
   limit: number;
 };
 
+function isUsageErrorPayload(
+  payload: UsageResponse | { error?: string } | null,
+): payload is { error?: string } {
+  return !payload || !("used" in payload);
+}
+
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -429,9 +435,10 @@ export function OnboardingFlow() {
     }
 
     if (typeof payload?.remainingGenerations === "number") {
+      const nextRemaining = payload.remainingGenerations;
       setUsage((current) => ({
         ...current,
-        remaining: payload.remainingGenerations,
+        remaining: nextRemaining,
       }));
     }
   }
@@ -455,10 +462,9 @@ export function OnboardingFlow() {
       | null;
 
     if (!response.ok) {
+      const apiError = isUsageErrorPayload(payload) ? payload?.error : undefined;
       throw new Error(
-        "error" in (payload ?? {}) && payload?.error
-          ? payload.error
-          : "Unable to update beta usage right now.",
+        apiError ?? "Unable to update beta usage right now.",
       );
     }
 
