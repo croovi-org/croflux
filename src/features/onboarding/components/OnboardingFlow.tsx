@@ -9,9 +9,24 @@ import { ReviewStep } from "@/features/onboarding/components/steps/ReviewStep";
 import { StartupInfoStep } from "@/features/onboarding/components/steps/StartupInfoStep";
 import { StrategyStep } from "@/features/onboarding/components/steps/StrategyStep";
 import { WorkspaceStep } from "@/features/onboarding/components/steps/WorkspaceStep";
+import {
+  FILE_SIZE_LIMIT_BYTES,
+  FILE_WORD_LIMIT,
+  NOTION_WORD_LIMIT,
+  ROADMAP_GENERATION_LIMIT,
+  STRATEGY_TEXT_WORD_LIMIT,
+  countWords,
+  truncateToWordLimit,
+} from "@/lib/onboarding/strategyLimits";
 
 type StrategyMode = "paste" | "upload" | "notion";
 type ProductStage = "idea_stage" | "mvp_stage" | "early_users" | "growth_stage";
+
+type UsageResponse = {
+  used: number;
+  remaining: number;
+  limit: number;
+};
 
 function slugify(value: string) {
   return value
@@ -38,8 +53,35 @@ export function OnboardingFlow() {
   const [strategyText, setStrategyText] = useState("");
   const [notionUrl, setNotionUrl] = useState("");
   const [strategyFile, setStrategyFile] = useState<File | null>(null);
+  const [fileExtractedText, setFileExtractedText] = useState("");
+  const [fileWordCount, setFileWordCount] = useState(0);
+  const [fileProcessingError, setFileProcessingError] = useState("");
+  const [fileProcessingNotice, setFileProcessingNotice] = useState("");
+  const [fileProcessingTooltip, setFileProcessingTooltip] = useState<string | null>(null);
+  const [isFileProcessing, setIsFileProcessing] = useState(false);
+  const [notionExtractedText, setNotionExtractedText] = useState("");
+  const [notionWordCount, setNotionWordCount] = useState(0);
+  const [notionError, setNotionError] = useState("");
+  const [notionStatus, setNotionStatus] = useState("");
+  const [isNotionProcessing, setIsNotionProcessing] = useState(false);
+  const [usage, setUsage] = useState<UsageResponse>({
+    used: 0,
+    remaining: ROADMAP_GENERATION_LIMIT,
+    limit: ROADMAP_GENERATION_LIMIT,
+  });
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [error, setError] = useState("");
+
+  const strategyWordCount = useMemo(() => countWords(strategyText), [strategyText]);
+  const activeStrategyText = useMemo(() => {
+    if (strategyMode === "upload") return fileExtractedText.trim();
+    if (strategyMode === "notion") return notionExtractedText.trim();
+    return strategyText.trim();
+  }, [fileExtractedText, notionExtractedText, strategyMode, strategyText]);
+  const activeStrategyWordCount = useMemo(
+    () => countWords(activeStrategyText),
+    [activeStrategyText],
+  );
 
   const onboardingPayload = useMemo(
     () => ({
@@ -50,9 +92,10 @@ export function OnboardingFlow() {
       product_stage: productStage,
       strategy: {
         mode: strategyMode,
-        text: strategyText.trim(),
+        text: activeStrategyText,
         notion_url: notionUrl.trim(),
         file_name: strategyFile?.name ?? null,
+        text_word_count: activeStrategyWordCount,
       },
     }),
     [
@@ -62,9 +105,10 @@ export function OnboardingFlow() {
       slug,
       productStage,
       strategyMode,
-      strategyText,
+      activeStrategyText,
       notionUrl,
       strategyFile,
+      activeStrategyWordCount,
     ],
   );
 
@@ -85,6 +129,82 @@ export function OnboardingFlow() {
       window.clearTimeout(timer);
     };
   }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadUsage() {
+      const response = await fetch("/api/onboarding/usage", { cache: "no-store" });
+      if (!response.ok) return;
+      const payload = (await response.json()) as UsageResponse;
+      if (!active) return;
+      setUsage({
+        used: Math.max(0, payload.used ?? 0),
+        remaining: Math.max(0, payload.remaining ?? ROADMAP_GENERATION_LIMIT),
+        limit: payload.limit ?? ROADMAP_GENERATION_LIMIT,
+      });
+    }
+
+    void loadUsage();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (strategyMode !== "notion") return;
+    const trimmedUrl = notionUrl.trim();
+
+    if (!trimmedUrl) {
+      return;
+    }
+
+    const timeout = window.setTimeout(async () => {
+      setIsNotionProcessing(true);
+      setNotionError("");
+      setNotionStatus("");
+
+      const response = await fetch("/api/onboarding/strategy/extract-notion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ notionUrl: trimmedUrl }),
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | {
+            text?: string;
+            usedWordCount?: number;
+            wasTruncated?: boolean;
+            warning?: string;
+            error?: string;
+          }
+        | null;
+
+      if (!response.ok) {
+        setNotionExtractedText("");
+        setNotionWordCount(0);
+        setNotionError(
+          payload?.error ??
+            "Notion content extraction failed. Please try another link.",
+        );
+        setIsNotionProcessing(false);
+        return;
+      }
+
+      const text = payload?.text ?? "";
+      setNotionExtractedText(text);
+      setNotionWordCount(Math.min(payload?.usedWordCount ?? countWords(text), NOTION_WORD_LIMIT));
+      setNotionStatus(payload?.wasTruncated ? payload?.warning ?? "" : "");
+      setIsNotionProcessing(false);
+    }, 450);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [notionUrl, strategyMode]);
 
   function updateCompletion(step: number) {
     setCompletedSteps((previous) =>
@@ -127,6 +247,95 @@ export function OnboardingFlow() {
     setSlug(slugify(value));
   }
 
+  function handleStrategyModeChange(mode: StrategyMode) {
+    setError("");
+    setStrategyMode(mode);
+    if (mode !== "notion") {
+      setNotionError("");
+      setNotionStatus("");
+      setIsNotionProcessing(false);
+    }
+  }
+
+  function handleStrategyTextChange(value: string) {
+    setError("");
+    const truncated = truncateToWordLimit(value, STRATEGY_TEXT_WORD_LIMIT);
+    setStrategyText(truncated.text);
+  }
+
+  function handleNotionChange(value: string) {
+    setError("");
+    setNotionUrl(value);
+    if (!value.trim()) {
+      setNotionExtractedText("");
+      setNotionWordCount(0);
+      setNotionError("");
+      setNotionStatus("");
+    }
+  }
+
+  async function handleFileChange(file: File | null) {
+    setError("");
+    setStrategyFile(file);
+    setFileExtractedText("");
+    setFileWordCount(0);
+    setFileProcessingError("");
+    setFileProcessingNotice("");
+    setFileProcessingTooltip(null);
+
+    if (!file) {
+      return;
+    }
+
+    if (file.size > FILE_SIZE_LIMIT_BYTES) {
+      setFileProcessingError("File must be 5MB or smaller.");
+      return;
+    }
+
+    setIsFileProcessing(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/api/onboarding/strategy/extract-file", {
+      method: "POST",
+      body: formData,
+    });
+
+    const payload = (await response.json().catch(() => null)) as
+      | {
+          text?: string;
+          usedWordCount?: number;
+          wasTruncated?: boolean;
+          warning?: string;
+          estimatedPageCount?: number;
+          error?: string;
+        }
+      | null;
+
+    if (!response.ok) {
+      setFileProcessingError(
+        payload?.error ?? "File exceeds beta limits and cannot be processed.",
+      );
+      setIsFileProcessing(false);
+      return;
+    }
+
+    const extractedText = payload?.text ?? "";
+    const usedWordCount = Math.min(
+      payload?.usedWordCount ?? countWords(extractedText),
+      FILE_WORD_LIMIT,
+    );
+    setFileExtractedText(extractedText);
+    setFileWordCount(usedWordCount);
+    setFileProcessingNotice(
+      `Concise strategies produce better roadmaps. We will use ${usedWordCount} words from this document.`,
+    );
+    setFileProcessingTooltip(payload?.wasTruncated ? payload.warning ?? null : null);
+    setFileProcessingError("");
+    setIsFileProcessing(false);
+  }
+
   function validateStep(step: number) {
     if (step === 0) {
       if (!startupName.trim() || !oneLiner.trim()) {
@@ -149,29 +358,157 @@ export function OnboardingFlow() {
         return "Upload a strategy file before continuing.";
       }
 
+      if (strategyMode === "upload" && !fileExtractedText.trim()) {
+        return fileProcessingError || "File exceeds beta limits and cannot be processed.";
+      }
+
       if (strategyMode === "notion" && !notionUrl.trim()) {
         return "Add a Notion link before continuing.";
+      }
+
+      if (strategyMode === "notion" && !notionExtractedText.trim()) {
+        return notionError || "Notion content extraction failed.";
       }
     }
 
     return "";
   }
 
-  function handleNext() {
-    const validationError = validateStep(currentStep);
+  function getStepGuardrailError(step: number) {
+    if (usage.remaining <= 0) {
+      return "Beta roadmap limit reached.";
+    }
 
-    if (validationError) {
-      setError(validationError);
+    if (step !== 2) {
+      return "";
+    }
+
+    if (strategyMode === "paste" && strategyWordCount > STRATEGY_TEXT_WORD_LIMIT) {
+      return "Strategy too long. Please keep within 1200 words for best results.";
+    }
+
+    if (strategyMode === "upload") {
+      if (isFileProcessing) return "Processing file. Please wait.";
+      if (fileProcessingError) return fileProcessingError;
+      if (strategyFile && !fileExtractedText.trim()) {
+        return "File exceeds beta limits and cannot be processed.";
+      }
+    }
+
+    if (strategyMode === "notion") {
+      if (isNotionProcessing) return "Fetching Notion content. Please wait.";
+      if (notionError) return notionError;
+      if (notionUrl.trim() && !notionExtractedText.trim()) {
+        return "Notion content extraction failed.";
+      }
+    }
+
+    return "";
+  }
+
+  async function validateStrategyServerSide() {
+    const response = await fetch("/api/onboarding/strategy/validate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        strategyMode,
+        textInputWords: strategyWordCount,
+        fileWords: fileWordCount,
+        notionWords: notionWordCount,
+      }),
+    });
+
+    const payload = (await response.json().catch(() => null)) as
+      | { error?: string; remainingGenerations?: number }
+      | null;
+
+    if (!response.ok) {
+      throw new Error(payload?.error ?? "Unable to validate strategy right now.");
+    }
+
+    if (typeof payload?.remainingGenerations === "number") {
+      setUsage((current) => ({
+        ...current,
+        remaining: payload.remainingGenerations,
+      }));
+    }
+  }
+
+  async function incrementRoadmapUsage() {
+    const documentsUploaded = strategyMode === "upload" && strategyFile ? 1 : 0;
+    const response = await fetch("/api/onboarding/usage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        wordsProcessed: activeStrategyWordCount,
+        documentsUploaded,
+      }),
+    });
+
+    const payload = (await response.json().catch(() => null)) as
+      | UsageResponse
+      | { error?: string }
+      | null;
+
+    if (!response.ok) {
+      throw new Error(
+        "error" in (payload ?? {}) && payload?.error
+          ? payload.error
+          : "Unable to update beta usage right now.",
+      );
+    }
+
+    const usagePayload = payload as UsageResponse;
+    setUsage({
+      used: Math.max(0, usagePayload.used ?? 0),
+      remaining: Math.max(0, usagePayload.remaining ?? 0),
+      limit: usagePayload.limit ?? ROADMAP_GENERATION_LIMIT,
+    });
+  }
+
+  async function handleNext() {
+    const validationError = validateStep(currentStep);
+    const guardrailError = getStepGuardrailError(currentStep);
+
+    if (validationError || guardrailError) {
+      setError(validationError || guardrailError);
+      return;
+    }
+
+    try {
+      if (currentStep === 2 || currentStep === 3) {
+        await validateStrategyServerSide();
+      }
+    } catch (validationErrorFromServer) {
+      setError(
+        validationErrorFromServer instanceof Error
+          ? validationErrorFromServer.message
+          : "Unable to validate strategy right now.",
+      );
       return;
     }
 
     setError("");
     updateCompletion(currentStep);
 
-    if (currentStep < 3) {
-      setCurrentStep((step) => step + 1);
+    if (currentStep === 3) {
+      try {
+        await incrementRoadmapUsage();
+      } catch (incrementError) {
+        setError(
+          incrementError instanceof Error
+            ? incrementError.message
+            : "Unable to update beta usage right now.",
+        );
+      }
       return;
     }
+
+    setCurrentStep((step) => step + 1);
   }
 
   function handleBack() {
@@ -206,14 +543,22 @@ export function OnboardingFlow() {
           productStage={productStage}
           strategyMode={strategyMode}
           strategyText={strategyText}
+          strategyWordCount={strategyWordCount}
           notionUrl={notionUrl}
           strategyFile={strategyFile}
           fileInputRef={fileInputRef}
           onProductStageChange={setProductStage}
-          onModeChange={setStrategyMode}
-          onTextChange={setStrategyText}
-          onNotionChange={setNotionUrl}
-          onFileChange={setStrategyFile}
+          onModeChange={handleStrategyModeChange}
+          onTextChange={handleStrategyTextChange}
+          onNotionChange={handleNotionChange}
+          onFileChange={handleFileChange}
+          uploadHelperText={fileProcessingNotice || undefined}
+          uploadTooltip={fileProcessingTooltip}
+          isFileProcessing={isFileProcessing}
+          notionHelperText="Concise strategies produce better roadmaps."
+          notionStatusText={notionStatus || undefined}
+          isNotionProcessing={isNotionProcessing}
+          remainingGenerations={usage.remaining}
         />
       );
     }
@@ -231,6 +576,15 @@ export function OnboardingFlow() {
       />
     );
   }
+
+  const stepGuardrailError = getStepGuardrailError(currentStep);
+  const displayedError = error || stepGuardrailError;
+  const continueDisabled =
+    currentStep === 2
+      ? Boolean(stepGuardrailError)
+      : currentStep === 3
+        ? usage.remaining <= 0
+        : false;
 
   if (showIntro) {
     return (
@@ -467,9 +821,9 @@ export function OnboardingFlow() {
             >
               {renderStep()}
 
-              {error ? (
+              {displayedError ? (
                 <div className="mt-6 rounded-[12px] border border-[rgba(239,68,68,0.22)] bg-[rgba(239,68,68,0.08)] px-4 py-3 text-[13px] text-[#fda4af]">
-                  {error}
+                  {displayedError}
                 </div>
               ) : null}
 
@@ -491,7 +845,8 @@ export function OnboardingFlow() {
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="h-11 rounded-[12px] bg-[var(--purple)] px-5 text-[14px] font-medium text-white transition hover:bg-[var(--purple3)]"
+                    disabled={continueDisabled}
+                    className="h-11 rounded-[12px] bg-[var(--purple)] px-5 text-[14px] font-medium text-white transition hover:bg-[var(--purple3)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-[var(--purple)]"
                   >
                     {primaryActionLabel}
                   </button>
