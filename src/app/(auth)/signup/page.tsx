@@ -11,6 +11,7 @@ export default function SignupPage() {
   const router = useRouter();
   const supabase = createClient();
 
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -48,11 +49,17 @@ export default function SignupPage() {
 
     setLoading(true);
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    const {
+      data: signUpData,
+      error: signUpError,
+    } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
+        data: {
+          name: fullName.trim(),
+        },
       },
     });
 
@@ -60,6 +67,21 @@ export default function SignupPage() {
       setError(signUpError.message);
       setLoading(false);
       return;
+    }
+
+    const authUser = signUpData.user;
+    if (authUser) {
+      const { error: upsertError } = await supabase.from("users").upsert({
+        id: authUser.id,
+        name: fullName.trim() || "Builder",
+        email: authUser.email ?? email,
+      });
+
+      if (upsertError) {
+        setError(upsertError.message);
+        setLoading(false);
+        return;
+      }
     }
 
     router.push("/onboarding");
@@ -105,6 +127,20 @@ export default function SignupPage() {
             </div>
 
             <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <label className="mb-2 block text-[13px] text-[var(--text2)]">
+                  Full name
+                </label>
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(event) => setFullName(event.target.value)}
+                  required
+                  className="h-12 w-full rounded-[var(--radius)] bg-[var(--bg3)] px-4 text-[14px]"
+                  placeholder="Ashish Khanagwal"
+                />
+              </div>
+
               <div>
                 <label className="mb-2 block text-[13px] text-[var(--text2)]">
                   Email
