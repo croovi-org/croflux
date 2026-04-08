@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createClient as createServerClient } from "@/lib/supabase/server";
 import { generateRoadmapFromAI } from "@/lib/ai/aiClient";
 import { parseRoadmapToDB } from "@/lib/ai/roadmapParser";
 import { validateInputLimits } from "@/lib/validation/inputLimits";
@@ -34,6 +35,21 @@ export async function POST(request: Request) {
       );
     }
 
+    const serverSupabase = await createServerClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await serverSupabase.auth.getUser();
+
+    if (authError || !user) {
+      return Response.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+
+    const userId = user.id;
+
     if (
       !process.env.NEXT_PUBLIC_SUPABASE_URL ||
       !process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -45,23 +61,6 @@ export async function POST(request: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
-
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return Response.json(
-        {
-          success: false,
-          error: "Unauthorized",
-        },
-        { status: 401 },
-      );
-    }
-
-    const userId = user.id;
 
     const { error: usageSeedError } = await supabase.from("user_usage").upsert(
       {
