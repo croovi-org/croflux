@@ -138,7 +138,8 @@ export async function generateRoadmapFromAI(
 ): Promise<AIRoadmapResponse> {
   const MODELS = [
     "gemini-2.5-flash",
-    "gemini-2.0-flash",
+    "gemini-2.5-flash-lite",
+    "gemini-2.0-flash-001",
     "gemini-2.0-flash-lite",
   ] as const;
 
