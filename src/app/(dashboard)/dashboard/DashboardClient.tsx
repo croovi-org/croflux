@@ -47,7 +47,8 @@ type CalendarCell = {
   isToday: boolean;
 };
 
-function getFirstName(name: string) {
+function getFirstName(name: string | null | undefined) {
+  if (!name) return "Builder";
   return name.trim().split(/\s+/)[0] || "Builder";
 }
 
@@ -58,7 +59,8 @@ function getGreeting() {
   return "Good evening";
 }
 
-function getInitials(name: string) {
+function getInitials(name: string | null | undefined) {
+  if (!name) return "AS";
   const parts = name.trim().split(/\s+/).filter(Boolean);
   return parts.slice(0, 2).map((p) => p[0]?.toUpperCase()).join("") || "AS";
 }
