@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Logo } from "@/components/shared/logo";
@@ -39,6 +40,7 @@ function slugify(value: string) {
 }
 
 export function OnboardingFlow() {
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [showIntro, setShowIntro] = useState(true);
@@ -71,6 +73,8 @@ export function OnboardingFlow() {
   });
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [error, setError] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [genStep, setGenStep] = useState(1);
 
   const strategyWordCount = useMemo(() => countWords(strategyText), [strategyText]);
   const activeStrategyText = useMemo(() => {
@@ -463,7 +467,49 @@ export function OnboardingFlow() {
     updateCompletion(currentStep);
 
     if (currentStep === 3) {
-      // Credit deduction must happen only after successful roadmap generation.
+      setIsGenerating(true);
+      setGenStep(1);
+
+      const timers = [
+        window.setTimeout(() => setGenStep(2), 1200),
+        window.setTimeout(() => setGenStep(3), 2600),
+        window.setTimeout(() => setGenStep(4), 4200),
+      ];
+
+      try {
+        const res = await fetch("/api/generate-roadmap", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: startupName.trim(),
+            idea: oneLiner.trim(),
+            strategy: activeStrategyText.trim(),
+          }),
+        });
+
+        const data = (await res.json().catch(() => null)) as
+          | { success?: boolean; error?: string; data?: { project_id?: string } }
+          | null;
+
+        if (!res.ok || !data?.success || !data?.data?.project_id) {
+          throw new Error(data?.error || "Failed to generate roadmap");
+        }
+
+        router.push(`/dashboard/${data.data.project_id}`);
+      } catch (generationError) {
+        setIsGenerating(false);
+        setError(
+          generationError instanceof Error
+            ? generationError.message
+            : "Failed to generate roadmap",
+        );
+      } finally {
+        timers.forEach((timer) => window.clearTimeout(timer));
+      }
+
       return;
     }
 
@@ -671,6 +717,10 @@ export function OnboardingFlow() {
     );
   }
 
+  if (isGenerating) {
+    return <GeneratingScreen step={genStep} />;
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[var(--bg)] px-4 pt-4 pb-6 sm:px-6 sm:pt-6 sm:pb-8 lg:px-8 lg:pt-8 lg:pb-12">
       <div
@@ -833,5 +883,45 @@ export function OnboardingFlow() {
         </div>
       </div>
     </main>
+  );
+}
+
+function GeneratingScreen({ step }: { step: number }) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[var(--bg)] px-6">
+      <div className="w-full max-w-[560px] rounded-[20px] border border-[var(--border)] bg-[var(--bg2)] p-7">
+        <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-[var(--text)]">
+          Building your roadmap.
+        </h2>
+        <div className="mt-5 space-y-3 text-[14px]">
+          <StepRow active={step >= 1} done={step > 1} label="Analyzing idea" />
+          <StepRow
+            active={step >= 2}
+            done={step > 2}
+            label="Creating roadmap structure"
+          />
+          <StepRow active={step >= 3} done={step > 3} label="Breaking into tasks" />
+          <StepRow active={step >= 4} done={false} label="Assigning XP" />
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function StepRow({
+  active,
+  done,
+  label,
+}: {
+  active: boolean;
+  done: boolean;
+  label: string;
+}) {
+  const marker = done ? "✓" : active ? "•" : "○";
+  return (
+    <div className={active ? "text-[var(--text)]" : "text-[var(--text3)]"}>
+      <span className="inline-block w-5">{marker}</span>
+      {label}
+    </div>
   );
 }
