@@ -41,7 +41,7 @@ export default async function DashboardByIdPage({ params }: Props) {
 
   const { data: milestones } = await supabase
     .from("milestones")
-    .select("id, title, is_boss, order_index, project_id")
+    .select("id, title, is_boss, order_index, project_id, created_at")
     .eq("project_id", id)
     .order("order_index", { ascending: true })
 
