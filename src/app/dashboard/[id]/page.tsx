@@ -20,7 +20,7 @@ export default async function DashboardByIdPage({ params }: Props) {
 
   const { data: profile } = await supabase
     .from("users")
-    .select("id, name, email, streak, weekly_tasks_completed")
+    .select("id, name, email, streak, weekly_tasks_completed, created_at")
     .eq("id", user.id)
     .single()
 
