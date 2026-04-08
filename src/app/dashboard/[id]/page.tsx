@@ -30,7 +30,7 @@ export default async function DashboardByIdPage({ params }: Props) {
 
   const { data: project } = await supabase
     .from("projects")
-    .select("id, name, idea, strategy, product_stage, created_at")
+    .select("id, user_id, name, idea, strategy, product_stage, created_at")
     .eq("id", id)
     .eq("user_id", user.id)
     .single()
