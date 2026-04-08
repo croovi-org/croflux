@@ -1,6 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { generateRoadmapFromAI } from "@/lib/ai/aiClient";
 import { parseRoadmapToDB } from "@/lib/ai/roadmapParser";
+import { validateInputLimits } from "@/lib/validation/inputLimits";
+import { checkUsage } from "@/lib/usage/checkUsage";
+import { updateUsage } from "@/lib/usage/updateUsage";
 
 type GenerateRoadmapRequest = {
   name: string;
@@ -14,6 +17,15 @@ export async function POST(request: Request) {
     const name = body.name?.trim();
     const idea = body.idea?.trim();
     const strategy = body.strategy?.trim();
+
+    const validation = validateInputLimits({ text: idea });
+
+    if (!validation.valid) {
+      return Response.json(
+        { success: false, error: validation.errors[0] },
+        { status: 400 },
+      );
+    }
 
     if (!name || !idea) {
       return Response.json(
@@ -34,9 +46,54 @@ export async function POST(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
 
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return Response.json(
+        {
+          success: false,
+          error: "Unauthorized",
+        },
+        { status: 401 },
+      );
+    }
+
+    const userId = user.id;
+
+    const { error: usageSeedError } = await supabase.from("user_usage").upsert(
+      {
+        user_id: userId,
+        roadmaps_generated_count: 0,
+        total_words_processed: 0,
+        total_documents_uploaded: 0,
+      },
+      { onConflict: "user_id" },
+    );
+
+    if (usageSeedError) {
+      throw usageSeedError;
+    }
+
+    const usageCheck = await checkUsage(userId);
+    const usage = {
+      allowed: usageCheck.canGenerate,
+      reason: usageCheck.canGenerate ? undefined : "Usage limit reached",
+    };
+
+    if (!usage.allowed) {
+      return Response.json(
+        { success: false, error: usage.reason },
+        { status: 429 },
+      );
+    }
+
     const { data: project, error: projectError } = await supabase
       .from("projects")
       .insert({
+        user_id: userId,
         name,
         idea,
         strategy: strategy || null,
@@ -112,19 +169,28 @@ Rules:
       throw tasksError;
     }
 
+    await updateUsage({
+      userId,
+      wordsProcessed: validation.stats?.textWords ?? 0,
+      documentsUploaded: 0,
+    });
+
     return Response.json({
       success: true,
-      project_id: project.id,
+      data: {
+        project_id: project.id,
+        milestone_count: parsed.milestones.length,
+        task_count: parsed.tasks.length,
+      },
     });
   } catch (error) {
-    console.error("=== GENERATE ROADMAP ERROR ===");
-    console.error(error);
-    console.error("==============================");
-
     return Response.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unexpected server error",
       },
       { status: 500 },
     );
