@@ -1,7 +1,6 @@
 import "server-only";
 
-const AI_ENDPOINT =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=";
+const AI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
 const REQUEST_TIMEOUT_MS = 25_000;
 const MAX_ATTEMPTS = 2;
 
@@ -52,7 +51,20 @@ function parseJSONSafely(text: string): AIRoadmapResponse {
   return parsed;
 }
 
-async function attemptRequest(params: GenerateRoadmapParams): Promise<string> {
+class AIHttpError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "AIHttpError";
+    this.status = status;
+  }
+}
+
+async function attemptRequest(
+  params: GenerateRoadmapParams,
+  modelName: string,
+): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not configured");
@@ -79,19 +91,25 @@ async function attemptRequest(params: GenerateRoadmapParams): Promise<string> {
       ],
     };
 
-    const response = await fetch(`${AI_ENDPOINT}${apiKey}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${AI_ENDPOINT}/${modelName}:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
       },
-      body: JSON.stringify(payload),
-      signal: controller.signal,
-    });
+    );
 
     if (!response.ok) {
       const errorBody = await response.text().catch(() => "");
       const detail = errorBody ? ` - ${errorBody}` : "";
-      throw new Error(`Gemini API request failed (${response.status})${detail}`);
+      throw new AIHttpError(
+        `Gemini API request failed (${response.status})${detail}`,
+        response.status,
+      );
     }
 
     const payloadJson = (await response.json()) as GeminiResponse;
@@ -118,28 +136,70 @@ async function attemptRequest(params: GenerateRoadmapParams): Promise<string> {
 export async function generateRoadmapFromAI(
   params: GenerateRoadmapParams,
 ): Promise<AIRoadmapResponse> {
-  let lastParseError: Error | null = null;
+  const MODELS = [
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-lite",
+  ] as const;
 
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
-    const rawText = await attemptRequest(params);
+  for (const modelName of MODELS) {
+    console.log("Trying model:", modelName);
+    let lastParseError: Error | null = null;
+    let shouldTryNextModel = false;
 
-    try {
-      return parseJSONSafely(rawText);
-    } catch (error) {
-      if (error instanceof Error) {
-        lastParseError = error;
-      } else {
-        lastParseError = new Error("Failed to parse AI response as JSON.");
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      let rawText: string;
+
+      try {
+        rawText = await attemptRequest(params, modelName);
+      } catch (error) {
+        if (
+          error instanceof AIHttpError &&
+          (error.status === 429 || error.status === 503)
+        ) {
+          shouldTryNextModel = true;
+          if (attempt === MAX_ATTEMPTS) {
+            break;
+          }
+          continue;
+        }
+        throw error instanceof Error
+          ? error
+          : new Error("Unexpected error while calling Gemini API.");
       }
 
-      if (attempt === MAX_ATTEMPTS) {
-        break;
+      try {
+        const parsed = parseJSONSafely(rawText);
+        console.log("Success with model:", modelName);
+        return parsed;
+      } catch (error) {
+        if (error instanceof Error) {
+          lastParseError = error;
+        } else {
+          lastParseError = new Error("Failed to parse AI response as JSON.");
+        }
+
+        if (attempt === MAX_ATTEMPTS) {
+          break;
+        }
       }
+    }
+
+    if (shouldTryNextModel) {
+      continue;
+    }
+
+    if (lastParseError) {
+      const reason = lastParseError.message
+        ? `: ${lastParseError.message}`
+        : "";
+      throw new Error(
+        `Invalid JSON response from AI after 2 attempts${reason}`,
+      );
     }
   }
 
-  const reason = lastParseError?.message ? `: ${lastParseError.message}` : "";
-  throw new Error(`Invalid JSON response from AI after 2 attempts${reason}`);
+  throw new Error("All AI models unavailable. Please try again shortly.");
 }
 
 function isAIRoadmapResponse(value: unknown): value is AIRoadmapResponse {
@@ -151,7 +211,12 @@ function isAIRoadmapResponse(value: unknown): value is AIRoadmapResponse {
     if (!isRecord(milestone)) return false;
     if (typeof milestone.title !== "string") return false;
     if (typeof milestone.description !== "string") return false;
-    if (typeof milestone.is_boss !== "boolean") return false;
+    if (
+      "is_boss" in milestone &&
+      typeof milestone.is_boss !== "boolean"
+    ) {
+      return false;
+    }
     if (!Array.isArray(milestone.tasks)) return false;
 
     return milestone.tasks.every((task) => {
@@ -159,7 +224,8 @@ function isAIRoadmapResponse(value: unknown): value is AIRoadmapResponse {
       return (
         typeof task.title === "string" &&
         typeof task.description === "string" &&
-        typeof task.estimated_hours === "number"
+        (typeof task.estimated_hours === "number" ||
+          typeof task.estimated_hours === "string")
       );
     });
   });
