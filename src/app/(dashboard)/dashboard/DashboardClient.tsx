@@ -1351,10 +1351,22 @@ export function DashboardClient({
     showToast(nextToast);
 
     const supabase = createClient();
-    await Promise.all([
-      supabase.from("tasks").update({ completed: true }).eq("id", taskId),
-      supabase.from("activity_log").insert({ user_id: user.id, task_completed: true, timestamp: new Date().toISOString() }),
-    ]);
+    const { error: taskError } = await supabase
+      .from("tasks")
+      .update({ completed: true })
+      .eq("id", taskId);
+
+    if (taskError) {
+      console.error("Task update failed:", taskError);
+    }
+
+    try {
+      await supabase
+        .from("activity_log")
+        .insert({ user_id: user.id, task_completed: true, timestamp: new Date().toISOString() });
+    } catch (err) {
+      console.error("Activity log failed (non-critical):", err);
+    }
 
     if (defeatedName && unlockedName) {
       showToast({ title: "Boss defeated", body: `${defeatedName} cleared. ${unlockedName} unlocked.` });
