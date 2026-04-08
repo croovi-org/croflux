@@ -29,7 +29,8 @@ function normalizeMilestones(rows: MilestoneRow[]) {
     .sort((a, b) => a.order_index - b.order_index);
 }
 
-export function getInitials(name: string) {
+export function getInitials(name: string | null | undefined) {
+  if (!name || typeof name !== "string") return "AS";
   const parts = name.trim().split(/\s+/).filter(Boolean);
   return parts.slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "AS";
 }

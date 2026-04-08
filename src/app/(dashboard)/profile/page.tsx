@@ -103,14 +103,16 @@ export default async function ProfilePage() {
     workspace_name?: string | null;
     workspace_slug?: string | null;
   };
+  const safeName = typeof user.name === "string" ? user.name : "";
+  const safeNameParts = safeName.trim().split(/\s+/).filter(Boolean);
 
   const firstName =
     rawUser.first_name ??
-    user.name.trim().split(/\s+/).filter(Boolean)[0] ??
-    "Ashish";
+    safeNameParts[0] ??
+    "Builder";
   const lastName =
     rawUser.last_name ??
-    user.name.trim().split(/\s+/).filter(Boolean).slice(1).join(" ");
+    safeNameParts.slice(1).join(" ");
 
   const totalTasks = milestones.reduce((sum, milestone) => sum + milestone.tasks.length, 0);
   const completedTasks = milestones.reduce(

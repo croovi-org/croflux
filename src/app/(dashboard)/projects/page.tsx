@@ -47,7 +47,8 @@ function isRecentActivity(value: string | null) {
   return new Date(value).getTime() >= sevenDaysAgo;
 }
 
-function getWorkspaceName(name: string) {
+function getWorkspaceName(name: string | null | undefined) {
+  if (!name || typeof name !== "string") return "Builder's Workspace";
   const firstName = name.trim().split(/\s+/)[0] || "Builder";
   return `${firstName}'s Workspace`;
 }
