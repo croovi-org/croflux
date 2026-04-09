@@ -7,7 +7,6 @@ import { LockedMilestone } from "@/components/dashboard/LockedMilestone";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatCards } from "@/components/dashboard/StatCards";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
-import { createClient } from "@/lib/supabase/client";
 import type { Milestone, Project, Task, User } from "@/types";
 
 type MilestoneWithTasks = Milestone & { tasks: Task[] };
@@ -1375,11 +1374,13 @@ export function DashboardClient({
       })),
     );
 
-    const supabase = createClient();
-    await supabase
-      .from("tasks")
-      .update({ completed: shouldComplete })
-      .eq("id", taskId);
+    const response = await fetch('/api/tasks/move', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ taskId, completed: shouldComplete })
+    })
+    const result = await response.json()
+    console.log('Board move result:', result)
   };
 
   return (
