@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createClient as createServiceClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
@@ -10,6 +11,10 @@ export async function POST(request: Request) {
     }
 
     const supabase = await createClient()
+    const serviceSupabase = createServiceClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
     
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
@@ -83,7 +88,7 @@ export async function POST(request: Request) {
               ? currentStreak + 1
               : 1
 
-            await supabase
+            await serviceSupabase
               .from("users")
               .update({ streak: newStreak })
               .eq("id", userId)
@@ -94,13 +99,13 @@ export async function POST(request: Request) {
       })(),
       (async () => {
         try {
-          const { data: currentUser } = await supabase
+          const { data: currentUser } = await serviceSupabase
             .from("users")
             .select("weekly_tasks_completed")
             .eq("id", userId)
             .single()
 
-          await supabase
+          await serviceSupabase
             .from("users")
             .update({
               weekly_tasks_completed: (currentUser?.weekly_tasks_completed ?? 0) + 1
