@@ -91,8 +91,8 @@ export async function POST(request: Request) {
               <a href="https://croovi.com" style="color: #4ade80;">Join the waitlist</a>
             </p>
             <p style="color: #ccc; line-height: 1.8;">
-              👁️ <strong style="color: #fff;">CroVew</strong> — Real-time behavioral analytics for SaaS founders. Drop in a script tag, see who's active, what they're doing, and where they're dropping off — in under 5 minutes.
-              <span style="color: #555;">Waitlist coming soon.</span>
+              👁️ <strong style="color: #fff;">CroVew</strong> — Real-time behavioral analytics for SaaS founders. Drop in a script tag, see who's active, what they're doing, and where they're dropping off — in under 5 minutes. →
+              <a href="https://crovew.vercel.app/" style="color: #4ade80;">Join the waitlist</a>
             </p>
           </div>
           <p style="color: #666; margin-top: 32px; font-size: 13px; border-top: 1px solid #222; padding-top: 16px;">
