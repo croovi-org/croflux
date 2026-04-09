@@ -31,91 +31,94 @@ export async function POST(request: Request) {
     }
 
     const userId = user.id
+    const today = new Date().toISOString().split("T")[0]
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const yesterdayStr = yesterday.toISOString().split("T")[0]
 
-    void Promise.allSettled([
-      (async () => {
-        try {
-          await supabase
-            .from("activity_log")
-            .insert({
-              user_id: userId,
-              task_completed: true,
-              timestamp: new Date().toISOString()
-            })
-        } catch (err) {
-          console.error("activity_log write failed:", err)
-        }
-      })(),
-      (async () => {
-        try {
-          await supabase.rpc("increment_weekly_tasks", { uid: userId })
-        } catch (err) {
-          console.error("increment_weekly_tasks rpc failed:", err)
-        }
-      })(),
-      (async () => {
-        try {
-          const yesterday = new Date()
-          yesterday.setDate(yesterday.getDate() - 1)
-          const yesterdayStr = yesterday.toISOString().split("T")[0]
-          const today = new Date().toISOString().split("T")[0]
+    try {
+      await supabase
+        .from("activity_log")
+        .insert({
+          user_id: userId,
+          task_completed: true,
+          timestamp: new Date().toISOString()
+        })
+    } catch (err) {
+      console.error("activity_log write failed:", err)
+    }
 
-          const { data: todayLogs } = await supabase
-            .from("activity_log")
-            .select("id")
-            .eq("user_id", userId)
-            .gte("timestamp", today + "T00:00:00.000Z")
-            .lt("timestamp", today + "T23:59:59.999Z")
-            .limit(2)
+    let currentWeeklyTasksCompleted = 0
+    let currentStreak = 0
+    let userSnapshotLoaded = false
 
-          if (!todayLogs || todayLogs.length <= 1) {
-            const { data: yesterdayLogs } = await supabase
-              .from("activity_log")
-              .select("id")
-              .eq("user_id", userId)
-              .gte("timestamp", yesterdayStr + "T00:00:00.000Z")
-              .lt("timestamp", yesterdayStr + "T23:59:59.999Z")
-              .limit(1)
+    try {
+      const { data: currentUser } = await serviceSupabase
+        .from("users")
+        .select("weekly_tasks_completed, streak")
+        .eq("id", userId)
+        .single()
 
-            const { data: currentUser } = await supabase
-              .from("users")
-              .select("streak")
-              .eq("id", userId)
-              .single()
+      currentWeeklyTasksCompleted = currentUser?.weekly_tasks_completed ?? 0
+      currentStreak = currentUser?.streak ?? 0
+      userSnapshotLoaded = true
+    } catch (err) {
+      console.error("users select failed:", err)
+    }
 
-            const currentStreak = currentUser?.streak ?? 0
-            const newStreak = yesterdayLogs && yesterdayLogs.length > 0
-              ? currentStreak + 1
-              : 1
+    let nextStreak = currentStreak
+    let shouldUpdateStreak = false
 
-            await serviceSupabase
-              .from("users")
-              .update({ streak: newStreak })
-              .eq("id", userId)
-          }
-        } catch (err) {
-          console.error("streak update failed:", err)
-        }
-      })(),
-      (async () => {
-        try {
-          const { data: currentUser } = await serviceSupabase
-            .from("users")
-            .select("weekly_tasks_completed")
-            .eq("id", userId)
-            .single()
+    try {
+      const { data: todayLogs } = await supabase
+        .from("activity_log")
+        .select("id")
+        .eq("user_id", userId)
+        .gte("timestamp", today + "T00:00:00.000Z")
+        .lt("timestamp", today + "T23:59:59.999Z")
+        .limit(2)
 
-          await serviceSupabase
-            .from("users")
-            .update({
-              weekly_tasks_completed: (currentUser?.weekly_tasks_completed ?? 0) + 1
-            })
-            .eq("id", userId)
-        } catch (err) {
-          console.error("direct weekly_tasks_completed update failed:", err)
-        }
-      })(),
-    ])
+      if (!todayLogs || todayLogs.length <= 1) {
+        const { data: yesterdayLogs } = await supabase
+          .from("activity_log")
+          .select("id")
+          .eq("user_id", userId)
+          .gte("timestamp", yesterdayStr + "T00:00:00.000Z")
+          .lt("timestamp", yesterdayStr + "T23:59:59.999Z")
+          .limit(1)
+
+        nextStreak = yesterdayLogs && yesterdayLogs.length > 0
+          ? currentStreak + 1
+          : 1
+        shouldUpdateStreak = true
+      }
+    } catch (err) {
+      console.error("streak calculation failed:", err)
+    }
+
+    try {
+      const updates: {
+        weekly_tasks_completed?: number
+        streak?: number
+      } = {}
+
+      if (userSnapshotLoaded) {
+        updates.weekly_tasks_completed = currentWeeklyTasksCompleted + 1
+      }
+
+      if (shouldUpdateStreak) {
+        updates.streak = nextStreak
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await serviceSupabase
+          .from("users")
+          .update(updates)
+          .eq("id", userId)
+      }
+    } catch (err) {
+      console.error("users update failed:", err)
+    }
 
     return NextResponse.json({ success: true })
   } catch (err) {
