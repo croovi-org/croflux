@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { Milestone, Task } from "@/types";
 import { TaskRow } from "./TaskRow";
 
@@ -23,23 +24,40 @@ function ShieldIcon() {
   );
 }
 
+function ChevronIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m8 10 4 4 4-4" />
+    </svg>
+  );
+}
+
 export function BossMilestone({
   milestone,
   progress,
   onTaskComplete,
   getTaskBadge,
 }: BossMilestoneProps) {
+  const [expanded, setExpanded] = useState(true);
   const defeated = progress === 100;
 
   return (
     <section className="boss-shell">
-      <div className="boss-top">
+      <button
+        type="button"
+        className="boss-top"
+        onClick={() => setExpanded((current) => !current)}
+        aria-expanded={expanded}
+      >
         <div className="boss-icon">
           <ShieldIcon />
         </div>
         <div className="boss-title">{milestone.title}</div>
         <div className="boss-pill">BOSS</div>
-      </div>
+        <span className={`boss-chevron ${expanded ? "open" : ""}`}>
+          <ChevronIcon />
+        </span>
+      </button>
 
       <div className="boss-hp">
         <div className="boss-hp-top">
@@ -54,19 +72,21 @@ export function BossMilestone({
         </div>
       </div>
 
-      <div className="boss-tasks">
-        {milestone.tasks.map((task, index) => (
-          <TaskRow
-            key={task.id}
-            id={task.id}
-            title={task.title}
-            completed={task.completed}
-            badge={getTaskBadge(index)}
-            isLast={index === milestone.tasks.length - 1}
-            onComplete={(taskId) => onTaskComplete(milestone.id, taskId)}
-          />
-        ))}
-      </div>
+      {expanded ? (
+        <div className="boss-tasks">
+          {milestone.tasks.map((task, index) => (
+            <TaskRow
+              key={task.id}
+              id={task.id}
+              title={task.title}
+              completed={task.completed}
+              badge={getTaskBadge(index)}
+              isLast={index === milestone.tasks.length - 1}
+              onComplete={(taskId) => onTaskComplete(milestone.id, taskId)}
+            />
+          ))}
+        </div>
+      ) : null}
 
       <style jsx>{`
         .boss-shell {
@@ -80,6 +100,11 @@ export function BossMilestone({
           display: flex;
           align-items: center;
           gap: 10px;
+          width: 100%;
+          border: 0;
+          background: transparent;
+          text-align: left;
+          cursor: pointer;
           padding: 12px 15px 8px;
         }
         .boss-icon {
@@ -115,6 +140,29 @@ export function BossMilestone({
           font-weight: 600;
           letter-spacing: 0.05em;
           color: var(--amber);
+        }
+        .boss-chevron {
+          width: 20px;
+          height: 20px;
+          border-radius: 6px;
+          display: grid;
+          place-items: center;
+          color: #8b6f1a;
+          transition: transform 0.18s ease;
+          flex-shrink: 0;
+          transform: rotate(-90deg);
+        }
+        .boss-chevron.open {
+          transform: rotate(0deg);
+        }
+        .boss-chevron :global(svg) {
+          width: 11px;
+          height: 11px;
+          stroke: currentColor;
+          stroke-width: 2;
+          fill: none;
+          stroke-linecap: round;
+          stroke-linejoin: round;
         }
         .boss-hp {
           padding: 0 15px 8px;
