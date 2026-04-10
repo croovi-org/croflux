@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ActiveMilestone } from "@/components/dashboard/ActiveMilestone";
 import { BossMilestone } from "@/components/dashboard/BossMilestone";
 import { CompletedMilestone } from "@/components/dashboard/CompletedMilestone";
 import { LockedMilestone } from "@/components/dashboard/LockedMilestone";
@@ -1436,12 +1437,20 @@ export function DashboardClient({
               ))}
 
               {activeMilestone && (
-                <BossMilestone
-                  milestone={activeMilestone}
-                  progress={100 - getBossHp(activeMilestone)}
-                  onTaskComplete={handleTaskComplete}
-                  getTaskBadge={() => null}
-                />
+                activeMilestone.is_boss ? (
+                  <BossMilestone
+                    milestone={activeMilestone}
+                    progress={100 - getBossHp(activeMilestone)}
+                    onTaskComplete={handleTaskComplete}
+                    getTaskBadge={() => null}
+                  />
+                ) : (
+                  <ActiveMilestone
+                    milestone={activeMilestone}
+                    progress={getMilestoneProgress(activeMilestone)}
+                    onTaskComplete={handleTaskComplete}
+                  />
+                )
               )}
 
               {remainingMilestones.map((m) => (
