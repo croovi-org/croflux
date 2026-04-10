@@ -34,6 +34,7 @@ export interface Task {
   title: string;
   completed: boolean;
   created_at: string;
+  updated_at?: string | null;
 }
 
 export interface ActivityLog {
