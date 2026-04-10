@@ -134,6 +134,25 @@ export default async function ProjectsPage() {
           milestone.tasks.length > 0 &&
           milestone.tasks.some((task) => !task.completed),
       ) ?? null;
+    // Find the current active milestone (first one with incomplete tasks)
+    const currentActiveMilestone =
+      [...milestones]
+        .sort((a, b) => a.order_index - b.order_index)
+        .find(
+          (milestone) =>
+            milestone.tasks.length > 0 &&
+            milestone.tasks.some((task) => !task.completed),
+        ) ?? null
+
+    const currentMilestoneTitle = currentActiveMilestone?.title ?? null
+    const currentMilestoneIsBoss = currentActiveMilestone?.is_boss ?? false
+    const currentMilestoneProgress = currentActiveMilestone
+      ? Math.round(
+          (currentActiveMilestone.tasks.filter((t) => t.completed).length /
+            currentActiveMilestone.tasks.length) *
+            100,
+        )
+      : null
 
     const bossesDefeated = milestones.filter(
       (milestone) =>
@@ -160,6 +179,9 @@ export default async function ProjectsPage() {
       tasksTotal,
       currentBoss: currentBossMilestone?.title ?? null,
       bossHp: currentBossMilestone ? getBossHp(currentBossMilestone) : null,
+      currentMilestoneTitle,
+      currentMilestoneIsBoss,
+      currentMilestoneProgress,
       bossesDefeated,
       lastUpdated: formatRelativeDate(latestActivity ?? project.created_at),
       status,
@@ -180,10 +202,12 @@ export default async function ProjectsPage() {
   const sidebarProject = projects[0] ?? null;
   const sidebarMilestones = sidebarProject ? groupedMilestones.get(sidebarProject.id) ?? [] : [];
   const nextUp = getNextUpTask(sidebarMilestones);
-  const rank =
-    user.weekly_tasks_completed > 0
-      ? Math.max(1, 18 - user.weekly_tasks_completed)
-      : null;
+  const { count: rankCount } = await supabase
+    .from("users")
+    .select("id", { count: "exact", head: true })
+    .gt("weekly_tasks_completed", user.weekly_tasks_completed ?? 0)
+
+  const rank = (rankCount ?? 0) + 1
 
   return (
     <ProjectsClient
