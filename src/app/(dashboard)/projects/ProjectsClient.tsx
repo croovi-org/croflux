@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { EmptyProjects } from "@/components/projects/EmptyProjects";
-import { ProjectRow } from "@/components/projects/ProjectRow";
 import {
   ProjectsToolbar,
   type ProjectsSortOption,
@@ -72,6 +72,7 @@ export function ProjectsClient({
   stats,
   projects,
 }: ProjectsClientProps) {
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [sort, setSort] = useState<ProjectsSortOption>("recent");
   const [view, setView] = useState<"list" | "grid">("list");
@@ -220,9 +221,155 @@ export function ProjectsClient({
                   </div>
 
                   <div className="table-body">
-                    {filteredProjects.map((project) => (
-                      <ProjectRow key={project.id} project={project} />
-                    ))}
+                    {filteredProjects.map((project) => {
+                      const statusLabel =
+                        project.status === "active"
+                          ? "Active"
+                          : project.status === "completed"
+                            ? "Completed"
+                            : project.status === "paused"
+                              ? "Paused"
+                              : "Not started";
+                      const statusStyles =
+                        project.status === "active"
+                          ? {
+                              color: "#22c55e",
+                              borderColor: "rgba(34,197,94,0.28)",
+                              background: "rgba(34,197,94,0.08)",
+                            }
+                          : project.status === "completed"
+                            ? {
+                                color: "#378add",
+                                borderColor: "rgba(55,138,221,0.3)",
+                                background: "rgba(55,138,221,0.08)",
+                              }
+                            : project.status === "paused"
+                              ? {
+                                  color: "#ffb700",
+                                  borderColor: "rgba(255,183,0,0.28)",
+                                  background: "rgba(255,183,0,0.08)",
+                                }
+                              : {
+                                  color: "var(--text3)",
+                                  borderColor: "var(--border2)",
+                                  background: "var(--bg4)",
+                                };
+                      const progressColor =
+                        project.status === "completed" || project.progress > 50
+                          ? "#22c55e"
+                          : "var(--accent)";
+
+                      return (
+                        <article
+                          key={project.id}
+                          className="project-row"
+                          onClick={() => router.push(project.href)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              router.push(project.href);
+                            }
+                          }}
+                        >
+                          <div className="project-identity">
+                            <div className="project-avatar" style={{ color: project.accentColor }}>
+                              {project.name.trim().charAt(0).toUpperCase() || "P"}
+                            </div>
+                            <div className="project-copy">
+                              <div className="project-name">{project.name}</div>
+                              <div className="project-idea">{project.idea}</div>
+                            </div>
+                          </div>
+
+                          <div className="progress-col">
+                            <div className="progress-value">{project.progress}%</div>
+                            <div className="progress-bar">
+                              <span
+                                className="progress-fill"
+                                style={{ width: `${project.progress}%`, background: progressColor }}
+                              />
+                            </div>
+                          </div>
+
+                          <div
+                            className={`tasks-col ${project.tasksDone === 0 ? "muted" : ""}`}
+                          >
+                            <span>
+                              {project.tasksDone} / {project.tasksTotal} tasks
+                            </span>
+                          </div>
+
+                          <div className="milestone-col">
+                            {project.currentMilestoneTitle ? (
+                              <div
+                                style={{
+                                  overflow: "hidden",
+                                  minWidth: 0,
+                                  maxWidth: "100%",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    fontSize: 12,
+                                    fontWeight: 600,
+                                    color: project.currentMilestoneIsBoss
+                                      ? "#ffb700"
+                                      : "var(--text)",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {project.currentMilestoneIsBoss ? "⚔ " : ""}
+                                  {project.currentMilestoneTitle}
+                                </div>
+                                <div style={{ fontSize: 11, color: "#5f5f7a", marginTop: 2 }}>
+                                  {project.currentMilestoneIsBoss
+                                    ? `${100 - (project.currentMilestoneProgress ?? 0)}% HP remaining`
+                                    : `${project.currentMilestoneProgress ?? 0}% complete`}
+                                </div>
+                              </div>
+                            ) : (
+                              <span style={{ color: "#5f5f7a", fontSize: 12 }}>—</span>
+                            )}
+                          </div>
+
+                          <div className="updated-col">{project.lastUpdated}</div>
+
+                          <div className="status-col">
+                            <span className="status-badge" style={statusStyles}>
+                              <span
+                                className="status-dot"
+                                style={{ background: statusStyles.color }}
+                              />
+                              {statusLabel}
+                            </span>
+                          </div>
+
+                          <div className="open-col">
+                            <Link
+                              href={project.href}
+                              className="open-btn"
+                              onClick={(event) => event.stopPropagation()}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 4,
+                                whiteSpace: "nowrap",
+                                color: "var(--accent)",
+                                textDecoration: "none",
+                                fontSize: 13,
+                                fontWeight: 500,
+                              }}
+                            >
+                              Open <span aria-hidden="true">→</span>
+                            </Link>
+                          </div>
+                        </article>
+                      );
+                    })}
                   </div>
                 </section>
               )}
@@ -409,6 +556,140 @@ export function ProjectsClient({
           .table-body {
             display: grid;
             gap: 10px;
+          }
+          .project-row {
+            display: grid;
+            grid-template-columns: 1fr 180px 140px 160px 120px 100px 60px;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border2);
+            background: #12121e;
+            cursor: pointer;
+            transition:
+              border-color 0.3s ease,
+              background-color 0.3s ease,
+              transform 0.18s ease;
+          }
+          .project-row:hover {
+            border-color: var(--accent);
+            background: rgba(124, 110, 247, 0.03);
+            transform: translateY(-1px);
+          }
+          .project-identity {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+          .project-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border2);
+            background: var(--bg4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            flex-shrink: 0;
+          }
+          .project-copy {
+            min-width: 0;
+          }
+          .project-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+          }
+          .project-idea {
+            margin-top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 10px;
+            color: var(--text3);
+          }
+          .progress-col {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+          }
+          .progress-value {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text);
+            font-family: "Geist Mono", monospace;
+          }
+          .progress-bar {
+            width: 100%;
+            height: 4px;
+            border-radius: 999px;
+            background: var(--bg4);
+            overflow: hidden;
+          }
+          .progress-fill {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+          }
+          .tasks-col {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 11px;
+            color: var(--text2);
+          }
+          .tasks-col.muted {
+            color: var(--text3);
+          }
+          .milestone-col {
+            min-width: 0;
+          }
+          .updated-col {
+            font-size: 11px;
+            color: var(--text3);
+          }
+          .status-col {
+            display: flex;
+            justify-content: flex-start;
+          }
+          .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 9px;
+            border-radius: 4px;
+            border: 1px solid var(--border2);
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            font-family: "Geist Mono", monospace;
+            white-space: nowrap;
+          }
+          .status-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 999px;
+            flex-shrink: 0;
+          }
+          .open-col {
+            display: flex;
+            justify-content: flex-end;
+          }
+          .open-btn {
+            border: 0;
+            background: transparent;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.18s ease;
+          }
+          .open-btn:hover {
+            opacity: 0.75;
           }
           .projects-grid {
             display: grid;
