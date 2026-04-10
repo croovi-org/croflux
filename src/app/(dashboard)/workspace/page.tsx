@@ -207,10 +207,12 @@ export default async function WorkspacePage() {
     ? groupedMilestones.get(activeWorkspaceProject.id) ?? []
     : [];
   const nextUp = getNextUpTask(activeWorkspaceMilestones);
-  const rank =
-    user.weekly_tasks_completed > 0
-      ? Math.max(1, 18 - user.weekly_tasks_completed)
-      : null;
+  const { count: rankCount } = await supabase
+    .from("users")
+    .select("id", { count: "exact", head: true })
+    .gt("weekly_tasks_completed", user.weekly_tasks_completed ?? 0)
+
+  const rank = (rankCount ?? 0) + 1;
 
   return (
     <WorkspaceClient
