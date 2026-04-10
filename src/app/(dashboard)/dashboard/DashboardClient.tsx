@@ -1354,8 +1354,7 @@ export function DashboardClient({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ taskId }),
     });
-    const result = await response.json();
-    console.log("Task complete result:", result);
+    await response.json();
 
     if (defeatedName && unlockedName) {
       showToast({ title: "Boss defeated", body: `${defeatedName} cleared. ${unlockedName} unlocked.` });
@@ -1379,8 +1378,7 @@ export function DashboardClient({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ taskId, completed: shouldComplete })
     })
-    const result = await response.json()
-    console.log('Board move result:', result)
+    await response.json()
   };
 
   return (

@@ -144,7 +144,6 @@ export async function generateRoadmapFromAI(
   ] as const;
 
   for (const modelName of MODELS) {
-    console.log("Trying model:", modelName);
     let lastParseError: Error | null = null;
     let shouldTryNextModel = false;
 
@@ -171,7 +170,6 @@ export async function generateRoadmapFromAI(
 
       try {
         const parsed = parseJSONSafely(rawText);
-        console.log("Success with model:", modelName);
         return parsed;
       } catch (error) {
         if (error instanceof Error) {
