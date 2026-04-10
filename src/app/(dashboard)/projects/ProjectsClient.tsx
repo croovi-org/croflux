@@ -3,15 +3,33 @@
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { EmptyProjects } from "@/components/projects/EmptyProjects";
-import {
-  ProjectRow,
-  type ProjectsPageRow,
-} from "@/components/projects/ProjectRow";
+import { ProjectRow } from "@/components/projects/ProjectRow";
 import {
   ProjectsToolbar,
   type ProjectsSortOption,
 } from "@/components/projects/ProjectsToolbar";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+
+type ProjectsPageRow = {
+  id: string;
+  name: string;
+  idea: string;
+  progress: number;
+  tasksDone: number;
+  tasksTotal: number;
+  currentBoss: string | null;
+  bossHp: number | null;
+  currentMilestoneTitle: string | null;
+  currentMilestoneIsBoss: boolean;
+  currentMilestoneProgress: number | null;
+  bossesDefeated: number;
+  lastUpdated: string;
+  status: "active" | "paused" | "completed" | "not_started";
+  href: string;
+  accentColor: string;
+  createdAt: string;
+  updatedAtValue: number;
+};
 
 type SidebarMilestone = {
   id: string;
@@ -54,9 +72,6 @@ export function ProjectsClient({
   stats,
   projects,
 }: ProjectsClientProps) {
-  const [previewMode, setPreviewMode] = useState<"projects" | "empty">(
-    projects.length > 0 ? "projects" : "empty",
-  );
   const [searchValue, setSearchValue] = useState("");
   const [sort, setSort] = useState<ProjectsSortOption>("recent");
   const [view, setView] = useState<"list" | "grid">("list");
@@ -121,26 +136,6 @@ export function ProjectsClient({
     >
       <main className="projects-main">
         <div className="projects-wrap">
-          <section className="preview-strip">
-            <span className="preview-label">Preview:</span>
-            <div className="preview-actions">
-              <button
-                type="button"
-                className={`preview-btn ${previewMode === "projects" ? "active" : ""}`}
-                onClick={() => setPreviewMode("projects")}
-              >
-                With projects
-              </button>
-              <button
-                type="button"
-                className={`preview-btn ${previewMode === "empty" ? "active" : ""}`}
-                onClick={() => setPreviewMode("empty")}
-              >
-                Empty state
-              </button>
-            </div>
-          </section>
-
           <section className="projects-header">
             <div>
               <h1>Projects</h1>
@@ -187,7 +182,7 @@ export function ProjectsClient({
             </Link>
           </section>
 
-          {previewMode === "empty" || projects.length === 0 ? (
+          {projects.length === 0 ? (
             <EmptyProjects />
           ) : (
             <>
@@ -234,7 +229,7 @@ export function ProjectsClient({
                   <span>Project</span>
                   <span>Progress</span>
                   <span>Tasks</span>
-                  <span>Current boss</span>
+                  <span>Current milestone</span>
                   <span>Last updated</span>
                   <span>Status</span>
                   <span />
@@ -271,47 +266,6 @@ export function ProjectsClient({
             align-items: flex-start;
             justify-content: space-between;
             gap: 18px;
-          }
-          .preview-strip {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-height: 49px;
-            padding: 0 16px;
-            border-radius: 11px;
-            border: 1px solid var(--border2);
-            background: rgba(19, 19, 30, 0.35);
-          }
-          .preview-label {
-            color: var(--text3);
-            font-size: 11px;
-          }
-          .preview-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          }
-          .preview-btn {
-            height: 27px;
-            padding: 0 14px;
-            border-radius: 7px;
-            border: 1px solid var(--border2);
-            background: var(--bg3);
-            color: var(--text3);
-            font-size: 11px;
-            line-height: 1;
-            cursor: pointer;
-            transition:
-              background-color 0.3s ease,
-              border-color 0.3s ease,
-              color 0.3s ease;
-          }
-          .preview-btn.active {
-            border-color: var(--purple-border);
-            background: var(--accent-subtle);
-            color: var(--accent);
-            box-shadow: inset 0 0 0 1px
-              color-mix(in srgb, var(--accent) 10%, transparent);
           }
           h1 {
             margin: 0;
