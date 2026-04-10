@@ -18,6 +18,15 @@ export default async function LeaderboardPage() {
     .order("weekly_tasks_completed", { ascending: false })
     .order("streak", { ascending: false })
     .limit(10);
+  const userIds = (data ?? []).map((u: User) => u.id)
+  const { data: projectsData } = await supabase
+    .from("projects")
+    .select("user_id, name")
+    .in("user_id", userIds)
+
+  const projectMap = Object.fromEntries(
+    (projectsData ?? []).map((p: { user_id: string; name: string }) => [p.user_id, p.name])
+  )
 
   const entries = ((data ?? []) as User[]).map((entry, index) => ({
     ...entry,
@@ -135,10 +144,10 @@ export default async function LeaderboardPage() {
                             flexShrink: 0,
                           }}
                         >
-                          {getInitials(entry.name)}
+                          {getInitials(entry.name ?? "Anonymous")}
                         </div>
                         <div>
-                          <div style={{ fontSize: 14, fontWeight: 600 }}>{entry.name}</div>
+                          <div style={{ fontSize: 14, fontWeight: 600 }}>{entry.name ?? "Anonymous Builder"}</div>
                           <div
                             style={{
                               overflow: "hidden",
@@ -148,7 +157,7 @@ export default async function LeaderboardPage() {
                               fontSize: 12,
                             }}
                           >
-                            {entry.email}
+                            {projectMap[entry.id] ?? "Building in stealth"}
                           </div>
                         </div>
                       </div>
