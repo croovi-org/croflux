@@ -120,9 +120,12 @@ export default async function ProjectsPage() {
     const progress = tasksTotal > 0 ? Math.round((tasksDone / tasksTotal) * 100) : 0;
     const latestActivity =
       tasks
-        .filter((task) => task.completed)
-        .sort((left, right) => right.created_at.localeCompare(left.created_at))[0]?.created_at ??
-      null;
+        .filter((task) => task.completed && task.updated_at)
+        .sort((left, right) =>
+          (right.updated_at ?? right.created_at).localeCompare(
+            left.updated_at ?? left.created_at,
+          ),
+        )[0]?.updated_at ?? null
     const updatedAtValue = latestActivity
       ? new Date(latestActivity).getTime()
       : new Date(project.created_at).getTime();
@@ -134,15 +137,14 @@ export default async function ProjectsPage() {
           milestone.tasks.length > 0 &&
           milestone.tasks.some((task) => !task.completed),
       ) ?? null;
-    // Find the current active milestone (first one with incomplete tasks)
+    const sortedMilestones = milestones.slice().sort((a, b) => a.order_index - b.order_index)
+
     const currentActiveMilestone =
-      [...milestones]
-        .sort((a, b) => a.order_index - b.order_index)
-        .find(
-          (milestone) =>
-            milestone.tasks.length > 0 &&
-            milestone.tasks.some((task) => !task.completed),
-        ) ?? null
+      sortedMilestones.find(
+        (milestone) =>
+          milestone.tasks.length > 0 &&
+          milestone.tasks.some((task) => !task.completed),
+      ) ?? null
 
     const currentMilestoneTitle = currentActiveMilestone?.title ?? null
     const currentMilestoneIsBoss = currentActiveMilestone?.is_boss ?? false

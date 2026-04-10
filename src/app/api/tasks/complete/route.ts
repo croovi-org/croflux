@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     const { error } = await supabase
       .from("tasks")
-      .update({ completed: true })
+      .update({ completed: true, updated_at: new Date().toISOString() })
       .eq("id", taskId)
 
     if (error) {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { EmptyProjects } from "@/components/projects/EmptyProjects";
 import { ProjectRow } from "@/components/projects/ProjectRow";
 import {
@@ -75,8 +75,6 @@ export function ProjectsClient({
   const [searchValue, setSearchValue] = useState("");
   const [sort, setSort] = useState<ProjectsSortOption>("recent");
   const [view, setView] = useState<"list" | "grid">("list");
-  const [toast, setToast] = useState<string | null>(null);
-  const toastTimerRef = useRef<number | null>(null);
 
   const filteredProjects = useMemo(() => {
     const normalizedQuery = searchValue.trim().toLowerCase();
@@ -106,15 +104,6 @@ export function ProjectsClient({
 
     return sorted;
   }, [projects, searchValue, sort]);
-
-  const showToast = (message: string) => {
-    if (toastTimerRef.current) {
-      window.clearTimeout(toastTimerRef.current);
-    }
-
-    setToast(message);
-    toastTimerRef.current = window.setTimeout(() => setToast(null), 2400);
-  };
 
   return (
     <WorkspaceShell
@@ -215,37 +204,105 @@ export function ProjectsClient({
                 sort={sort}
                 onSortChange={setSort}
                 view={view}
-                onViewChange={(nextView) => {
-                  if (nextView === "grid") {
-                    showToast("Grid view is coming soon");
-                    return;
-                  }
-                  setView(nextView);
-                }}
+                onViewChange={setView}
               />
 
-              <section className="projects-table">
-                <div className="table-head">
-                  <span>Project</span>
-                  <span>Progress</span>
-                  <span>Tasks</span>
-                  <span>Current milestone</span>
-                  <span>Last updated</span>
-                  <span>Status</span>
-                  <span />
-                </div>
+              {view === "list" && (
+                <section className="projects-table">
+                  <div className="table-head">
+                    <span>Project</span>
+                    <span>Progress</span>
+                    <span>Tasks</span>
+                    <span>Current milestone</span>
+                    <span>Last updated</span>
+                    <span>Status</span>
+                    <span />
+                  </div>
 
-                <div className="table-body">
-                  {filteredProjects.map((project) => (
-                    <ProjectRow key={project.id} project={project} />
-                  ))}
-                </div>
-              </section>
+                  <div className="table-body">
+                    {filteredProjects.map((project) => (
+                      <ProjectRow key={project.id} project={project} />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {view === "grid" && (
+                <section className="projects-grid">
+                  {filteredProjects.map((project) => {
+                    const statusLabel =
+                      project.status === "active"
+                        ? "Active"
+                        : project.status === "completed"
+                          ? "Completed"
+                          : project.status === "paused"
+                            ? "Paused"
+                            : "Not started";
+
+                    return (
+                      <article key={project.id} className="project-card">
+                        <div className="project-card-head">
+                          <div className="project-card-title-wrap">
+                            <h3>{project.name}</h3>
+                            <p>{project.idea}</p>
+                          </div>
+                          <span className={`grid-status ${project.status}`}>
+                            {statusLabel}
+                          </span>
+                        </div>
+
+                        <div className="grid-progress">
+                          <div className="grid-progress-top">
+                            <span>Progress</span>
+                            <strong>{project.progress}%</strong>
+                          </div>
+                          <div className="grid-progress-bar">
+                            <span style={{ width: `${project.progress}%` }} />
+                          </div>
+                        </div>
+
+                        <div className="grid-meta">
+                          <div className="grid-meta-row">
+                            <span>Tasks</span>
+                            <strong>
+                              {project.tasksDone} / {project.tasksTotal}
+                            </strong>
+                          </div>
+                          <div className="grid-meta-row">
+                            <span>Current milestone</span>
+                            <strong>{project.currentMilestoneTitle ?? "—"}</strong>
+                          </div>
+                          <div className="grid-meta-row">
+                            <span>Last updated</span>
+                            <strong>{project.lastUpdated}</strong>
+                          </div>
+                        </div>
+
+                        <div className="grid-card-footer">
+                          <Link
+                            href={project.href}
+                            className="grid-open-link"
+                            style={{
+                              color: "var(--accent)",
+                              fontSize: 14,
+                              fontWeight: 500,
+                              textDecoration: "none",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 4,
+                            }}
+                          >
+                            Open →
+                          </Link>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </section>
+              )}
             </>
           )}
         </div>
-
-        <div className={`projects-toast ${toast ? "show" : ""}`}>{toast}</div>
 
         <style jsx>{`
           .projects-main {
@@ -353,26 +410,150 @@ export function ProjectsClient({
             display: grid;
             gap: 10px;
           }
-          .projects-toast {
-            position: fixed;
-            right: 28px;
-            bottom: 24px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border2);
-            background: #171722;
-            color: var(--text);
-            font-size: 12px;
-            opacity: 0;
-            transform: translateY(8px);
-            pointer-events: none;
-            transition:
-              opacity 0.2s ease,
-              transform 0.2s ease;
+          .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
           }
-          .projects-toast.show {
-            opacity: 1;
-            transform: translateY(0);
+          .project-card {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border2);
+            background: #12121e;
+            padding: 16px;
+          }
+          .project-card-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+          }
+          .project-card-title-wrap {
+            min-width: 0;
+          }
+          .project-card-title-wrap h3 {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text);
+            font-weight: 600;
+          }
+          .project-card-title-wrap p {
+            margin: 5px 0 0;
+            color: var(--text3);
+            font-size: 12px;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          .grid-status {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            border: 1px solid var(--border2);
+            background: var(--bg4);
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+          .grid-status.active {
+            color: #22c55e;
+            border-color: rgba(34, 197, 94, 0.28);
+            background: rgba(34, 197, 94, 0.08);
+          }
+          .grid-status.completed {
+            color: #378add;
+            border-color: rgba(55, 138, 221, 0.3);
+            background: rgba(55, 138, 221, 0.08);
+          }
+          .grid-status.paused {
+            color: #ffb700;
+            border-color: rgba(255, 183, 0, 0.28);
+            background: rgba(255, 183, 0, 0.08);
+          }
+          .grid-progress {
+            display: grid;
+            gap: 7px;
+          }
+          .grid-progress-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text3);
+          }
+          .grid-progress-top strong {
+            color: var(--text);
+            font-family: "Geist Mono", monospace;
+          }
+          .grid-progress-bar {
+            width: 100%;
+            height: 5px;
+            border-radius: 999px;
+            background: var(--bg4);
+            overflow: hidden;
+          }
+          .grid-progress-bar span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--accent);
+          }
+          .grid-meta {
+            display: grid;
+            gap: 8px;
+          }
+          .grid-meta-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 11px;
+          }
+          .grid-meta-row span {
+            color: var(--text3);
+          }
+          .grid-meta-row strong {
+            color: var(--text2);
+            text-align: right;
+            font-weight: 500;
+          }
+          .grid-card-footer {
+            margin-top: auto;
+            padding-top: 4px;
+          }
+          .grid-open-link {
+            border: 0;
+            background: transparent;
+            color: var(--accent);
+            font-size: 38px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.18s ease;
+          }
+          .grid-open-link:hover {
+            opacity: 0.75;
+          }
+          @media (max-width: 1200px) {
+            .projects-grid {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+          }
+          @media (max-width: 780px) {
+            .projects-wrap {
+              padding: 22px 16px;
+            }
+            .projects-grid {
+              grid-template-columns: 1fr;
+            }
           }
         `}</style>
       </main>
