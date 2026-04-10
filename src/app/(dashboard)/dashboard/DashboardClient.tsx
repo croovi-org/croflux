@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BossMilestone } from "@/components/dashboard/BossMilestone";
+import { CompletedMilestone } from "@/components/dashboard/CompletedMilestone";
 import { LockedMilestone } from "@/components/dashboard/LockedMilestone";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatCards } from "@/components/dashboard/StatCards";
@@ -70,7 +71,7 @@ function isMilestoneComplete(m: MilestoneWithTasks) {
 
 function getActiveMilestoneIndex(milestones: MilestoneWithTasks[]) {
   const i = milestones.findIndex((m) => !isMilestoneComplete(m));
-  return i === -1 ? 0 : i;
+  return i === -1 ? milestones.length : i;
 }
 
 function getMilestoneProgress(m: MilestoneWithTasks) {
@@ -1271,7 +1272,8 @@ export function DashboardClient({
 
   const activeMilestoneIndex = useMemo(() => getActiveMilestoneIndex(milestones), [milestones]);
   const activeMilestone = milestones[activeMilestoneIndex];
-  const lockedMilestones = milestones.slice(activeMilestoneIndex + 1);
+  const completedMilestones = milestones.slice(0, activeMilestoneIndex);
+  const remainingMilestones = milestones.slice(activeMilestoneIndex + 1);
 
   const totalTasks = useMemo(() => milestones.reduce((n, m) => n + m.tasks.length, 0), [milestones]);
   const completedTasks = useMemo(() => milestones.reduce((n, m) => n + m.tasks.filter((t) => t.completed).length, 0), [milestones]);
@@ -1429,6 +1431,10 @@ export function DashboardClient({
                 <span>{Math.min(activeMilestoneIndex + 1, milestones.length)} of {milestones.length} unlocked</span>
               </div>
 
+              {completedMilestones.map((m) => (
+                <CompletedMilestone key={m.id} milestone={m} />
+              ))}
+
               {activeMilestone && (
                 <BossMilestone
                   milestone={activeMilestone}
@@ -1438,7 +1444,7 @@ export function DashboardClient({
                 />
               )}
 
-              {lockedMilestones.map((m) => (
+              {remainingMilestones.map((m) => (
                 <LockedMilestone key={m.id} title={m.title} />
               ))}
             </div>
