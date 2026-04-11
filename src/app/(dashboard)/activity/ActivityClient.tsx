@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState, type CSSProperties } from "react"
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell"
 import type { Milestone, Project, Task, User } from "@/types"
 
@@ -136,6 +136,20 @@ export function ActivityClient({
     return d
   })
   const [firstClick, setFirstClick] = useState<Date | null>(null)
+  const datePickerRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!calendarOpen) return
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!datePickerRef.current?.contains(event.target as Node)) {
+        setCalendarOpen(false)
+      }
+    }
+
+    window.addEventListener("mousedown", handlePointerDown)
+    return () => window.removeEventListener("mousedown", handlePointerDown)
+  }, [calendarOpen])
 
   const { dayCounts, dayLabels } = useMemo(() => {
     const start = new Date(rangeStart)
@@ -195,6 +209,25 @@ export function ActivityClient({
   const rangeLabelStr = rangeStart.toDateString() === rangeEnd.toDateString()
     ? rangeStart.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
     : `${rangeStart.toLocaleDateString("en-US", { month: "short", day: "numeric" })} – ${rangeEnd.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+
+  const presetDays = useMemo(() => {
+    const start = startOfDay(rangeStart)
+    const end = startOfDay(rangeEnd)
+    if (formatDayKey(end) !== formatDayKey(today)) return null
+    return Math.round((end.getTime() - start.getTime()) / 86400000) + 1
+  }, [rangeStart, rangeEnd, today])
+
+  const applyPreset = (days: number) => {
+    const end = new Date(today)
+    const start = new Date(today)
+    start.setDate(today.getDate() - (days - 1))
+    setRangeStart(start)
+    setRangeEnd(end)
+    setFirstClick(null)
+    const monthStart = new Date(end)
+    monthStart.setDate(1)
+    setCalendarMonth(monthStart)
+  }
 
   const nextUp = getNextUpTask(milestones)
 
@@ -304,6 +337,7 @@ export function ActivityClient({
             </div>
           </section>
 
+          <div style={{ position: "relative" }}>
           <section style={{ border: "1px solid #1e1e2e", borderRadius: 16, background: "#13131e", padding: 20 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
               <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", color: "#5f5f7a" }}>
@@ -342,191 +376,225 @@ export function ActivityClient({
                 >
                   Line
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setCalendarOpen((o) => !o)}
-                  style={{
-                    height: 28,
-                    padding: "0 12px",
-                    borderRadius: 8,
-                    background: calendarOpen ? "var(--accent-subtle)" : "transparent",
-                    color: calendarOpen ? "var(--accent-text)" : "#5f5f7a",
-                    border: calendarOpen ? "1px solid var(--purple-border)" : "1px solid #1e1e2e",
-                    fontSize: 11,
-                    cursor: "pointer",
-                    fontFamily: "var(--mono)",
-                  }}
-                >
-                  {rangeLabelStr}
-                </button>
-              </div>
-            </div>
-
-            {calendarOpen ? (
-              <div
-                style={{
-                  background: "#13131e",
-                  border: "1px solid #1e1e2e",
-                  borderRadius: 12,
-                  padding: 16,
-                  marginBottom: 16,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                <div ref={datePickerRef} style={{ position: "relative" }}>
                   <button
                     type="button"
-                    onClick={() => {
-                      const prev = new Date(calendarMonth)
-                      prev.setMonth(prev.getMonth() - 1)
-                      setCalendarMonth(prev)
-                    }}
+                    onClick={() => setCalendarOpen((o) => !o)}
                     style={{
-                      width: 28,
                       height: 28,
+                      padding: "0 12px",
                       borderRadius: 8,
-                      border: "1px solid #1e1e2e",
-                      background: "transparent",
-                      color: "#9898b8",
+                      background: calendarOpen ? "var(--accent-subtle)" : "transparent",
+                      color: calendarOpen ? "var(--accent-text)" : "#5f5f7a",
+                      border: calendarOpen ? "1px solid var(--purple-border)" : "1px solid #1e1e2e",
+                      fontSize: 11,
                       cursor: "pointer",
+                      fontFamily: "var(--mono)",
                     }}
                   >
-                    {"<"}
+                    {rangeLabelStr}
                   </button>
-                  <div style={{ fontSize: 12, color: "#e0e0f8", fontFamily: "var(--mono)" }}>
-                    {calendarMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!canGoNextMonth) return
-                      const next = new Date(calendarMonth)
-                      next.setMonth(next.getMonth() + 1)
-                      setCalendarMonth(next)
-                    }}
-                    disabled={!canGoNextMonth}
-                    style={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 8,
-                      border: "1px solid #1e1e2e",
-                      background: "transparent",
-                      color: canGoNextMonth ? "#9898b8" : "#5f5f7a",
-                      cursor: canGoNextMonth ? "pointer" : "not-allowed",
-                      opacity: canGoNextMonth ? 1 : 0.5,
-                    }}
-                  >
-                    {">"}
-                  </button>
-                </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 36px)", gap: 6, marginBottom: 8 }}>
-                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                  {calendarOpen ? (
                     <div
-                      key={day}
                       style={{
-                        width: 36,
-                        height: 20,
-                        fontSize: 10,
-                        color: "#5f5f7a",
-                        fontFamily: "var(--mono)",
-                        display: "grid",
-                        placeItems: "center",
+                        position: "absolute",
+                        top: "44px",
+                        right: 0,
+                        zIndex: 50,
+                        width: 320,
+                        maxWidth: "320px",
+                        background: "#13131e",
+                        border: "1px solid #1e1e2e",
+                        borderRadius: 12,
+                        padding: 16,
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
                       }}
                     >
-                      {day}
-                    </div>
-                  ))}
-
-                  {calendarDays.map((date, index) => {
-                    if (!date) {
-                      return <div key={`empty-${index}`} style={{ width: 36, height: 36 }} />
-                    }
-
-                    const day = startOfDay(date)
-                    const dayKey = formatDayKey(day)
-                    const isFuture = day > today
-                    const isBeforeWindow = day < minSelectableDate
-                    const isDisabled = isFuture || isBeforeWindow
-                    const startDay = startOfDay(rangeStart)
-                    const endDay = startOfDay(rangeEnd)
-                    const isInRange = day >= startDay && day <= endDay
-                    const isStart = formatDayKey(startDay) === dayKey
-                    const isEnd = formatDayKey(endDay) === dayKey
-                    const isToday = formatDayKey(today) === dayKey
-                    const isHovered = hoveredCalendarKey === dayKey
-
-                    const baseStyle: CSSProperties = {
-                      width: 36,
-                      height: 36,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      display: "grid",
-                      placeItems: "center",
-                      border: isToday ? "1px solid var(--purple-border)" : "1px solid transparent",
-                      background: "transparent",
-                      color: "#9898b8",
-                      cursor: "pointer",
-                      userSelect: "none",
-                      opacity: 1,
-                    }
-
-                    if (isDisabled) {
-                      baseStyle.opacity = isFuture ? 0.25 : 0.15
-                      baseStyle.cursor = "not-allowed"
-                    } else if (isStart || isEnd) {
-                      baseStyle.background = "var(--accent)"
-                      baseStyle.color = "white"
-                    } else if (isInRange) {
-                      baseStyle.background = "rgba(124,110,247,0.2)"
-                      baseStyle.color = "#e0e0f8"
-                    } else if (isHovered) {
-                      baseStyle.background = "rgba(255,255,255,0.05)"
-                    }
-
-                    return (
-                      <div
-                        key={dayKey}
-                        style={baseStyle}
-                        onMouseEnter={() => setHoveredCalendarKey(dayKey)}
-                        onMouseLeave={() => setHoveredCalendarKey(null)}
-                        onClick={() => {
-                          if (isDisabled) return
-                          if (!firstClick) {
-                            setFirstClick(day)
-                            return
-                          }
-
-                          const first = startOfDay(firstClick)
-                          const second = day
-                          if (first <= second) {
-                            setRangeStart(first)
-                            setRangeEnd(second)
-                          } else {
-                            setRangeStart(second)
-                            setRangeEnd(first)
-                          }
-                          setFirstClick(null)
-                          setCalendarOpen(false)
-                        }}
-                        onDoubleClick={() => {
-                          if (isDisabled) return
-                          setRangeStart(day)
-                          setRangeEnd(day)
-                          setFirstClick(null)
-                          setCalendarOpen(false)
-                        }}
-                      >
-                        {day.getDate()}
+                      <div style={{ display: "inline-flex", gap: 6, marginBottom: 10 }}>
+                        {[{ label: "7D", days: 7 }, { label: "2W", days: 14 }, { label: "1M", days: 30 }].map((preset) => {
+                          const active = presetDays === preset.days
+                          return (
+                            <button
+                              key={preset.label}
+                              type="button"
+                              onClick={() => applyPreset(preset.days)}
+                              style={{
+                                height: 26,
+                                padding: "0 10px",
+                                borderRadius: 8,
+                                background: active ? "var(--accent-subtle)" : "transparent",
+                                color: active ? "var(--accent-text)" : "#5f5f7a",
+                                border: active ? "1px solid var(--purple-border)" : "1px solid #1e1e2e",
+                                fontSize: 11,
+                                cursor: "pointer",
+                                fontFamily: "var(--mono)",
+                              }}
+                            >
+                              {preset.label}
+                            </button>
+                          )
+                        })}
                       </div>
-                    )
-                  })}
-                </div>
 
-                <div style={{ fontSize: 10, color: "#5f5f7a", fontFamily: "var(--mono)" }}>
-                  Click two dates to select a range · Double-click for a single day
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const prev = new Date(calendarMonth)
+                            prev.setMonth(prev.getMonth() - 1)
+                            setCalendarMonth(prev)
+                          }}
+                          style={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: 8,
+                            border: "1px solid #1e1e2e",
+                            background: "transparent",
+                            color: "#9898b8",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {"<"}
+                        </button>
+                        <div style={{ fontSize: 12, color: "#e0e0f8", fontFamily: "var(--mono)" }}>
+                          {calendarMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!canGoNextMonth) return
+                            const next = new Date(calendarMonth)
+                            next.setMonth(next.getMonth() + 1)
+                            setCalendarMonth(next)
+                          }}
+                          disabled={!canGoNextMonth}
+                          style={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: 8,
+                            border: "1px solid #1e1e2e",
+                            background: "transparent",
+                            color: canGoNextMonth ? "#9898b8" : "#5f5f7a",
+                            cursor: canGoNextMonth ? "pointer" : "not-allowed",
+                            opacity: canGoNextMonth ? 1 : 0.5,
+                          }}
+                        >
+                          {">"}
+                        </button>
+                      </div>
+
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 32px)", gap: 6, marginBottom: 8, justifyContent: "center" }}>
+                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                          <div
+                            key={day}
+                            style={{
+                              width: 32,
+                              height: 18,
+                              fontSize: 10,
+                              color: "#5f5f7a",
+                              fontFamily: "var(--mono)",
+                              display: "grid",
+                              placeItems: "center",
+                            }}
+                          >
+                            {day}
+                          </div>
+                        ))}
+
+                        {calendarDays.map((date, index) => {
+                          if (!date) {
+                            return <div key={`empty-${index}`} style={{ width: 32, height: 32 }} />
+                          }
+
+                          const day = startOfDay(date)
+                          const dayKey = formatDayKey(day)
+                          const isFuture = day > today
+                          const isBeforeWindow = day < minSelectableDate
+                          const isDisabled = isFuture || isBeforeWindow
+                          const startDay = startOfDay(rangeStart)
+                          const endDay = startOfDay(rangeEnd)
+                          const isInRange = day >= startDay && day <= endDay
+                          const isStart = formatDayKey(startDay) === dayKey
+                          const isEnd = formatDayKey(endDay) === dayKey
+                          const isToday = formatDayKey(today) === dayKey
+                          const isHovered = hoveredCalendarKey === dayKey
+
+                          const baseStyle: CSSProperties = {
+                            width: 32,
+                            height: 32,
+                            borderRadius: 8,
+                            fontSize: 12,
+                            display: "grid",
+                            placeItems: "center",
+                            border: isToday ? "1px solid var(--purple-border)" : "1px solid transparent",
+                            background: "transparent",
+                            color: "#9898b8",
+                            cursor: "pointer",
+                            userSelect: "none",
+                            opacity: 1,
+                          }
+
+                          if (isDisabled) {
+                            baseStyle.opacity = isFuture ? 0.25 : 0.15
+                            baseStyle.cursor = "not-allowed"
+                          } else if (isStart || isEnd) {
+                            baseStyle.background = "var(--accent)"
+                            baseStyle.color = "white"
+                          } else if (isInRange) {
+                            baseStyle.background = "rgba(124,110,247,0.2)"
+                            baseStyle.color = "#e0e0f8"
+                          } else if (isHovered) {
+                            baseStyle.background = "rgba(255,255,255,0.05)"
+                          }
+
+                          return (
+                            <div
+                              key={dayKey}
+                              style={baseStyle}
+                              onMouseEnter={() => setHoveredCalendarKey(dayKey)}
+                              onMouseLeave={() => setHoveredCalendarKey(null)}
+                              onClick={() => {
+                                if (isDisabled) return
+                                if (!firstClick) {
+                                  setFirstClick(day)
+                                  return
+                                }
+
+                                const first = startOfDay(firstClick)
+                                const second = day
+                                if (first <= second) {
+                                  setRangeStart(first)
+                                  setRangeEnd(second)
+                                } else {
+                                  setRangeStart(second)
+                                  setRangeEnd(first)
+                                }
+                                setFirstClick(null)
+                                setCalendarOpen(false)
+                              }}
+                              onDoubleClick={() => {
+                                if (isDisabled) return
+                                setRangeStart(day)
+                                setRangeEnd(day)
+                                setFirstClick(null)
+                                setCalendarOpen(false)
+                              }}
+                            >
+                              {day.getDate()}
+                            </div>
+                          )
+                        })}
+                      </div>
+
+                      <div style={{ fontSize: 10, color: "#5f5f7a", fontFamily: "var(--mono)" }}>
+                        Click two dates to select a range · Double-click for a single day
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               </div>
-            ) : null}
+            </div>
 
             {chartType === "bar" ? (
               <>
@@ -679,6 +747,7 @@ export function ActivityClient({
               </div>
             )}
           </section>
+          </div>
 
           <div
             style={{
