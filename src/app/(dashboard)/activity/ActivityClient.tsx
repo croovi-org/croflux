@@ -484,7 +484,16 @@ export function ActivityClient({
                         </button>
                       </div>
 
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 32px)", gap: 6, marginBottom: 8, justifyContent: "center" }}>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(7, 32px)",
+                          columnGap: 0,
+                          rowGap: 2,
+                          marginBottom: 8,
+                          justifyContent: "center",
+                        }}
+                      >
                         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                           <div
                             key={day}
@@ -514,9 +523,11 @@ export function ActivityClient({
                           const isDisabled = isFuture || isBeforeWindow
                           const startDay = startOfDay(rangeStart)
                           const endDay = startOfDay(rangeEnd)
-                          const isInRange = day >= startDay && day <= endDay
+                          const firstClickDayKey = firstClick ? formatDayKey(startOfDay(firstClick)) : null
+                          const isFirstClick = !!firstClickDayKey && firstClickDayKey === dayKey
                           const isStart = formatDayKey(startDay) === dayKey
                           const isEnd = formatDayKey(endDay) === dayKey
+                          const isInRange = day > startDay && day < endDay
                           const isToday = formatDayKey(today) === dayKey
                           const isHovered = hoveredCalendarKey === dayKey
 
@@ -527,22 +538,41 @@ export function ActivityClient({
                             fontSize: 12,
                             display: "grid",
                             placeItems: "center",
-                            border: isToday ? "1px solid var(--purple-border)" : "1px solid transparent",
+                            border: "1px solid transparent",
                             background: "transparent",
                             color: "#9898b8",
                             cursor: "pointer",
                             userSelect: "none",
                             opacity: 1,
+                            boxShadow: "none",
                           }
 
                           if (isDisabled) {
-                            baseStyle.opacity = isFuture ? 0.25 : 0.15
+                            baseStyle.opacity = 0.25
                             baseStyle.cursor = "not-allowed"
-                          } else if (isStart || isEnd) {
+                          } else if (isFirstClick) {
                             baseStyle.background = "var(--accent)"
                             baseStyle.color = "white"
+                            baseStyle.borderRadius = 8
+                            baseStyle.boxShadow = "0 0 0 2px var(--accent), 0 0 12px -4px rgba(124,110,247,0.5)"
+                          } else if (isStart && isEnd) {
+                            baseStyle.background = "var(--accent)"
+                            baseStyle.color = "white"
+                            baseStyle.borderRadius = 8
+                          } else if (isStart) {
+                            baseStyle.background = "var(--accent)"
+                            baseStyle.color = "white"
+                            baseStyle.borderRadius = "8px 0 0 8px"
+                          } else if (isEnd) {
+                            baseStyle.background = "var(--accent)"
+                            baseStyle.color = "white"
+                            baseStyle.borderRadius = "0 8px 8px 0"
                           } else if (isInRange) {
-                            baseStyle.background = "rgba(124,110,247,0.2)"
+                            baseStyle.background = "rgba(124,110,247,0.18)"
+                            baseStyle.color = "#e0e0f8"
+                            baseStyle.borderRadius = 0
+                          } else if (isToday) {
+                            baseStyle.border = "1px solid var(--purple-border)"
                             baseStyle.color = "#e0e0f8"
                           } else if (isHovered) {
                             baseStyle.background = "rgba(255,255,255,0.05)"
@@ -587,9 +617,15 @@ export function ActivityClient({
                         })}
                       </div>
 
-                      <div style={{ fontSize: 10, color: "#5f5f7a", fontFamily: "var(--mono)" }}>
-                        Click two dates to select a range · Double-click for a single day
-                      </div>
+                      {firstClick ? (
+                        <div style={{ fontSize: 10, color: "var(--accent)", fontFamily: "var(--mono)" }}>
+                          Now click a second date to complete the range
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: 10, color: "#5f5f7a", fontFamily: "var(--mono)" }}>
+                          Click two dates to select a range · Double-click for a single day
+                        </div>
+                      )}
                     </div>
                   ) : null}
                 </div>
