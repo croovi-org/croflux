@@ -127,8 +127,8 @@ export function ActivityClient({
   const points = useMemo(
     () =>
       dayCounts.map((count, i) => {
-        const x = 40 + (i / 6) * 660
-        const y = 190 - ((count / maxCount) * 170)
+        const x = 50 + (i / 6) * 600
+        const y = 240 - ((count / maxCount) * 220)
         return { x, y, count, label: dayLabels[i] }
       }),
     [dayCounts, dayLabels, maxCount],
@@ -239,12 +239,12 @@ export function ActivityClient({
 
             {chartType === "bar" ? (
               <>
-                <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 220 }}>
+                <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 280 }}>
                   <div
                     style={{
                       width: 32,
                       minWidth: 32,
-                      height: 220,
+                      height: 280,
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
@@ -326,18 +326,18 @@ export function ActivityClient({
                 </div>
               </>
             ) : (
-              <div style={{ height: 220 }}>
-                <svg width="100%" height="220" viewBox="0 0 700 220" preserveAspectRatio="none">
+              <div style={{ height: 280 }}>
+                <svg width="100%" height="280" viewBox="0 0 700 280" preserveAspectRatio="none">
                   <line x1="40" y1="24" x2="700" y2="24" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-                  <line x1="40" y1="107" x2="700" y2="107" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-                  <line x1="40" y1="194" x2="700" y2="194" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+                  <line x1="40" y1="132" x2="700" y2="132" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+                  <line x1="40" y1="244" x2="700" y2="244" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
                   <text x="34" y="24" textAnchor="end" fontSize="10" fill="#5f5f7a">
                     {maxCount}
                   </text>
-                  <text x="34" y="107" textAnchor="end" fontSize="10" fill="#5f5f7a">
+                  <text x="34" y="132" textAnchor="end" fontSize="10" fill="#5f5f7a">
                     {Math.round(maxCount / 2)}
                   </text>
-                  <text x="34" y="194" textAnchor="end" fontSize="10" fill="#5f5f7a">
+                  <text x="34" y="244" textAnchor="end" fontSize="10" fill="#5f5f7a">
                     0
                   </text>
                   <polyline
@@ -352,23 +352,17 @@ export function ActivityClient({
                       key={`point-${i}`}
                       cx={point.x}
                       cy={point.y}
-                      r="3.5"
-                      fill={
-                        i === todayIndex
-                          ? "var(--accent)"
-                          : point.count > 0
-                            ? "rgba(124,110,247,0.7)"
-                            : "rgba(255,255,255,0.1)"
-                      }
+                      r={3.5}
+                      fill="rgba(124, 110, 247, 0.75)"
                       stroke="#0f0f17"
-                      strokeWidth="2"
+                      strokeWidth={2}
                     />
                   ))}
                   {points.map((point, i) => (
                     <text
                       key={`label-${i}`}
                       x={point.x}
-                      y="214"
+                      y="268"
                       textAnchor="middle"
                       fontSize="10"
                       fill={i === todayIndex ? "var(--accent)" : "#5f5f7a"}
