@@ -27,6 +27,7 @@ type WorkspaceShellProps = {
     | "/workspace"
     | "/dashboard"
     | "/projects"
+    | "/activity"
     | "/my-tasks"
     | "/leaderboard"
     | "/profile"
