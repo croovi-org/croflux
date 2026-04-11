@@ -10,27 +10,27 @@ export default async function ActivityPage() {
   const thirtyDaysAgo = new Date(now)
   thirtyDaysAgo.setDate(now.getDate() - 29)
   thirtyDaysAgo.setHours(0, 0, 0, 0)
+  const ninetyDaysAgo = new Date(now)
+  ninetyDaysAgo.setDate(now.getDate() - 89)
+  ninetyDaysAgo.setHours(0, 0, 0, 0)
 
   const { data: activityData } = await supabase
     .from("activity_log")
     .select("timestamp")
     .eq("user_id", user.id)
-    .gte("timestamp", thirtyDaysAgo.toISOString())
+    .gte("timestamp", ninetyDaysAgo.toISOString())
     .order("timestamp", { ascending: true })
 
-  const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-  const dayCounts: number[] = Array(7).fill(0)
+  const allTimestamps: string[] = (activityData ?? []).map((r) => r.timestamp)
 
-  for (const row of activityData ?? []) {
-    const d = new Date(row.timestamp)
-    const dayOfWeek = d.getDay()
-    const index = dayOfWeek === 0 ? 6 : dayOfWeek - 1
-    dayCounts[index] = (dayCounts[index] ?? 0) + 1
-  }
-
-  const totalTasksThisMonth = (activityData ?? []).length
+  const totalTasksThisMonth = allTimestamps.filter((ts) => {
+    const d = new Date(ts)
+    return d >= thirtyDaysAgo
+  }).length
   const activeDaysSet = new Set(
-    (activityData ?? []).map((r) => new Date(r.timestamp).toISOString().split("T")[0])
+    allTimestamps
+      .filter((ts) => new Date(ts) >= thirtyDaysAgo)
+      .map((ts) => new Date(ts).toISOString().split("T")[0])
   )
   const activeDays = activeDaysSet.size
 
@@ -41,8 +41,7 @@ export default async function ActivityPage() {
       milestones={milestones}
       rank={rank}
       projectCount={projectCount}
-      dayCounts={dayCounts}
-      dayLabels={dayLabels}
+      allTimestamps={allTimestamps}
       totalTasksThisMonth={totalTasksThisMonth}
       activeDays={activeDays}
       streak={user.streak}
