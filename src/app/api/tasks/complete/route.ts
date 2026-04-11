@@ -30,6 +30,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
+    const { data: taskRow } = await supabase
+      .from("tasks")
+      .select("milestone_id")
+      .eq("id", taskId)
+      .single()
+
+    const projectId = taskRow?.milestone_id
+      ? (await supabase
+          .from("milestones")
+          .select("project_id")
+          .eq("id", taskRow.milestone_id)
+          .single()
+        ).data?.project_id ?? null
+      : null
+
     const userId = user.id
     const today = new Date().toISOString().split("T")[0]
     const yesterday = new Date()
@@ -42,7 +57,8 @@ export async function POST(request: Request) {
         .insert({
           user_id: userId,
           task_completed: true,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          project_id: projectId,
         })
     } catch (err) {
       console.error("activity_log write failed:", err)

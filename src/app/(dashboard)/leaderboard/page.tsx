@@ -27,6 +27,34 @@ export default async function LeaderboardPage() {
   const projectMap = Object.fromEntries(
     (projectsData ?? []).map((p: { user_id: string; name: string }) => [p.user_id, p.name])
   )
+  const now = new Date()
+  const sevenDaysAgo = new Date(now)
+  sevenDaysAgo.setDate(now.getDate() - 6)
+  sevenDaysAgo.setHours(0, 0, 0, 0)
+
+  const { data: activityData } = await supabase
+    .from("activity_log")
+    .select("timestamp")
+    .eq("user_id", user.id)
+    .gte("timestamp", sevenDaysAgo.toISOString())
+    .order("timestamp", { ascending: true })
+
+  // Build a map of day label → count for the last 7 days
+  const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  const dayCounts: number[] = Array(7).fill(0)
+
+  for (const row of activityData ?? []) {
+    const d = new Date(row.timestamp)
+    const dayOfWeek = d.getDay() // 0 = Sun
+    const index = dayOfWeek === 0 ? 6 : dayOfWeek - 1 // Mon=0 ... Sun=6
+    dayCounts[index] = (dayCounts[index] ?? 0) + 1
+  }
+
+  const maxCount = Math.max(...dayCounts, 1)
+  const todayIndex = (() => {
+    const d = new Date().getDay()
+    return d === 0 ? 6 : d - 1
+  })()
 
   const entries = ((data ?? []) as User[]).map((entry, index) => ({
     ...entry,
@@ -192,6 +220,44 @@ export default async function LeaderboardPage() {
                     </article>
                   );
                 })}
+              </div>
+            </section>
+            <section style={{ marginTop: 28, border: "1px solid #1e1e2e", borderRadius: 16, background: "#13131e", padding: 18 }}>
+              <div style={{ marginBottom: 14, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", color: "#5f5f7a" }}>
+                Your activity — this week
+              </div>
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 64 }}>
+                {dayCounts.map((count, i) => (
+                  <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, height: "100%" }}>
+                    <div style={{
+                      flex: 1,
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "flex-end",
+                    }}>
+                      <div style={{
+                        width: "100%",
+                        height: `${Math.max(8, Math.round((count / maxCount) * 100))}%`,
+                        borderRadius: 4,
+                        background: i === todayIndex ? "var(--accent)" : count > 0 ? "rgba(124, 110, 247, 0.35)" : "rgba(255,255,255,0.05)",
+                        transition: "height 0.3s ease",
+                      }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                {dayLabels.map((label, i) => (
+                  <div key={i} style={{
+                    flex: 1,
+                    textAlign: "center",
+                    fontSize: 10,
+                    fontFamily: "var(--mono)",
+                    color: i === todayIndex ? "var(--accent)" : "#5f5f7a",
+                  }}>
+                    {label}
+                  </div>
+                ))}
               </div>
             </section>
           </div>
