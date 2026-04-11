@@ -1189,7 +1189,6 @@ function BoardView({
           border: 1px solid rgba(255, 255, 255, 0.1);
           background: linear-gradient(180deg, rgba(34, 34, 46, 0.96) 0%, rgba(31, 31, 42, 0.98) 100%);
           padding: 18px 20px 16px;
-          min-height: 110px;
           cursor: grab;
           transition:
             transform 0.16s ease,
@@ -1216,7 +1215,9 @@ function BoardView({
           display: flex;
           align-items: center;
           gap: 8px;
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
+          min-width: 0;
+          overflow: hidden;
         }
         .board-chip {
           height: 28px;
@@ -1233,16 +1234,27 @@ function BoardView({
           color: var(--accent);
           border: 1px solid var(--purple-border);
           background: var(--accent-subtle);
+          flex: 0 1 auto;
+          max-width: 68%;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          text-align: left;
+          justify-content: flex-start;
+          padding-left: 11px;
         }
         .board-chip.subtle {
           color: #70758c;
           border: 1px solid rgba(255, 255, 255, 0.08);
           background: rgba(255, 255, 255, 0.04);
+          flex-shrink: 0;
         }
         .board-chip.date {
           color: #54a2ff;
           border: 1px solid rgba(64, 130, 255, 0.42);
           background: rgba(64, 130, 255, 0.08);
+          flex-shrink: 0;
         }
         @media (max-width: 1180px) {
           .board-view {
