@@ -15,6 +15,7 @@ export default async function LeaderboardPage() {
   const { data } = await supabase
     .from("users")
     .select("*")
+    .gt("weekly_tasks_completed", 0)
     .order("weekly_tasks_completed", { ascending: false })
     .order("streak", { ascending: false })
     .limit(10);
@@ -32,6 +33,7 @@ export default async function LeaderboardPage() {
     ...entry,
     position: index + 1,
   }));
+  const isCurrentUserInEntries = entries.some((entry) => entry.id === user.id);
 
   const initials = getInitials(user.name ?? "Builder");
   const nextUp = getNextUpTask(milestones);
@@ -192,6 +194,48 @@ export default async function LeaderboardPage() {
                     </article>
                   );
                 })}
+                {user.weekly_tasks_completed === 0 && !isCurrentUserInEntries && (
+                  <div
+                    style={{
+                      position: "relative",
+                      padding: "20px 16px",
+                      borderRadius: 14,
+                      border: "1px dashed #252538",
+                      background: "#101019",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        right: 0,
+                        top: "50%",
+                        height: 1,
+                        background: "#252538",
+                      }}
+                    />
+                    <span
+                      style={{
+                        position: "relative",
+                        zIndex: 1,
+                        padding: "6px 16px",
+                        background: "#101019",
+                        border: "1px solid #252538",
+                        borderRadius: 999,
+                        fontSize: 11,
+                        color: "#5f5f7a",
+                        fontFamily: '"Geist Mono", monospace',
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      Complete a task this week to appear on the leaderboard
+                    </span>
+                  </div>
+                )}
               </div>
             </section>
           </div>
