@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { DashboardClient } from "@/app/(dashboard)/dashboard/DashboardClient"
+import type { User } from "@/types"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -20,7 +21,7 @@ export default async function DashboardByIdPage({ params }: Props) {
 
   const { data: profile } = await supabase
     .from("users")
-    .select("id, name, email, streak, weekly_tasks_completed, created_at")
+    .select("*")
     .eq("id", user.id)
     .single()
 
@@ -70,14 +71,14 @@ export default async function DashboardByIdPage({ params }: Props) {
 
   const { count: rankCount } = await supabase
     .from("users")
-    .select("id", { count: "exact", head: true })
+    .select("*", { count: "exact", head: true })
     .gt("weekly_tasks_completed", profile.weekly_tasks_completed ?? 0)
 
   const rank = (rankCount ?? 0) + 1
 
   return (
     <DashboardClient
-      user={profile}
+      user={profile as User}
       project={project}
       milestones={milestonesWithTasks}
       initialRank={rank}

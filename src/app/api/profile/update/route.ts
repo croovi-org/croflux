@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     if (updates.first_name !== undefined || updates.last_name !== undefined) {
       const { data: current } = await supabase
         .from("users")
-        .select("first_name, last_name")
+        .select("*")
         .eq("id", user.id)
         .single()
 

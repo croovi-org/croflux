@@ -221,7 +221,7 @@ export default async function WorkspacePage() {
   const nextUp = getNextUpTask(activeWorkspaceMilestones);
   const { count: rankCount } = await supabase
     .from("users")
-    .select("id", { count: "exact", head: true })
+    .select("*", { count: "exact", head: true })
     .gt("weekly_tasks_completed", user.weekly_tasks_completed ?? 0)
 
   const rank = (rankCount ?? 0) + 1;

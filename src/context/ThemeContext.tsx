@@ -80,7 +80,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
       const { data, error } = await supabase
         .from("users")
-        .select("theme_preference")
+        .select("*")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -110,7 +110,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
       const { data, error } = await supabase
         .from("users")
-        .select("theme_preference")
+        .select("*")
         .eq("id", session.user.id)
         .maybeSingle();
 

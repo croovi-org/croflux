@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         }),
         supabase
           .from("users")
-          .select("weekly_tasks_completed")
+          .select("*")
           .eq("id", user.id)
           .single()
           .then(({ data }) =>

@@ -139,10 +139,22 @@ export async function getWorkspaceData(selectedProjectId?: string | null) {
   const user: User = profile ?? {
     id: authUser.id,
     email: authUser.email ?? "",
-    name:
-      typeof authUser.user_metadata?.full_name === "string"
-        ? authUser.user_metadata.full_name
-        : (authUser.email?.split("@")[0] ?? "Builder"),
+    name: authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "Builder",
+    first_name: null,
+    last_name: null,
+    phone: null,
+    gender: null,
+    date_of_birth: null,
+    location: null,
+    timezone: null,
+    role: null,
+    github: null,
+    twitter: null,
+    instagram: null,
+    bio: null,
+    personal_website: null,
+    linkedin: null,
+    avatar_url: null,
     weekly_tasks_completed: 0,
     streak: 0,
     created_at: new Date().toISOString(),
@@ -150,7 +162,7 @@ export async function getWorkspaceData(selectedProjectId?: string | null) {
 
   const { count: rankCount } = await supabase
     .from("users")
-    .select("id", { count: "exact", head: true })
+    .select("*", { count: "exact", head: true })
     .gt("weekly_tasks_completed", user.weekly_tasks_completed ?? 0)
 
   const rank = (rankCount ?? 0) + 1;
