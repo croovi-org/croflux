@@ -74,7 +74,7 @@ export default async function DashboardByIdPage({ params }: Props) {
     .select("*", { count: "exact", head: true })
     .gt("weekly_tasks_completed", profile.weekly_tasks_completed ?? 0)
 
-  const rank = (user.weekly_tasks_completed ?? 0) > 0
+  const rank = (profile?.weekly_tasks_completed ?? 0) > 0
     ? (rankCount ?? 0) + 1
     : null
 
