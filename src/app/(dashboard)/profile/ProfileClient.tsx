@@ -2,14 +2,17 @@
 
 import {
   BriefcaseBusiness,
+  Globe,
   Github,
   Instagram,
+  Linkedin,
   Mail,
   MapPin,
   Pencil,
   Phone,
   Twitter,
 } from "lucide-react";
+import { useState } from "react";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
 import { CurrentPlanCard } from "@/components/profile/CurrentPlanCard";
 import { DangerZone } from "@/components/profile/DangerZone";
@@ -152,6 +155,66 @@ export function ProfileClient({
   savePersonalInfo,
   saveProfessionalInfo,
 }: ProfileClientProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValues, setEditValues] = useState({
+    name: `${profile.firstName} ${profile.lastName}`.trim() || profile.name,
+    bio: profile.bio,
+    github: profile.githubUrl,
+    twitter: profile.twitterUrl,
+    instagram: "",
+    linkedin: profile.linkedinUrl,
+    website: profile.websiteUrl,
+  });
+
+  const toSocialHref = (value: string, prefix: string) =>
+    value.startsWith("http") ? value : `${prefix}${value.replace(/^@/, "")}`;
+  const toWebsiteHref = (value: string) => (value.startsWith("http") ? value : `https://${value}`);
+
+  const handleIdentitySave = async () => {
+    const nameParts = editValues.name.trim().split(/\s+/);
+    const firstName = nameParts[0] ?? "";
+    const lastName = nameParts.slice(1).join(" ");
+
+    await savePersonalInfo({
+      firstName,
+      lastName,
+      email: profile.email,
+      phone: profile.phone,
+      gender: profile.gender,
+      dateOfBirth: profile.dateOfBirth,
+      location: profile.location,
+      timezone: profile.timezone,
+    });
+
+    await saveProfessionalInfo({
+      projectId: profile.projectId,
+      startupName: profile.startupName,
+      workspaceName: profile.workspaceName,
+      workspaceSlug: profile.workspaceSlug,
+      role: profile.role,
+      bio: editValues.bio,
+      twitter: editValues.twitter,
+      linkedin: editValues.linkedin,
+      website: editValues.website,
+      instagram: editValues.instagram,
+    });
+
+    setIsEditing(false);
+  };
+
+  const handleIdentityCancel = () => {
+    setEditValues({
+      name: `${profile.firstName} ${profile.lastName}`.trim() || profile.name,
+      bio: profile.bio,
+      github: profile.githubUrl,
+      twitter: profile.twitterUrl,
+      instagram: "",
+      linkedin: profile.linkedinUrl,
+      website: profile.websiteUrl,
+    });
+    setIsEditing(false);
+  };
+
   return (
     <WorkspaceShell
       workspaceName={shell.workspaceName}
@@ -171,37 +234,194 @@ export function ProfileClient({
         <div className="profile-grid">
           <aside className="profile-left">
             <section className="card identity-card">
-              <div className="avatar-wrap">
-                <div className="avatar-circle">{shell.initials}</div>
-                <button type="button" className="avatar-edit" aria-label="Edit avatar">
-                  <Pencil size={12} />
-                </button>
-              </div>
+              {isEditing ? (
+                <div className="identity-edit">
+                  <div className="identity-edit-field">
+                    <label>Name</label>
+                    <input
+                      value={editValues.name}
+                      onChange={(event) =>
+                        setEditValues((prev) => ({ ...prev, name: event.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="identity-edit-field">
+                    <label>Bio</label>
+                    <textarea
+                      rows={3}
+                      value={editValues.bio}
+                      onChange={(event) =>
+                        setEditValues((prev) => ({ ...prev, bio: event.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="identity-edit-field">
+                    <label>GitHub</label>
+                    <input
+                      value={editValues.github}
+                      onChange={(event) =>
+                        setEditValues((prev) => ({ ...prev, github: event.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="identity-edit-field">
+                    <label>Twitter / X</label>
+                    <input
+                      value={editValues.twitter}
+                      onChange={(event) =>
+                        setEditValues((prev) => ({ ...prev, twitter: event.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="identity-edit-field">
+                    <label>Instagram</label>
+                    <input
+                      value={editValues.instagram}
+                      onChange={(event) =>
+                        setEditValues((prev) => ({ ...prev, instagram: event.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="identity-edit-field">
+                    <label>LinkedIn</label>
+                    <input
+                      value={editValues.linkedin}
+                      onChange={(event) =>
+                        setEditValues((prev) => ({ ...prev, linkedin: event.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="identity-edit-field">
+                    <label>Personal website</label>
+                    <input
+                      value={editValues.website}
+                      onChange={(event) =>
+                        setEditValues((prev) => ({ ...prev, website: event.target.value }))
+                      }
+                    />
+                  </div>
+                  <div className="identity-edit-actions">
+                    <button type="button" className="edit-save-btn" onClick={handleIdentitySave}>
+                      Save
+                    </button>
+                    <button type="button" className="edit-cancel-btn" onClick={handleIdentityCancel}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="avatar-wrap">
+                    <div className="avatar-circle">{shell.initials}</div>
+                    <button type="button" className="avatar-edit" aria-label="Edit avatar">
+                      <Pencil size={12} />
+                    </button>
+                  </div>
 
-              <div className="identity-copy">
-                <h1>{profile.name}</h1>
-                <p>{getSubtitle(profile)}</p>
-              </div>
+                  <div className="identity-copy">
+                    <h1>{profile.name}</h1>
+                    <p>{getSubtitle(profile)}</p>
+                  </div>
 
-              <div className="identity-badges">
-                <span className="pill green">{profile.streak} day streak</span>
-                <span className="pill amber">Boss hunter</span>
-                <span className="pill accent">Early builder</span>
-              </div>
+                  <div className="identity-badges">
+                    <span className="pill green">{profile.streak} day streak</span>
+                    <span className="pill amber">Boss hunter</span>
+                    <span className="pill accent">Early builder</span>
+                  </div>
 
-              <div className="meta-list">
-                <MetaRow icon={<Mail size={15} />} label="Email" value={profile.email} />
-                <MetaRow icon={<Phone size={15} />} label="Phone" value={profile.phone || "Not provided"} />
-                <MetaRow icon={<MapPin size={15} />} label="Location" value={profile.location || "Not provided"} />
-                <MetaRow icon={<BriefcaseBusiness size={15} />} label="Role" value={profile.role || "Founder"} />
-                <MetaRow icon={<Github size={15} />} label="GitHub" value={profile.githubUrl || "@your-github"} />
-                <MetaRow icon={<Twitter size={15} />} label="Twitter / X" value={profile.twitterUrl || "@yourhandle"} />
-                <MetaRow
-                  icon={<Instagram size={15} />}
-                  label="Instagram"
-                  value="@yourinstagram"
-                />
-              </div>
+                  <div className="meta-list">
+                    <MetaRow icon={<Mail size={15} />} label="Email" value={profile.email} />
+                    <MetaRow icon={<Phone size={15} />} label="Phone" value={profile.phone || "Not provided"} />
+                    <MetaRow icon={<MapPin size={15} />} label="Location" value={profile.location || "Not provided"} />
+                    <MetaRow icon={<BriefcaseBusiness size={15} />} label="Role" value={profile.role || "Founder"} />
+                    {profile.githubUrl && (
+                      <a
+                        href={toSocialHref(profile.githubUrl, "https://github.com/")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="meta-link"
+                        style={{ color: "inherit", textDecoration: "none" }}
+                      >
+                        <MetaRow icon={<Github size={15} />} label="GitHub" value={profile.githubUrl} />
+                      </a>
+                    )}
+                    {profile.twitterUrl && (
+                      <a
+                        href={toSocialHref(profile.twitterUrl, "https://x.com/")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="meta-link"
+                        style={{ color: "inherit", textDecoration: "none" }}
+                      >
+                        <MetaRow icon={<Twitter size={15} />} label="Twitter / X" value={profile.twitterUrl} />
+                      </a>
+                    )}
+                    {editValues.instagram && (
+                      <a
+                        href={toSocialHref(editValues.instagram, "https://instagram.com/")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="meta-link"
+                        style={{ color: "inherit", textDecoration: "none" }}
+                      >
+                        <MetaRow icon={<Instagram size={15} />} label="Instagram" value={editValues.instagram} />
+                      </a>
+                    )}
+                    {profile.linkedinUrl && (
+                      <a
+                        href={toSocialHref(profile.linkedinUrl, "https://linkedin.com/in/")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="meta-link"
+                        style={{ color: "inherit", textDecoration: "none" }}
+                      >
+                        <MetaRow icon={<Linkedin size={15} />} label="LinkedIn" value={profile.linkedinUrl} />
+                      </a>
+                    )}
+                    {profile.websiteUrl && (
+                      <a
+                        href={toWebsiteHref(profile.websiteUrl)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="meta-link"
+                        style={{ color: "inherit", textDecoration: "none" }}
+                      >
+                        <MetaRow icon={<Globe size={15} />} label="Website" value={profile.websiteUrl} />
+                      </a>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditing(true);
+                      setEditValues({
+                        name: `${profile.firstName} ${profile.lastName}`.trim() || profile.name,
+                        bio: profile.bio,
+                        github: profile.githubUrl,
+                        twitter: profile.twitterUrl,
+                        instagram: editValues.instagram,
+                        linkedin: profile.linkedinUrl,
+                        website: profile.websiteUrl,
+                      });
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      margin: "0",
+                      border: "none",
+                      borderTop: "1px solid #252538",
+                      background: "none",
+                      color: "#8c90a7",
+                      fontSize: 12,
+                      cursor: "pointer",
+                      borderRadius: "0 0 12px 12px",
+                    }}
+                  >
+                    Edit profile
+                  </button>
+                </>
+              )}
             </section>
 
             <section className="card stats-card">
@@ -384,6 +604,66 @@ export function ProfileClient({
         .meta-list {
           display: grid;
           border-top: 1px solid #252538;
+        }
+        .meta-link {
+          display: block;
+        }
+        .meta-link:hover :global(.meta-row) {
+          background: rgba(255, 255, 255, 0.02);
+        }
+        .identity-edit {
+          display: grid;
+          gap: 10px;
+          padding: 14px;
+        }
+        .identity-edit-field {
+          display: grid;
+          gap: 6px;
+        }
+        .identity-edit-field label {
+          font-size: 10px;
+          color: #8c90a7;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-family: "Geist Mono", monospace;
+        }
+        .identity-edit-field input,
+        .identity-edit-field textarea {
+          background: #1a1a28;
+          border: 1px solid #252538;
+          border-radius: 8px;
+          color: #f0f0f8;
+          font-size: 13px;
+          padding: 9px 10px;
+          outline: none;
+        }
+        .identity-edit-field textarea {
+          resize: vertical;
+          min-height: 70px;
+        }
+        .identity-edit-actions {
+          display: flex;
+          gap: 8px;
+          margin-top: 2px;
+        }
+        .edit-save-btn,
+        .edit-cancel-btn {
+          flex: 1;
+          height: 34px;
+          border-radius: 8px;
+          border: 1px solid #252538;
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+        }
+        .edit-save-btn {
+          background: var(--accent-subtle);
+          color: var(--accent-text);
+          border-color: var(--purple-border);
+        }
+        .edit-cancel-btn {
+          background: #1a1a28;
+          color: #8c90a7;
         }
         .stats-card {
           padding: 12px;
