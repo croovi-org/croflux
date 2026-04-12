@@ -58,10 +58,9 @@ async function saveProfessionalInfo(payload: SavePayload) {
     .update({
       role: payload.role?.trim() || null,
       bio: payload.bio?.trim() || null,
-      twitter_url: payload.twitter?.trim() || null,
-      website_url: payload.website?.trim() || null,
-      linkedin_url: payload.linkedin?.trim() || null,
-      workspace_name: payload.workspaceName?.trim() || null,
+      twitter: payload.twitter?.trim() || null,
+      personal_website: payload.website?.trim() || null,
+      linkedin: payload.linkedin?.trim() || null,
     })
     .eq("id", authUser.id);
 
@@ -91,12 +90,11 @@ export default async function ProfilePage() {
     location?: string | null;
     timezone?: string | null;
     role?: string | null;
-    github_url?: string | null;
-    twitter_url?: string | null;
-    website_url?: string | null;
-    linkedin_url?: string | null;
+    github?: string | null;
+    twitter?: string | null;
+    personal_website?: string | null;
+    linkedin?: string | null;
     bio?: string | null;
-    workspace_name?: string | null;
     notion_connected?: boolean | null;
   };
   const rawProject = project as typeof project & {
@@ -160,10 +158,10 @@ export default async function ProfilePage() {
         location: rawUser.location ?? "",
         timezone: rawUser.timezone ?? "Asia/Kolkata",
         role: rawUser.role ?? "Founder",
-        githubUrl: rawUser.github_url ?? "",
-        twitterUrl: rawUser.twitter_url ?? "",
-        websiteUrl: rawUser.website_url ?? "",
-        linkedinUrl: rawUser.linkedin_url ?? "",
+        githubUrl: rawUser.github ?? "",
+        twitterUrl: rawUser.twitter ?? "",
+        websiteUrl: rawUser.personal_website ?? "",
+        linkedinUrl: rawUser.linkedin ?? "",
         bio:
           rawUser.bio ??
           "Building fast, shipping carefully, and turning product direction into weekly progress.",

@@ -97,6 +97,12 @@ export async function POST(request: Request) {
         idea,
         strategy: strategy || null,
         product_stage: "mvp",
+        workspace_name: `${name} Workspace`,
+        workspace_slug: name
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, ""),
       })
       .select()
       .single();
