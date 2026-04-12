@@ -42,7 +42,7 @@ export default async function LeaderboardPage() {
       currentPage="Leaderboard"
       currentSection="/leaderboard"
       initials={initials}
-      userName={user.name}
+      userName={user.name ?? "Builder"}
       nextUpTask={nextUp?.task.title ?? null}
       nextUpContext={nextUp?.context ?? null}
       incompleteTaskCount={getIncompleteTaskCount(milestones)}
