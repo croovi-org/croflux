@@ -221,7 +221,9 @@ export default async function ProjectsPage() {
     .select("*", { count: "exact", head: true })
     .gt("weekly_tasks_completed", user.weekly_tasks_completed ?? 0)
 
-  const rank = (rankCount ?? 0) + 1
+  const rank = (user.weekly_tasks_completed ?? 0) > 0
+    ? (rankCount ?? 0) + 1
+    : null
 
   return (
     <ProjectsClient
