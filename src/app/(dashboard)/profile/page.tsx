@@ -61,6 +61,8 @@ async function saveProfessionalInfo(payload: SavePayload) {
       twitter: payload.twitter?.trim() || null,
       personal_website: payload.website?.trim() || null,
       linkedin: payload.linkedin?.trim() || null,
+      github: payload.github?.trim() || null,
+      instagram: payload.instagram?.trim() || null,
     })
     .eq("id", authUser.id);
 
@@ -92,6 +94,7 @@ export default async function ProfilePage() {
     role?: string | null;
     github?: string | null;
     twitter?: string | null;
+    instagram?: string | null;
     personal_website?: string | null;
     linkedin?: string | null;
     bio?: string | null;
@@ -160,6 +163,7 @@ export default async function ProfilePage() {
         role: rawUser.role ?? "Founder",
         githubUrl: rawUser.github ?? "",
         twitterUrl: rawUser.twitter ?? "",
+        instagramUrl: rawUser.instagram ?? "",
         websiteUrl: rawUser.personal_website ?? "",
         linkedinUrl: rawUser.linkedin ?? "",
         bio:
