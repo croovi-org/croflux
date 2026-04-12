@@ -56,6 +56,7 @@ type ProfileData = {
   role: string;
   githubUrl: string;
   twitterUrl: string;
+  instagramUrl: string;
   websiteUrl: string;
   linkedinUrl: string;
   bio: string;
@@ -161,7 +162,7 @@ export function ProfileClient({
     bio: profile.bio,
     github: profile.githubUrl,
     twitter: profile.twitterUrl,
-    instagram: "",
+    instagram: profile.instagramUrl,
     linkedin: profile.linkedinUrl,
     website: profile.websiteUrl,
   });
@@ -192,11 +193,12 @@ export function ProfileClient({
       workspaceName: profile.workspaceName,
       workspaceSlug: profile.workspaceSlug,
       role: profile.role,
-      bio: editValues.bio,
-      twitter: editValues.twitter,
-      linkedin: editValues.linkedin,
-      website: editValues.website,
-      instagram: editValues.instagram,
+      bio: editValues.bio ?? profile.bio,
+      twitter: editValues.twitter ?? profile.twitterUrl,
+      website: editValues.website ?? profile.websiteUrl,
+      linkedin: editValues.linkedin ?? profile.linkedinUrl,
+      github: editValues.github ?? profile.githubUrl,
+      instagram: editValues.instagram ?? profile.instagramUrl,
     });
 
     setIsEditing(false);
@@ -208,7 +210,7 @@ export function ProfileClient({
       bio: profile.bio,
       github: profile.githubUrl,
       twitter: profile.twitterUrl,
-      instagram: "",
+      instagram: profile.instagramUrl,
       linkedin: profile.linkedinUrl,
       website: profile.websiteUrl,
     });
@@ -356,15 +358,15 @@ export function ProfileClient({
                         <MetaRow icon={<Twitter size={15} />} label="Twitter / X" value={profile.twitterUrl} />
                       </a>
                     )}
-                    {editValues.instagram && (
+                    {profile.instagramUrl && (
                       <a
-                        href={toSocialHref(editValues.instagram, "https://instagram.com/")}
+                        href={toSocialHref(profile.instagramUrl, "https://instagram.com/")}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="meta-link"
                         style={{ color: "inherit", textDecoration: "none" }}
                       >
-                        <MetaRow icon={<Instagram size={15} />} label="Instagram" value={editValues.instagram} />
+                        <MetaRow icon={<Instagram size={15} />} label="Instagram" value={profile.instagramUrl} />
                       </a>
                     )}
                     {profile.linkedinUrl && (
@@ -400,7 +402,7 @@ export function ProfileClient({
                         bio: profile.bio,
                         github: profile.githubUrl,
                         twitter: profile.twitterUrl,
-                        instagram: editValues.instagram,
+                        instagram: profile.instagramUrl,
                         linkedin: profile.linkedinUrl,
                         website: profile.websiteUrl,
                       });
@@ -497,7 +499,7 @@ export function ProfileClient({
         }
         .profile-grid {
           display: grid;
-          grid-template-columns: 282px minmax(0, 1fr);
+          grid-template-columns: 380px minmax(0, 1fr);
           gap: 14px;
           align-items: start;
           padding: 14px 18px 18px;
