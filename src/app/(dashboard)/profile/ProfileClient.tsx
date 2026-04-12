@@ -82,10 +82,18 @@ type StatsData = {
   memberSince: string;
 };
 
+type BadgesData = {
+  streak: boolean
+  streakCount: number
+  bossHunter: boolean
+  earlyBuilder: boolean
+}
+
 type ProfileClientProps = {
   shell: ShellProps;
   profile: ProfileData;
   stats: StatsData;
+  badges: BadgesData;
   savePersonalInfo: (payload: Record<string, string>) => Promise<void>;
   saveProfessionalInfo: (payload: Record<string, string>) => Promise<void>;
 };
@@ -155,6 +163,7 @@ export function ProfileClient({
   shell,
   profile,
   stats,
+  badges,
   savePersonalInfo,
   saveProfessionalInfo,
 }: ProfileClientProps) {
@@ -393,9 +402,20 @@ export function ProfileClient({
                   </div>
 
                   <div className="identity-badges">
-                    <span className="pill green">{profile.streak} day streak</span>
-                    <span className="pill amber">Boss hunter</span>
-                    <span className="pill accent">Early builder</span>
+                    {badges.streak && (
+                      <span className="pill green">{badges.streakCount} day streak</span>
+                    )}
+                    {badges.bossHunter && (
+                      <span className="pill amber">Boss hunter</span>
+                    )}
+                    {badges.earlyBuilder && (
+                      <span className="pill accent">Early builder</span>
+                    )}
+                    {!badges.streak && !badges.bossHunter && !badges.earlyBuilder && (
+                      <span className="pill" style={{ color: "#5f5f7a", borderColor: "#252538", background: "transparent" }}>
+                        Complete tasks to earn badges
+                      </span>
+                    )}
                   </div>
 
                   <div className="meta-list">

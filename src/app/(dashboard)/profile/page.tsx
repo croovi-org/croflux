@@ -133,6 +133,13 @@ export default async function ProfilePage() {
       milestone.tasks.length > 0 &&
       milestone.tasks.every((task) => task.completed),
   ).length;
+  // Badge logic
+  const isBossHunter = bossesDefeated >= 1
+
+  const earlyBuilderCutoff = new Date("2026-06-30T23:59:59Z")
+  const isEarlyBuilder = new Date(user.created_at) <= earlyBuilderCutoff
+
+  const hasStreak = user.streak >= 1
   const nextUp = getNextUpTask(milestones);
 
   return (
@@ -197,6 +204,12 @@ export default async function ProfilePage() {
           month: "short",
           year: "numeric",
         }),
+      }}
+      badges={{
+        streak: hasStreak,
+        streakCount: user.streak,
+        bossHunter: isBossHunter,
+        earlyBuilder: isEarlyBuilder,
       }}
       savePersonalInfo={savePersonalInfo}
       saveProfessionalInfo={saveProfessionalInfo}
