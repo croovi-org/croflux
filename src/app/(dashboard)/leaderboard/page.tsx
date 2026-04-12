@@ -33,12 +33,12 @@ export default async function LeaderboardPage() {
     position: index + 1,
   }));
 
-  const initials = getInitials(user.name);
+  const initials = getInitials(user.name ?? "Builder");
   const nextUp = getNextUpTask(milestones);
 
   return (
     <WorkspaceShell
-      workspaceName={project.name}
+      workspaceName={project.name ?? "My Project"}
       currentPage="Leaderboard"
       currentSection="/leaderboard"
       initials={initials}

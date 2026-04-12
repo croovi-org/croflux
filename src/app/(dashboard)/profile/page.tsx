@@ -134,9 +134,9 @@ export default async function ProfilePage() {
   return (
     <ProfileClient
       shell={{
-        workspaceName: project.name,
-        initials: getInitials(user.name),
-        userName: user.name,
+        workspaceName: project.name ?? "My Project",
+        initials: getInitials(user.name ?? "Builder"),
+        userName: user.name ?? "Builder",
         nextUpTask: nextUp?.task.title ?? null,
         nextUpContext: nextUp?.context ?? null,
         incompleteTaskCount: getIncompleteTaskCount(milestones),
@@ -148,7 +148,7 @@ export default async function ProfilePage() {
       profile={{
         userId: user.id,
         projectId: project.id,
-        name: user.name,
+        name: user.name ?? "Builder",
         firstName,
         lastName,
         email: user.email,

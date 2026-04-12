@@ -30,9 +30,9 @@ export default async function PricingPage() {
   return (
     <PricingClient
       shell={{
-        workspaceName: project.name,
-        initials: getInitials(user.name),
-        userName: user.name,
+        workspaceName: project.name ?? "My Project",
+        initials: getInitials(user.name ?? "Builder"),
+        userName: user.name ?? "Builder",
         nextUpTask: nextUp?.task.title ?? null,
         nextUpContext: nextUp?.context ?? null,
         incompleteTaskCount: getIncompleteTaskCount(milestones),

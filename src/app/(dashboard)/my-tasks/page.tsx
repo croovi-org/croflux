@@ -11,7 +11,7 @@ import {
 
 export default async function MyTasksPage() {
   const { user, project, milestones, rank, projectCount } = await getWorkspaceData();
-  const initials = getInitials(user.name);
+  const initials = getInitials(user.name ?? "Builder");
   const nextUp = getNextUpTask(milestones);
   const tasks = milestones.flatMap((milestone) =>
     milestone.tasks.map((task) => ({
@@ -28,7 +28,7 @@ export default async function MyTasksPage() {
 
   return (
     <WorkspaceShell
-      workspaceName={project.name}
+      workspaceName={project.name ?? "My Project"}
       currentPage="My Tasks"
       currentSection="/my-tasks"
       initials={initials}

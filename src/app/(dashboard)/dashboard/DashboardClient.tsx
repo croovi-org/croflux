@@ -1399,10 +1399,10 @@ export function DashboardClient({
   return (
     <>
       <WorkspaceShell
-        workspaceName={project.name}
+        workspaceName={project.name ?? "My Project"}
         currentPage="Dashboard"
         currentSection="/dashboard"
-        initials={getInitials(user.name)}
+        initials={getInitials(user.name ?? "Builder")}
         userName={user.name ?? "Builder"}
         nextUpTask={nextUp?.task.title ?? null}
         nextUpContext={nextUp?.context ?? null}
