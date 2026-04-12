@@ -33,6 +33,7 @@ type WorkspaceShellProps = {
     | "/profile"
     | "/pricing";
   initials: string;
+  avatarUrl?: string | null;
   userName: string;
   nextUpTask: string | null;
   nextUpContext: string | null;
@@ -60,6 +61,7 @@ export function WorkspaceShell({
   currentPage,
   currentSection,
   initials,
+  avatarUrl,
   userName,
   nextUpTask,
   nextUpContext,
@@ -158,6 +160,7 @@ export function WorkspaceShell({
                   breadcrumbRoot={breadcrumbRoot ?? workspaceName}
                   currentPage={currentPage}
                   initials={initials}
+                  avatarUrl={avatarUrl}
                   userName={userName}
                   hideAddTask={hideAddTask}
                   actionLabel={actionLabel}

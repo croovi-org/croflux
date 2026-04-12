@@ -35,6 +35,7 @@ export type WorkspaceSummary = {
 
 type WorkspaceClientProps = {
   initials: string;
+  avatarUrl: string | null;
   userName: string;
   workspaceName: string;
   summary: WorkspaceSummary;
@@ -54,6 +55,7 @@ type WorkspaceClientProps = {
 
 export function WorkspaceClient({
   initials,
+  avatarUrl,
   userName,
   workspaceName,
   summary,
@@ -86,6 +88,7 @@ export function WorkspaceClient({
       breadcrumbRoot="Workspace"
       currentSection="/workspace"
       initials={initials}
+      avatarUrl={avatarUrl}
       userName={userName}
       nextUpTask={nextUpTask}
       nextUpContext={nextUpContext}

@@ -31,6 +31,7 @@ type SidebarMilestone = {
 type ShellProps = {
   workspaceName: string;
   initials: string;
+  avatarUrl: string | null;
   userName: string;
   nextUpTask: string | null;
   nextUpContext: string | null;
@@ -54,6 +55,7 @@ type ProfileData = {
   location: string;
   timezone: string;
   role: string;
+  avatarUrl: string | null;
   githubUrl: string;
   twitterUrl: string;
   instagramUrl: string;
@@ -157,6 +159,8 @@ export function ProfileClient({
   saveProfessionalInfo,
 }: ProfileClientProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(profile.avatarUrl ?? null);
+  const [uploading, setUploading] = useState(false);
   const [editValues, setEditValues] = useState({
     name: `${profile.firstName} ${profile.lastName}`.trim() || profile.name,
     bio: profile.bio,
@@ -170,6 +174,41 @@ export function ProfileClient({
   const toSocialHref = (value: string, prefix: string) =>
     value.startsWith("http") ? value : `${prefix}${value.replace(/^@/, "")}`;
   const toWebsiteHref = (value: string) => (value.startsWith("http") ? value : `https://${value}`);
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please upload an image file");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image must be under 2MB");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/profile/avatar", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Upload failed");
+
+      setAvatarUrl(result.url);
+    } catch (err) {
+      console.error("Avatar upload failed:", err);
+      alert("Upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleIdentitySave = async () => {
     const nameParts = editValues.name.trim().split(/\s+/);
@@ -223,6 +262,7 @@ export function ProfileClient({
       currentPage="Profile"
       currentSection="/profile"
       initials={shell.initials}
+      avatarUrl={shell.avatarUrl}
       userName={shell.userName}
       nextUpTask={shell.nextUpTask}
       nextUpContext={shell.nextUpContext}
@@ -314,10 +354,37 @@ export function ProfileClient({
               ) : (
                 <>
                   <div className="avatar-wrap">
-                    <div className="avatar-circle">{shell.initials}</div>
-                    <button type="button" className="avatar-edit" aria-label="Edit avatar">
-                      <Pencil size={12} />
-                    </button>
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt="Avatar"
+                        style={{
+                          width: 72,
+                          height: 72,
+                          borderRadius: "999px",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                    ) : (
+                      <div className="avatar-circle">{shell.initials}</div>
+                    )}
+                    <label
+                      htmlFor="avatar-upload"
+                      className="avatar-edit"
+                      style={{ cursor: uploading ? "wait" : "pointer" }}
+                      aria-label="Edit avatar"
+                    >
+                      {uploading ? "..." : <Pencil size={12} />}
+                    </label>
+                    <input
+                      id="avatar-upload"
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={handleAvatarUpload}
+                      disabled={uploading}
+                    />
                   </div>
 
                   <div className="identity-copy">

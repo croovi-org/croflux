@@ -18,6 +18,7 @@ import { useSignOut } from "@/lib/auth/useSignOut";
 
 type AvatarMenuProps = {
   initials: string;
+  avatarUrl?: string | null;
   userName: string;
 };
 
@@ -47,7 +48,7 @@ function ChevronRightIcon() {
   );
 }
 
-export function AvatarMenu({ initials, userName }: AvatarMenuProps) {
+export function AvatarMenu({ initials, avatarUrl, userName }: AvatarMenuProps) {
   const [open, setOpen] = useState(false);
   const [themeModalOpen, setThemeModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -129,7 +130,23 @@ export function AvatarMenu({ initials, userName }: AvatarMenuProps) {
           onClick={() => setOpen((value) => !value)}
         >
           <span className="tb-user-avatar-wrap">
-            <div className="tb-user-avatar">{initials}</div>
+            <div className="tb-user-avatar">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="Avatar"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: "999px",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                <span>{initials}</span>
+              )}
+            </div>
             <span className="tb-user-dot" aria-hidden="true" />
           </span>
           <span className="tb-user-chevron" aria-hidden="true">

@@ -40,6 +40,7 @@ type SidebarMilestone = {
 
 type ProjectsClientProps = {
   initials: string;
+  avatarUrl: string | null;
   userName: string;
   workspaceName: string;
   projectCount: number;
@@ -60,6 +61,7 @@ type ProjectsClientProps = {
 
 export function ProjectsClient({
   initials,
+  avatarUrl,
   userName,
   workspaceName,
   projectCount,
@@ -113,6 +115,7 @@ export function ProjectsClient({
       currentPage="Projects"
       currentSection="/projects"
       initials={initials}
+      avatarUrl={avatarUrl}
       userName={userName}
       nextUpTask={nextUpTask}
       nextUpContext={nextUpContext}

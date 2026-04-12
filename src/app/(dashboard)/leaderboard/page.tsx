@@ -44,6 +44,7 @@ export default async function LeaderboardPage() {
       currentPage="Leaderboard"
       currentSection="/leaderboard"
       initials={initials}
+      avatarUrl={user.avatar_url ?? null}
       userName={user.name ?? "Builder"}
       nextUpTask={nextUp?.task.title ?? null}
       nextUpContext={nextUp?.context ?? null}
