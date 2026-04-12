@@ -1,12 +1,25 @@
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  plan?: string | null;
-  theme_preference?: string | null;
-  weekly_tasks_completed: number;
-  streak: number;
-  created_at: string;
+export type User = {
+  id: string
+  email: string
+  name: string | null
+  first_name: string | null
+  last_name: string | null
+  phone: string | null
+  gender: string | null
+  date_of_birth: string | null
+  location: string | null
+  timezone: string | null
+  role: string | null
+  github: string | null
+  twitter: string | null
+  instagram: string | null
+  bio: string | null
+  personal_website: string | null
+  linkedin: string | null
+  avatar_url: string | null
+  weekly_tasks_completed: number
+  streak: number
+  created_at: string
 }
 
 export interface Project {
