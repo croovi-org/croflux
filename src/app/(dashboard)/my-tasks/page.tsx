@@ -32,7 +32,7 @@ export default async function MyTasksPage() {
       currentPage="My Tasks"
       currentSection="/my-tasks"
       initials={initials}
-      userName={user.name}
+      userName={user.name ?? "Builder"}
       nextUpTask={nextUp?.task.title ?? null}
       nextUpContext={nextUp?.context ?? null}
       incompleteTaskCount={getIncompleteTaskCount(milestones)}
