@@ -168,7 +168,6 @@ export default async function ProfilePage() {
         startupName: rawProject.name ?? project.name,
         workspaceName:
           rawProject.workspace_name ??
-          rawUser.workspace_name ??
           rawProject.name ??
           project.name,
         workspaceSlug:
