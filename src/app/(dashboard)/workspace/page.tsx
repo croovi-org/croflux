@@ -86,10 +86,22 @@ export default async function WorkspacePage() {
   const user: User = profile ?? {
     id: authUser.id,
     email: authUser.email ?? "",
-    name:
-      typeof authUser.user_metadata?.full_name === "string"
-        ? authUser.user_metadata.full_name
-        : (authUser.email?.split("@")[0] ?? "Builder"),
+    name: authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "Builder",
+    first_name: null,
+    last_name: null,
+    phone: null,
+    gender: null,
+    date_of_birth: null,
+    location: null,
+    timezone: null,
+    role: null,
+    github: null,
+    twitter: null,
+    instagram: null,
+    bio: null,
+    personal_website: null,
+    linkedin: null,
+    avatar_url: null,
     weekly_tasks_completed: 0,
     streak: 0,
     created_at: new Date().toISOString(),
