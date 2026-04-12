@@ -46,10 +46,6 @@ export async function POST(request: Request) {
       : null
 
     const userId = user.id
-    const today = new Date().toISOString().split("T")[0]
-    const yesterday = new Date()
-    yesterday.setDate(yesterday.getDate() - 1)
-    const yesterdayStr = yesterday.toISOString().split("T")[0]
 
     try {
       await supabase
@@ -65,7 +61,6 @@ export async function POST(request: Request) {
     }
 
     let currentWeeklyTasksCompleted = 0
-    let currentStreak = 0
     let userSnapshotLoaded = false
 
     try {
@@ -76,54 +71,49 @@ export async function POST(request: Request) {
         .single()
 
       currentWeeklyTasksCompleted = currentUser?.weekly_tasks_completed ?? 0
-      currentStreak = currentUser?.streak ?? 0
       userSnapshotLoaded = true
     } catch (err) {
       console.error("users select failed:", err)
     }
 
-    let nextStreak = currentStreak
-    let shouldUpdateStreak = false
+    // Recalculate streak fresh based on consecutive days of activity
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
 
-    try {
-      const { data: todayLogs } = await supabase
-        .from("activity_log")
-        .select("id")
-        .eq("user_id", userId)
-        .gte("timestamp", today + "T00:00:00.000Z")
-        .lt("timestamp", today + "T23:59:59.999Z")
-        .limit(2)
+    const { data: recentActivity } = await serviceSupabase
+      .from("activity_log")
+      .select("timestamp")
+      .eq("user_id", user.id)
+      .gte("timestamp", new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString())
+      .order("timestamp", { ascending: false })
 
-      if (!todayLogs || todayLogs.length <= 1) {
-        const { data: yesterdayLogs } = await supabase
-          .from("activity_log")
-          .select("id")
-          .eq("user_id", userId)
-          .gte("timestamp", yesterdayStr + "T00:00:00.000Z")
-          .lt("timestamp", yesterdayStr + "T23:59:59.999Z")
-          .limit(1)
+    const activeDays = new Set(
+      (recentActivity ?? []).map((entry) => {
+        const d = new Date(entry.timestamp)
+        d.setHours(0, 0, 0, 0)
+        return d.getTime()
+      })
+    )
 
-        nextStreak = yesterdayLogs && yesterdayLogs.length > 0
-          ? currentStreak + 1
-          : 1
-        shouldUpdateStreak = true
-      }
-    } catch (err) {
-      console.error("streak calculation failed:", err)
+    let streak = 0
+    const checkDate = new Date(today)
+    while (activeDays.has(checkDate.getTime())) {
+      streak++
+      checkDate.setDate(checkDate.getDate() - 1)
     }
+
+    await serviceSupabase
+      .from("users")
+      .update({ streak })
+      .eq("id", user.id)
 
     try {
       const updates: {
         weekly_tasks_completed?: number
-        streak?: number
       } = {}
 
       if (userSnapshotLoaded) {
         updates.weekly_tasks_completed = currentWeeklyTasksCompleted + 1
-      }
-
-      if (shouldUpdateStreak) {
-        updates.streak = nextStreak
       }
 
       if (Object.keys(updates).length > 0) {

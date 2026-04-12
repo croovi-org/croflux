@@ -162,8 +162,11 @@ export async function getWorkspaceData(selectedProjectId?: string | null) {
 
   const { count: rankCount } = await supabase
     .from("users")
-    .select("*", { count: "exact", head: true })
-    .gt("weekly_tasks_completed", user.weekly_tasks_completed ?? 0)
+    .select("id", { count: "exact", head: true })
+    .or(
+      `weekly_tasks_completed.gt.${user.weekly_tasks_completed ?? 0},` +
+      `and(weekly_tasks_completed.eq.${user.weekly_tasks_completed ?? 0},streak.gt.${user.streak ?? 0})`
+    )
 
   const rank = (user.weekly_tasks_completed ?? 0) > 0
     ? (rankCount ?? 0) + 1

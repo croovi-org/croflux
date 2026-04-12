@@ -71,8 +71,11 @@ export default async function DashboardByIdPage({ params }: Props) {
 
   const { count: rankCount } = await supabase
     .from("users")
-    .select("*", { count: "exact", head: true })
-    .gt("weekly_tasks_completed", profile.weekly_tasks_completed ?? 0)
+    .select("id", { count: "exact", head: true })
+    .or(
+      `weekly_tasks_completed.gt.${profile.weekly_tasks_completed ?? 0},` +
+      `and(weekly_tasks_completed.eq.${profile.weekly_tasks_completed ?? 0},streak.gt.${profile.streak ?? 0})`
+    )
 
   const rank = (profile?.weekly_tasks_completed ?? 0) > 0
     ? (rankCount ?? 0) + 1
