@@ -1403,6 +1403,7 @@ export function DashboardClient({
         currentPage="Dashboard"
         currentSection="/dashboard"
         initials={getInitials(user.name ?? "Builder")}
+        avatarUrl={user.avatar_url ?? null}
         userName={user.name ?? "Builder"}
         nextUpTask={nextUp?.task.title ?? null}
         nextUpContext={nextUp?.context ?? null}

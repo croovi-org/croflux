@@ -95,6 +95,7 @@ export default async function ProfilePage() {
     github?: string | null;
     twitter?: string | null;
     instagram?: string | null;
+    avatar_url?: string | null;
     personal_website?: string | null;
     linkedin?: string | null;
     bio?: string | null;
@@ -139,6 +140,7 @@ export default async function ProfilePage() {
       shell={{
         workspaceName: project.name ?? "My Project",
         initials: getInitials(user.name ?? "Builder"),
+        avatarUrl: rawUser.avatar_url ?? null,
         userName: user.name ?? "Builder",
         nextUpTask: nextUp?.task.title ?? null,
         nextUpContext: nextUp?.context ?? null,
@@ -161,6 +163,7 @@ export default async function ProfilePage() {
         location: rawUser.location ?? "",
         timezone: rawUser.timezone ?? "Asia/Kolkata",
         role: rawUser.role ?? "Founder",
+        avatarUrl: rawUser.avatar_url ?? null,
         githubUrl: rawUser.github ?? "",
         twitterUrl: rawUser.twitter ?? "",
         instagramUrl: rawUser.instagram ?? "",

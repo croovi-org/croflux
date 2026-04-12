@@ -16,6 +16,7 @@ type SidebarMilestone = {
 type ShellProps = {
   workspaceName: string;
   initials: string;
+  avatarUrl: string | null;
   userName: string;
   nextUpTask: string | null;
   nextUpContext: string | null;
@@ -74,6 +75,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
       currentPage="Pricing"
       currentSection="/pricing"
       initials={shell.initials}
+      avatarUrl={shell.avatarUrl}
       userName={shell.userName}
       nextUpTask={shell.nextUpTask}
       nextUpContext={shell.nextUpContext}

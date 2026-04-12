@@ -231,6 +231,7 @@ export default async function ProjectsPage() {
   return (
     <ProjectsClient
       initials={getInitials(user.name ?? "Builder")}
+      avatarUrl={user.avatar_url ?? null}
       userName={user.name ?? "Builder"}
       workspaceName={getWorkspaceName(user.name)}
       projectCount={projects.length}

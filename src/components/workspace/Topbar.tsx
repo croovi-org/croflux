@@ -7,6 +7,7 @@ type TopbarProps = {
   breadcrumbRoot: string;
   currentPage?: string;
   initials: string;
+  avatarUrl?: string | null;
   userName: string;
   hideAddTask?: boolean;
   actionLabel?: string;
@@ -17,6 +18,7 @@ export function Topbar({
   breadcrumbRoot,
   currentPage,
   initials,
+  avatarUrl,
   userName,
   hideAddTask = false,
   actionLabel = "Add task",
@@ -72,7 +74,7 @@ export function Topbar({
           </button>
         ) : null}
 
-        <AvatarMenu initials={initials} userName={userName} />
+        <AvatarMenu initials={initials} avatarUrl={avatarUrl} userName={userName} />
       </div>
 
       <style jsx>{`

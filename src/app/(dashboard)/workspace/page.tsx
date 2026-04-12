@@ -234,6 +234,7 @@ export default async function WorkspacePage() {
   return (
     <WorkspaceClient
       initials={getInitials(user.name ?? "Builder")}
+      avatarUrl={user.avatar_url ?? null}
       userName={user.name ?? "Builder"}
       workspaceName={getWorkspaceName(user.name)}
       summary={summary}
