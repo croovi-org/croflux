@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { AvatarMenu } from "@/components/AvatarMenu";
+import { useProfile } from "@/context/ProfileContext";
 
 type TopbarProps = {
   breadcrumbRoot: string;
@@ -24,6 +25,11 @@ export function Topbar({
   actionLabel = "Add task",
   actionHref = "/my-tasks",
 }: TopbarProps) {
+  const {
+    initials: ctxInitials,
+    avatarUrl: ctxAvatarUrl,
+    displayName: ctxName,
+  } = useProfile()
   const router = useRouter();
   const hasCurrentPage = Boolean(currentPage);
 
@@ -74,7 +80,7 @@ export function Topbar({
           </button>
         ) : null}
 
-        <AvatarMenu initials={initials} avatarUrl={avatarUrl} userName={userName} />
+        <AvatarMenu initials={ctxInitials} avatarUrl={ctxAvatarUrl} userName={ctxName} />
       </div>
 
       <style jsx>{`

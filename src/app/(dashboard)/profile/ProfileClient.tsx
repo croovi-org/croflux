@@ -20,6 +20,7 @@ import { IntegrationsPanel } from "@/components/profile/IntegrationsPanel";
 import { PersonalInfoForm } from "@/components/profile/PersonalInfoForm";
 import { ProfessionalInfoForm } from "@/components/profile/ProfessionalInfoForm";
 import { SecurityPanel } from "@/components/profile/SecurityPanel";
+import { ProfileProvider, computeInitials, useProfile } from "@/context/ProfileContext";
 
 type SidebarMilestone = {
   id: string;
@@ -159,7 +160,25 @@ function MetaRow({
   );
 }
 
-export function ProfileClient({
+export function ProfileClient(props: ProfileClientProps) {
+  const { shell } = props;
+
+  return (
+    <ProfileProvider
+      initial={{
+        displayName: shell.userName,
+        initials: shell.initials,
+        avatarUrl: shell.avatarUrl ?? null,
+        workspaceName: shell.workspaceName,
+        streak: shell.streak,
+      }}
+    >
+      <ProfileClientContent {...props} />
+    </ProfileProvider>
+  );
+}
+
+function ProfileClientContent({
   shell,
   profile,
   stats,
@@ -167,6 +186,15 @@ export function ProfileClient({
   savePersonalInfo,
   saveProfessionalInfo,
 }: ProfileClientProps) {
+  const {
+    displayName,
+    initials: ctxInitials,
+    workspaceName: ctxWorkspaceName,
+    setDisplayName,
+    setInitials,
+    setAvatarUrl: setCtxAvatarUrl,
+    setWorkspaceName,
+  } = useProfile()
   const [isEditing, setIsEditing] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(profile.avatarUrl ?? null);
   const [uploading, setUploading] = useState(false);
@@ -211,6 +239,7 @@ export function ProfileClient({
       if (!response.ok) throw new Error(result.error ?? "Upload failed");
 
       setAvatarUrl(result.url);
+      setCtxAvatarUrl(result.url)
     } catch (err) {
       console.error("Avatar upload failed:", err);
       alert("Upload failed. Please try again.");
@@ -249,8 +278,32 @@ export function ProfileClient({
       instagram: editValues.instagram ?? profile.instagramUrl,
     });
 
+    const newName = editValues.name.trim() || profile.name
+    setDisplayName(newName)
+    setInitials(computeInitials(newName))
+    if (editValues.name !== profile.workspaceName) {
+      setWorkspaceName(editValues.name.trim() || profile.workspaceName)
+    }
     setIsEditing(false);
   };
+
+  const handlePersonalSave = async (payload: Record<string, string>) => {
+    await savePersonalInfo(payload)
+    const newName = [payload.firstName, payload.lastName].filter(Boolean).join(" ").trim()
+    if (newName) {
+      setDisplayName(newName)
+      setInitials(computeInitials(newName))
+    }
+  }
+
+  const handleProfessionalSave = async (payload: Record<string, string>) => {
+    await saveProfessionalInfo(payload)
+    const nextWorkspaceName =
+      payload.workspaceName?.trim() ||
+      payload.startupName?.trim() ||
+      ctxWorkspaceName
+    setWorkspaceName(nextWorkspaceName)
+  }
 
   const handleIdentityCancel = () => {
     setEditValues({
@@ -267,12 +320,12 @@ export function ProfileClient({
 
   return (
     <WorkspaceShell
-      workspaceName={shell.workspaceName}
+      workspaceName={ctxWorkspaceName}
       currentPage="Profile"
       currentSection="/profile"
-      initials={shell.initials}
-      avatarUrl={shell.avatarUrl}
-      userName={shell.userName}
+      initials={ctxInitials}
+      avatarUrl={avatarUrl}
+      userName={displayName}
       nextUpTask={shell.nextUpTask}
       nextUpContext={shell.nextUpContext}
       incompleteTaskCount={shell.incompleteTaskCount}
@@ -376,7 +429,7 @@ export function ProfileClient({
                         }}
                       />
                     ) : (
-                      <div className="avatar-circle">{shell.initials}</div>
+                      <div className="avatar-circle">{ctxInitials}</div>
                     )}
                     <label
                       htmlFor="avatar-upload"
@@ -397,7 +450,7 @@ export function ProfileClient({
                   </div>
 
                   <div className="identity-copy">
-                    <h1>{profile.name}</h1>
+                    <h1>{displayName}</h1>
                     <p>{getSubtitle(profile)}</p>
                   </div>
 
@@ -551,7 +604,7 @@ export function ProfileClient({
                 location: profile.location,
                 timezone: profile.timezone,
               }}
-              onSave={savePersonalInfo}
+              onSave={handlePersonalSave}
             />
 
             <ProfessionalInfoForm
@@ -566,7 +619,7 @@ export function ProfileClient({
                 website: profile.websiteUrl,
                 linkedin: profile.linkedinUrl,
               }}
-              onSave={saveProfessionalInfo}
+              onSave={handleProfessionalSave}
             />
 
             <IntegrationsPanel />

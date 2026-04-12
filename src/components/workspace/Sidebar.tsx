@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useProfile } from "@/context/ProfileContext";
 
 type SidebarMilestone = {
   id: string;
@@ -58,6 +59,12 @@ export function Sidebar({
   activeProjectId = null,
   projectCount,
 }: SidebarProps) {
+  const {
+    displayName: ctxName,
+    initials: ctxInitials,
+    workspaceName: ctxWorkspace,
+    streak: ctxStreak,
+  } = useProfile()
   const pathname = usePathname();
   const normalizedPathname =
     pathname.length > 1 && pathname.endsWith("/")
@@ -102,9 +109,9 @@ export function Sidebar({
   return (
     <aside className={`sidebar-shell ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-top">
-        <div className="workspace-switcher">
-          <span className="workspace-avatar">{initials}</span>
-          <span className="workspace-name">{workspaceName}</span>
+        <div className="workspace-switcher" title={ctxName}>
+          <span className="workspace-avatar">{ctxInitials}</span>
+          <span className="workspace-name">{ctxWorkspace}</span>
           <button
             type="button"
             className="sidebar-collapse-btn"
@@ -375,7 +382,7 @@ export function Sidebar({
         <div className="streak-card">
           <span className="streak-icon">⚡</span>
           <div>
-            <div className="streak-title">{streak} day streak</div>
+            <div className="streak-title">{ctxStreak} day streak</div>
             <div className="streak-copy">Don&apos;t break it today</div>
           </div>
         </div>
