@@ -4,6 +4,7 @@ import { useSyncExternalStore, type ReactNode } from "react";
 import { IconRail } from "@/components/workspace/IconRail";
 import { Sidebar } from "@/components/workspace/Sidebar";
 import { Topbar } from "@/components/workspace/Topbar";
+import { ProfileProvider, useOptionalProfile } from "@/context/ProfileContext";
 
 type SidebarMilestone = {
   id: string;
@@ -79,6 +80,7 @@ export function WorkspaceShell({
   projectCount,
   children,
 }: WorkspaceShellProps) {
+  const existingProfileContext = useOptionalProfile();
   const sidebarCollapsed = useSyncExternalStore(
     (onStoreChange) => {
       const handleStorage = (event: StorageEvent) => {
@@ -106,7 +108,7 @@ export function WorkspaceShell({
     window.dispatchEvent(new Event(SIDEBAR_EVENT));
   };
 
-  return (
+  const shellContent = (
     <div className="ws-shell">
       <div className="ws-body-row">
         <IconRail />
@@ -288,5 +290,23 @@ export function WorkspaceShell({
         }
       `}</style>
     </div>
+  );
+
+  if (existingProfileContext) {
+    return shellContent;
+  }
+
+  return (
+    <ProfileProvider
+      initial={{
+        displayName: userName,
+        initials: initials,
+        avatarUrl: avatarUrl ?? null,
+        workspaceName: workspaceName,
+        streak: streak,
+      }}
+    >
+      {shellContent}
+    </ProfileProvider>
   );
 }
