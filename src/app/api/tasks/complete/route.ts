@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     try {
       const { data: currentUser } = await serviceSupabase
         .from("users")
-        .select("weekly_tasks_completed, streak")
+        .select("*")
         .eq("id", userId)
         .single()
 
