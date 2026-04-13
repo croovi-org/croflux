@@ -30,6 +30,7 @@ type SidebarMilestone = {
 };
 
 type ShellProps = {
+  projectName: string;
   workspaceName: string;
   initials: string;
   avatarUrl: string | null;
@@ -326,6 +327,7 @@ function ProfileClientContent({
   return (
     <WorkspaceShell
       workspaceName={ctxWorkspaceName}
+      projectName={shell.projectName}
       currentPage="Profile"
       currentSection="/profile"
       initials={ctxInitials}

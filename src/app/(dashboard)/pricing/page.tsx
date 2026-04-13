@@ -30,6 +30,7 @@ export default async function PricingPage() {
   return (
     <PricingClient
       shell={{
+        projectName: project.name ?? "",
         workspaceName,
         initials: getInitials(user.name ?? "Builder"),
         avatarUrl: user.avatar_url ?? null,

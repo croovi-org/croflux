@@ -3,6 +3,7 @@ import { ProjectsClient } from "./ProjectsClient";
 import { createClient } from "@/lib/supabase/server";
 import {
   getBossHp,
+  getWorkspaceData,
   getIncompleteTaskCount,
   getInitials,
   getNextUpTask,
@@ -74,6 +75,7 @@ export default async function ProjectsPage() {
 
   const projects = (projectsData ?? []) as Project[];
   const profile = profileData as User | null;
+  const { project, workspaceName } = await getWorkspaceData();
 
   const user: User = profile ?? {
     id: authUser.id,
@@ -230,10 +232,11 @@ export default async function ProjectsPage() {
 
   return (
     <ProjectsClient
+      projectName={project.name ?? ""}
       initials={getInitials(user.name ?? "Builder")}
       avatarUrl={user.avatar_url ?? null}
       userName={user.name ?? "Builder"}
-      workspaceName={getWorkspaceName(user.name)}
+      workspaceName={workspaceName}
       projectCount={projects.length}
       nextUpTask={nextUp?.task.title ?? null}
       nextUpContext={nextUp?.context ?? null}

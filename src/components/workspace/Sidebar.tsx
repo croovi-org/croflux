@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
 
 type SidebarMilestone = {
@@ -39,12 +38,6 @@ type SidebarProps = {
     progress: number;
     color: string;
   }>;
-  allProjects?: Array<{
-    id: string
-    name: string
-    workspace_name?: string | null
-  }>;
-  activeProjectId?: string | null;
   projectCount?: number;
 };
 
@@ -62,16 +55,10 @@ export function Sidebar({
   currentSection,
   mode = "default",
   projects = [],
-  allProjects = [],
-  activeProjectId = null,
   projectCount,
 }: SidebarProps) {
-  const [switcherOpen, setSwitcherOpen] = useState(false)
-  const switcherRef = useRef<HTMLDivElement>(null)
   const {
-    displayName: ctxName,
     initials: ctxInitials,
-    workspaceName: ctxWorkspace,
     streak: ctxStreak,
   } = useProfile()
   const pathname = usePathname();
@@ -116,30 +103,15 @@ export function Sidebar({
     },
   ];
 
-  useEffect(() => {
-    if (!switcherOpen) return
-    const handleClick = (e: MouseEvent) => {
-      if (switcherRef.current && !switcherRef.current.contains(e.target as Node)) {
-        setSwitcherOpen(false)
-      }
-    }
-    document.addEventListener("mousedown", handleClick)
-    return () => document.removeEventListener("mousedown", handleClick)
-  }, [switcherOpen])
   return (
     <aside className={`sidebar-shell ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-top">
-        <div className="workspace-switcher-wrap" ref={switcherRef} style={{ position: "relative" }}>
+        <div className="workspace-switcher-wrap">
           <div className="workspace-switcher-row">
-            <button
-              type="button"
-              className="workspace-switcher"
-              onClick={() => setSwitcherOpen((o) => !o)}
-              title={ctxName}
-            >
+            <div className="workspace-switcher">
               <span className="workspace-avatar">{ctxInitials}</span>
-              <span className="workspace-name">{ctxWorkspace}</span>
-            </button>
+              <span className="workspace-name">{workspaceName}</span>
+            </div>
             <button
               type="button"
               className="sidebar-collapse-btn"
@@ -161,46 +133,6 @@ export function Sidebar({
               </svg>
             </button>
           </div>
-
-          {switcherOpen && (
-            <div className="ws-switcher-dropdown">
-              <div className="ws-switcher-label">WORKSPACES</div>
-              {(allProjects ?? []).map((p) => {
-                const rawP = p as typeof p & { workspace_name?: string | null }
-                const displayName = rawP.workspace_name ?? p.name
-                const isActive = p.id === activeProjectId
-                return (
-                  <Link
-                    key={p.id}
-                    href={`/dashboard?project=${p.id}`}
-                    className={`ws-switcher-item ${isActive ? "active" : ""}`}
-                    onClick={() => setSwitcherOpen(false)}
-                  >
-                    <span className="ws-switcher-avatar">
-                      {displayName[0]?.toUpperCase() ?? "W"}
-                    </span>
-                    <span className="ws-switcher-name">{displayName}</span>
-                    {isActive && (
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round">
-                        <polyline points="2,6 5,9 10,3" />
-                      </svg>
-                    )}
-                  </Link>
-                )
-              })}
-              <div className="ws-switcher-divider" />
-              <Link
-                href="/onboarding"
-                className="ws-switcher-new"
-                onClick={() => setSwitcherOpen(false)}
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                  <path d="M6 2v8M2 6h8" />
-                </svg>
-                New workspace
-              </Link>
-            </div>
-          )}
         </div>
         <div className="next-up-wrap">
           <div className="next-up-card">
@@ -331,7 +263,7 @@ export function Sidebar({
             <div className="milestones-label project-section-label">PROJECTS</div>
             <div className="project-list">
               {projects.map((project) => {
-                const isActive = activeProjectId === project.id;
+                const isActive = false;
 
                 return (
                   <Link
@@ -531,83 +463,6 @@ export function Sidebar({
           border-color: var(--purple-mid);
           color: var(--accent-text);
           transform: translateX(-1px);
-        }
-        .ws-switcher-dropdown {
-          position: absolute;
-          top: calc(100% + 4px);
-          left: 8px;
-          right: 8px;
-          background: #13131e;
-          border: 1px solid #252538;
-          border-radius: 12px;
-          padding: 6px;
-          z-index: 100;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }
-        .ws-switcher-label {
-          font-size: 9px;
-          color: #5f5f7a;
-          letter-spacing: 0.1em;
-          font-family: "Geist Mono", monospace;
-          padding: 6px 10px 4px;
-        }
-        .ws-switcher-item {
-          display: flex;
-          align-items: center;
-          gap: 9px;
-          padding: 8px 10px;
-          border-radius: 8px;
-          text-decoration: none;
-          color: #c3c6d7;
-          font-size: 12px;
-          transition: background 0.12s ease;
-          cursor: pointer;
-        }
-        .ws-switcher-item:hover {
-          background: rgba(255,255,255,0.04);
-        }
-        .ws-switcher-item.active {
-          background: var(--accent-subtle);
-          color: #f0f0f8;
-        }
-        .ws-switcher-avatar {
-          width: 22px;
-          height: 22px;
-          border-radius: 6px;
-          background: var(--accent);
-          color: white;
-          display: grid;
-          place-items: center;
-          font-size: 10px;
-          font-weight: 700;
-          flex-shrink: 0;
-        }
-        .ws-switcher-name {
-          flex: 1;
-          min-width: 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        .ws-switcher-divider {
-          height: 1px;
-          background: #252538;
-          margin: 6px 0;
-        }
-        .ws-switcher-new {
-          display: flex;
-          align-items: center;
-          gap: 9px;
-          padding: 8px 10px;
-          border-radius: 8px;
-          text-decoration: none;
-          color: #8c90a7;
-          font-size: 12px;
-          transition: background 0.12s ease, color 0.12s ease;
-        }
-        .ws-switcher-new:hover {
-          background: rgba(255,255,255,0.04);
-          color: var(--accent-text);
         }
         .workspace-avatar {
           width: 24px;

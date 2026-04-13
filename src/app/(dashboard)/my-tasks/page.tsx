@@ -29,6 +29,7 @@ export default async function MyTasksPage() {
   return (
     <WorkspaceShell
       workspaceName={workspaceName}
+      projectName={project.name ?? ""}
       currentPage="My Tasks"
       currentSection="/my-tasks"
       initials={initials}

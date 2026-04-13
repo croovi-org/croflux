@@ -14,6 +14,7 @@ type SidebarMilestone = {
 };
 
 type ShellProps = {
+  projectName: string;
   workspaceName: string;
   initials: string;
   avatarUrl: string | null;
@@ -77,6 +78,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
   return (
     <WorkspaceShell
       workspaceName={shell.workspaceName}
+      projectName={shell.projectName}
       currentPage="Pricing"
       currentSection="/pricing"
       initials={shell.initials}

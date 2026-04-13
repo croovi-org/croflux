@@ -284,6 +284,7 @@ export function ActivityClient({
   return (
     <WorkspaceShell
       workspaceName={workspaceName}
+      projectName={project.name ?? ""}
       currentPage="Activity"
       currentSection="/activity"
       initials={getInitials(user.name ?? "Builder")}
