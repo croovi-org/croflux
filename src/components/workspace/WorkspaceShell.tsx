@@ -48,6 +48,11 @@ type WorkspaceShellProps = {
   actionHref?: string;
   sidebarMode?: "default" | "workspaceHome";
   sidebarProjects?: SidebarProject[];
+  allProjects?: Array<{
+    id: string
+    name: string
+    workspace_name?: string | null
+  }>;
   activeProjectId?: string | null;
   projectCount?: number;
   children: ReactNode;
@@ -76,6 +81,7 @@ export function WorkspaceShell({
   actionHref,
   sidebarMode = "default",
   sidebarProjects = [],
+  allProjects,
   activeProjectId = null,
   projectCount,
   children,
@@ -107,6 +113,18 @@ export function WorkspaceShell({
     window.localStorage.setItem(SIDEBAR_STORAGE_KEY, nextValue ? "1" : "0");
     window.dispatchEvent(new Event(SIDEBAR_EVENT));
   };
+  const computedSidebarProjects = sidebarProjects.length > 0
+    ? sidebarProjects
+    : (allProjects ?? []).map((p, i) => {
+        const colors = ["#7c6ef7", "#22c55e", "#ffb700", "#22d3ee", "#f472b6"]
+        const rawP = p as typeof p & { workspace_name?: string | null }
+        return {
+          id: p.id,
+          name: rawP.workspace_name ?? p.name,
+          progress: 0,
+          color: colors[i % colors.length] ?? "#7c6ef7",
+        }
+      })
 
   const shellContent = (
     <div className="ws-shell">
@@ -126,7 +144,8 @@ export function WorkspaceShell({
             collapsed={sidebarCollapsed}
             onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
             mode={sidebarMode}
-            projects={sidebarProjects}
+            projects={computedSidebarProjects}
+            allProjects={allProjects}
             activeProjectId={activeProjectId}
             projectCount={projectCount}
           />

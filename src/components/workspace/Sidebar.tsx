@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
 
 type SidebarMilestone = {
@@ -38,6 +39,11 @@ type SidebarProps = {
     progress: number;
     color: string;
   }>;
+  allProjects?: Array<{
+    id: string
+    name: string
+    workspace_name?: string | null
+  }>;
   activeProjectId?: string | null;
   projectCount?: number;
 };
@@ -56,9 +62,12 @@ export function Sidebar({
   currentSection,
   mode = "default",
   projects = [],
+  allProjects = [],
   activeProjectId = null,
   projectCount,
 }: SidebarProps) {
+  const [switcherOpen, setSwitcherOpen] = useState(false)
+  const switcherRef = useRef<HTMLDivElement>(null)
   const {
     displayName: ctxName,
     initials: ctxInitials,
@@ -106,32 +115,92 @@ export function Sidebar({
       badgeTone: "amber" as const,
     },
   ];
+
+  useEffect(() => {
+    if (!switcherOpen) return
+    const handleClick = (e: MouseEvent) => {
+      if (switcherRef.current && !switcherRef.current.contains(e.target as Node)) {
+        setSwitcherOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => document.removeEventListener("mousedown", handleClick)
+  }, [switcherOpen])
   return (
     <aside className={`sidebar-shell ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-top">
-        <div className="workspace-switcher" title={ctxName}>
-          <span className="workspace-avatar">{ctxInitials}</span>
-          <span className="workspace-name">{ctxWorkspace}</span>
-          <button
-            type="button"
-            className="sidebar-collapse-btn"
-            aria-label="Close sidebar"
-            onClick={onToggleCollapse}
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+        <div className="workspace-switcher-wrap" ref={switcherRef} style={{ position: "relative" }}>
+          <div className="workspace-switcher-row">
+            <button
+              type="button"
+              className="workspace-switcher"
+              onClick={() => setSwitcherOpen((o) => !o)}
+              title={ctxName}
             >
-              <path d="m10 4-4 4 4 4" />
-            </svg>
-          </button>
+              <span className="workspace-avatar">{ctxInitials}</span>
+              <span className="workspace-name">{ctxWorkspace}</span>
+            </button>
+            <button
+              type="button"
+              className="sidebar-collapse-btn"
+              aria-label="Close sidebar"
+              onClick={onToggleCollapse}
+            >
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m10 4-4 4 4 4" />
+              </svg>
+            </button>
+          </div>
+
+          {switcherOpen && (
+            <div className="ws-switcher-dropdown">
+              <div className="ws-switcher-label">WORKSPACES</div>
+              {(allProjects ?? []).map((p) => {
+                const rawP = p as typeof p & { workspace_name?: string | null }
+                const displayName = rawP.workspace_name ?? p.name
+                const isActive = p.id === activeProjectId
+                return (
+                  <Link
+                    key={p.id}
+                    href={`/dashboard?project=${p.id}`}
+                    className={`ws-switcher-item ${isActive ? "active" : ""}`}
+                    onClick={() => setSwitcherOpen(false)}
+                  >
+                    <span className="ws-switcher-avatar">
+                      {displayName[0]?.toUpperCase() ?? "W"}
+                    </span>
+                    <span className="ws-switcher-name">{displayName}</span>
+                    {isActive && (
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round">
+                        <polyline points="2,6 5,9 10,3" />
+                      </svg>
+                    )}
+                  </Link>
+                )
+              })}
+              <div className="ws-switcher-divider" />
+              <Link
+                href="/onboarding"
+                className="ws-switcher-new"
+                onClick={() => setSwitcherOpen(false)}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                  <path d="M6 2v8M2 6h8" />
+                </svg>
+                New workspace
+              </Link>
+            </div>
+          )}
         </div>
         <div className="next-up-wrap">
           <div className="next-up-card">
@@ -416,21 +485,129 @@ export function Sidebar({
           position: relative;
           z-index: 2;
         }
-        .workspace-switcher {
+        .workspace-switcher-row {
+          display: flex;
+          align-items: center;
           width: 100%;
+          border-bottom: 1px solid var(--border);
+          overflow: hidden;
+        }
+        .workspace-switcher {
+          flex: 1;
+          min-width: 0;
           height: 64px;
           background: #111014;
           border: 0;
-          border-bottom: 1px solid var(--border);
           border-radius: 0;
-          padding: 0 16px;
+          padding: 0 0 0 16px;
           display: flex;
           align-items: center;
           gap: 10px;
           color: var(--text);
           text-align: left;
+          cursor: pointer;
           transition: background 0.12s ease;
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        }
+        .workspace-switcher:hover {
+          background: #17161d;
+        }
+        .sidebar-collapse-btn {
+          width: 26px;
+          height: 26px;
+          border-radius: 8px;
+          border: 1px solid rgba(255,255,255,0.06);
+          background: #17161d;
+          color: var(--text3);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          cursor: pointer;
+          margin-right: 12px;
+          transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease, transform 0.14s ease;
+        }
+        .sidebar-collapse-btn:hover {
+          background: #1d1c24;
+          border-color: var(--purple-mid);
+          color: var(--accent-text);
+          transform: translateX(-1px);
+        }
+        .ws-switcher-dropdown {
+          position: absolute;
+          top: calc(100% + 4px);
+          left: 8px;
+          right: 8px;
+          background: #13131e;
+          border: 1px solid #252538;
+          border-radius: 12px;
+          padding: 6px;
+          z-index: 100;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .ws-switcher-label {
+          font-size: 9px;
+          color: #5f5f7a;
+          letter-spacing: 0.1em;
+          font-family: "Geist Mono", monospace;
+          padding: 6px 10px 4px;
+        }
+        .ws-switcher-item {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          padding: 8px 10px;
+          border-radius: 8px;
+          text-decoration: none;
+          color: #c3c6d7;
+          font-size: 12px;
+          transition: background 0.12s ease;
+          cursor: pointer;
+        }
+        .ws-switcher-item:hover {
+          background: rgba(255,255,255,0.04);
+        }
+        .ws-switcher-item.active {
+          background: var(--accent-subtle);
+          color: #f0f0f8;
+        }
+        .ws-switcher-avatar {
+          width: 22px;
+          height: 22px;
+          border-radius: 6px;
+          background: var(--accent);
+          color: white;
+          display: grid;
+          place-items: center;
+          font-size: 10px;
+          font-weight: 700;
+          flex-shrink: 0;
+        }
+        .ws-switcher-name {
+          flex: 1;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .ws-switcher-divider {
+          height: 1px;
+          background: #252538;
+          margin: 6px 0;
+        }
+        .ws-switcher-new {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          padding: 8px 10px;
+          border-radius: 8px;
+          text-decoration: none;
+          color: #8c90a7;
+          font-size: 12px;
+          transition: background 0.12s ease, color 0.12s ease;
+        }
+        .ws-switcher-new:hover {
+          background: rgba(255,255,255,0.04);
+          color: var(--accent-text);
         }
         .workspace-avatar {
           width: 24px;
@@ -452,39 +629,6 @@ export function Sidebar({
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-        }
-        .sidebar-collapse-btn {
-          width: 26px;
-          height: 26px;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.06);
-          background: #17161d;
-          color: var(--text3);
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          cursor: pointer;
-          transition:
-            background 0.14s ease,
-            border-color 0.14s ease,
-            color 0.14s ease,
-            transform 0.14s ease;
-        }
-        .sidebar-collapse-btn:hover {
-          background: #1d1c24;
-          border-color: var(--purple-mid);
-          color: var(--accent-text);
-          transform: translateX(-1px);
-        }
-        .sidebar-collapse-btn :global(svg) {
-          width: 11px;
-          height: 11px;
-          stroke: currentColor;
-          stroke-width: 1.8;
-          fill: none;
-          stroke-linecap: round;
-          stroke-linejoin: round;
         }
         .next-up-wrap {
           padding: 10px 8px 10px;

@@ -19,6 +19,8 @@ type DashboardClientProps = {
   milestones: MilestoneWithTasks[];
   initialRank: number | null;
   projectCount: number;
+  workspaceName: string;
+  allProjects: Project[];
 };
 
 type ToastState = { title: string; body: string };
@@ -1275,6 +1277,8 @@ export function DashboardClient({
   milestones: initialMilestones,
   initialRank,
   projectCount,
+  workspaceName,
+  allProjects,
 }: DashboardClientProps) {
   const [milestones, setMilestones] = useState(initialMilestones);
   const [toast, setToast] = useState<ToastState | null>(null);
@@ -1399,7 +1403,7 @@ export function DashboardClient({
   return (
     <>
       <WorkspaceShell
-        workspaceName={project.name ?? "My Project"}
+        workspaceName={workspaceName}
         currentPage="Dashboard"
         currentSection="/dashboard"
         initials={getInitials(user.name ?? "Builder")}
@@ -1412,6 +1416,8 @@ export function DashboardClient({
         milestones={sidebarMilestones}
         streak={user.streak}
         projectCount={projectCount}
+        allProjects={allProjects}
+        activeProjectId={project.id}
         headerBottom={<div className="navbar-tabs"><ViewTabs active={activeTab} onSelect={setActiveTab} /></div>}
       >
         <main className="main">

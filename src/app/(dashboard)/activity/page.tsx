@@ -3,7 +3,7 @@ import { getWorkspaceData } from "@/lib/workspace/data"
 import { ActivityClient } from "./ActivityClient"
 
 export default async function ActivityPage() {
-  const { user, project, milestones, rank, projectCount } = await getWorkspaceData()
+  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData()
   const supabase = await createClient()
 
   const now = new Date()
@@ -41,6 +41,8 @@ export default async function ActivityPage() {
       milestones={milestones}
       rank={rank}
       projectCount={projectCount}
+      workspaceName={workspaceName}
+      allProjects={allProjects}
       allTimestamps={allTimestamps}
       totalTasksThisMonth={totalTasksThisMonth}
       activeDays={activeDays}

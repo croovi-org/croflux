@@ -41,6 +41,11 @@ type ShellProps = {
   milestones: SidebarMilestone[];
   streak: number;
   projectCount: number;
+  allProjects: Array<{
+    id: string
+    name: string
+    workspace_name?: string | null
+  }>;
 };
 
 type ProfileData = {
@@ -333,6 +338,7 @@ function ProfileClientContent({
       milestones={shell.milestones}
       streak={shell.streak}
       projectCount={shell.projectCount}
+      allProjects={shell.allProjects}
     >
       <main className="profile-main">
         <div className="profile-grid">

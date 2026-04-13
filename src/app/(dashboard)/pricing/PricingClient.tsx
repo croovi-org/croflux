@@ -25,6 +25,11 @@ type ShellProps = {
   milestones: SidebarMilestone[];
   streak: number;
   projectCount: number;
+  allProjects: Array<{
+    id: string
+    name: string
+    workspace_name?: string | null
+  }>;
 };
 
 type PricingClientProps = {
@@ -84,6 +89,7 @@ export function PricingClient({ shell, currentPlan }: PricingClientProps) {
       milestones={shell.milestones}
       streak={shell.streak}
       projectCount={shell.projectCount}
+      allProjects={shell.allProjects}
     >
       <main className="pricing-main">
         <div className="pricing-wrap">
