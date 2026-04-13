@@ -34,6 +34,7 @@ export type WorkspaceSummary = {
 };
 
 type WorkspaceClientProps = {
+  projectName: string;
   initials: string;
   avatarUrl: string | null;
   userName: string;
@@ -54,6 +55,7 @@ type WorkspaceClientProps = {
 };
 
 export function WorkspaceClient({
+  projectName,
   initials,
   avatarUrl,
   userName,
@@ -85,6 +87,7 @@ export function WorkspaceClient({
   return (
     <WorkspaceShell
       workspaceName={workspaceName}
+      projectName={projectName}
       breadcrumbRoot="Workspace"
       currentSection="/workspace"
       initials={initials}

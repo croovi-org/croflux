@@ -39,6 +39,7 @@ type SidebarMilestone = {
 };
 
 type ProjectsClientProps = {
+  projectName: string;
   initials: string;
   avatarUrl: string | null;
   userName: string;
@@ -60,6 +61,7 @@ type ProjectsClientProps = {
 };
 
 export function ProjectsClient({
+  projectName,
   initials,
   avatarUrl,
   userName,
@@ -111,6 +113,7 @@ export function ProjectsClient({
   return (
     <WorkspaceShell
       workspaceName={workspaceName}
+      projectName={projectName}
       breadcrumbRoot={workspaceName}
       currentPage="Projects"
       currentSection="/projects"

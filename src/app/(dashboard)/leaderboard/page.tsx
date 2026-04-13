@@ -41,6 +41,7 @@ export default async function LeaderboardPage() {
   return (
     <WorkspaceShell
       workspaceName={workspaceName}
+      projectName={project.name ?? ""}
       currentPage="Leaderboard"
       currentSection="/leaderboard"
       initials={initials}

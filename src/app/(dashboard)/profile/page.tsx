@@ -145,6 +145,7 @@ export default async function ProfilePage() {
   return (
     <ProfileClient
       shell={{
+        projectName: project.name ?? "",
         workspaceName,
         initials: getInitials(user.name ?? "Builder"),
         avatarUrl: rawUser.avatar_url ?? null,

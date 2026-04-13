@@ -22,6 +22,7 @@ type SidebarProject = {
 
 type WorkspaceShellProps = {
   workspaceName: string;
+  projectName?: string;
   breadcrumbRoot?: string;
   currentPage?: string;
   currentSection:
@@ -63,6 +64,7 @@ const SIDEBAR_EVENT = "croflux-sidebar-collapsed-change";
 
 export function WorkspaceShell({
   workspaceName,
+  projectName,
   breadcrumbRoot,
   currentPage,
   currentSection,
@@ -132,7 +134,7 @@ export function WorkspaceShell({
         <IconRail />
         <div className={`ws-sidebar-wrap ${sidebarCollapsed ? "collapsed" : ""}`}>
           <Sidebar
-            workspaceName={workspaceName}
+            workspaceName={projectName ?? workspaceName}
             initials={initials}
             nextUpTask={nextUpTask}
             nextUpContext={nextUpContext}
@@ -145,8 +147,6 @@ export function WorkspaceShell({
             onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
             mode={sidebarMode}
             projects={computedSidebarProjects}
-            allProjects={allProjects}
-            activeProjectId={activeProjectId}
             projectCount={projectCount}
           />
         </div>
@@ -186,6 +186,9 @@ export function WorkspaceShell({
                   hideAddTask={hideAddTask}
                   actionLabel={actionLabel}
                   actionHref={actionHref}
+                  workspaceName={workspaceName}
+                  allProjects={allProjects ?? []}
+                  activeProjectId={activeProjectId}
                 />
               </div>
               {headerBottom ? <div className="ws-navbar-bottom">{headerBottom}</div> : null}

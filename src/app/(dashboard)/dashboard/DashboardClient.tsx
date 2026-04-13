@@ -1404,6 +1404,7 @@ export function DashboardClient({
     <>
       <WorkspaceShell
         workspaceName={workspaceName}
+        projectName={project.name ?? ""}
         currentPage="Dashboard"
         currentSection="/dashboard"
         initials={getInitials(user.name ?? "Builder")}
