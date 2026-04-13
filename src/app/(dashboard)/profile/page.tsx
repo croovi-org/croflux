@@ -82,7 +82,7 @@ async function saveProfessionalInfo(payload: SavePayload) {
 }
 
 export default async function ProfilePage() {
-  const { user, project, milestones, rank, projectCount } = await getWorkspaceData();
+  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData();
   const rawUser = user as typeof user & {
     first_name?: string | null;
     last_name?: string | null;
@@ -145,7 +145,7 @@ export default async function ProfilePage() {
   return (
     <ProfileClient
       shell={{
-        workspaceName: project.name ?? "My Project",
+        workspaceName,
         initials: getInitials(user.name ?? "Builder"),
         avatarUrl: rawUser.avatar_url ?? null,
         userName: user.name ?? "Builder",
@@ -156,6 +156,7 @@ export default async function ProfilePage() {
         milestones: getSidebarMilestones(milestones),
         streak: user.streak,
         projectCount,
+        allProjects,
       }}
       profile={{
         userId: user.id,

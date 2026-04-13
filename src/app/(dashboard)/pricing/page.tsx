@@ -23,14 +23,14 @@ function normalizePlan(rawPlan: string | null | undefined) {
 }
 
 export default async function PricingPage() {
-  const { user, project, milestones, rank, projectCount } = await getWorkspaceData();
+  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData();
   const rawUser = user as typeof user & { plan?: string | null };
   const nextUp = getNextUpTask(milestones);
 
   return (
     <PricingClient
       shell={{
-        workspaceName: project.name ?? "My Project",
+        workspaceName,
         initials: getInitials(user.name ?? "Builder"),
         avatarUrl: user.avatar_url ?? null,
         userName: user.name ?? "Builder",
@@ -41,6 +41,7 @@ export default async function PricingPage() {
         milestones: getSidebarMilestones(milestones),
         streak: user.streak,
         projectCount,
+        allProjects,
       }}
       currentPlan={normalizePlan(rawUser.plan)}
     />

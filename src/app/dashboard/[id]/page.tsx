@@ -31,7 +31,7 @@ export default async function DashboardByIdPage({ params }: Props) {
 
   const { data: project } = await supabase
     .from("projects")
-    .select("id, user_id, name, idea, strategy, product_stage, created_at")
+    .select("id, user_id, name, workspace_name, workspace_slug, idea, strategy, product_stage, created_at")
     .eq("id", id)
     .eq("user_id", user.id)
     .single()
@@ -68,6 +68,11 @@ export default async function DashboardByIdPage({ params }: Props) {
     .from("projects")
     .select("id", { count: "exact", head: true })
     .eq("user_id", user.id)
+  const { data: allProjects } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: true })
 
   const { count: rankCount } = await supabase
     .from("users")
@@ -80,6 +85,11 @@ export default async function DashboardByIdPage({ params }: Props) {
   const rank = (profile?.weekly_tasks_completed ?? 0) > 0
     ? (rankCount ?? 0) + 1
     : null
+  const rawProject = project as typeof project & {
+    workspace_name?: string | null
+    workspace_slug?: string | null
+  }
+  const workspaceName = rawProject.workspace_name ?? rawProject.name ?? "My Workspace"
 
   return (
     <DashboardClient
@@ -88,6 +98,8 @@ export default async function DashboardByIdPage({ params }: Props) {
       milestones={milestonesWithTasks}
       initialRank={rank}
       projectCount={projectCount ?? 1}
+      workspaceName={workspaceName}
+      allProjects={allProjects ?? []}
     />
   )
 }

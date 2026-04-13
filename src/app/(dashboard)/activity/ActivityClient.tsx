@@ -12,6 +12,8 @@ type ActivityClientProps = {
   milestones: MilestoneWithTasks[]
   rank: number | null
   projectCount: number
+  workspaceName: string
+  allProjects: Project[]
   allTimestamps: string[]
   totalTasksThisMonth: number
   activeDays: number
@@ -99,6 +101,8 @@ export function ActivityClient({
   milestones,
   rank,
   projectCount,
+  workspaceName,
+  allProjects,
   allTimestamps,
   totalTasksThisMonth,
   activeDays,
@@ -279,7 +283,7 @@ export function ActivityClient({
 
   return (
     <WorkspaceShell
-      workspaceName={project.name ?? "My Project"}
+      workspaceName={workspaceName}
       currentPage="Activity"
       currentSection="/activity"
       initials={getInitials(user.name ?? "Builder")}
@@ -292,6 +296,8 @@ export function ActivityClient({
       milestones={getSidebarMilestones(milestones)}
       streak={user.streak}
       projectCount={projectCount}
+      allProjects={allProjects}
+      activeProjectId={project.id}
     >
       <main style={{ flex: 1, minWidth: 0, background: "#0f0f17", overflow: "auto" }}>
         <div style={{ padding: 24 }} data-total-tasks-month={totalTasksThisMonth}>
