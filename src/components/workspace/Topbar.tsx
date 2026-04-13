@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AvatarMenu } from "@/components/AvatarMenu";
@@ -86,37 +85,43 @@ export function Topbar({
                   const displayName = rawP.workspace_name ?? p.name
                   const isActive = p.id === activeProjectId
                   return (
-                    <Link
-                      key={p.id}
-                      href={`/dashboard?project=${p.id}`}
-                      className={`tb-ws-item ${isActive ? "active" : ""}`}
+                    <a key={p.id} href={`/dashboard?project=${p.id}`}
+                      className={`tb-ws-item${isActive ? " active" : ""}`}
                       onClick={() => setSwitcherOpen(false)}
+                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 8px", borderRadius: 7, textDecoration: "none", cursor: "pointer" }}
                     >
-                      <span className="tb-ws-item-avatar">
+                      <span style={{ width: 20, height: 20, borderRadius: 5, background: "var(--accent)", color: "white", display: "grid", placeItems: "center", fontSize: 9, fontWeight: 700, flexShrink: 0, fontFamily: '"Geist Mono", monospace' }}>
                         {displayName[0]?.toUpperCase() ?? "W"}
                       </span>
-                      <span className="tb-ws-item-name">{displayName}</span>
+                      <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13, fontFamily: "Inter, 'Inter Fallback'", fontWeight: 500, lineHeight: "19.5px", color: "rgb(236, 236, 239)" }}>
+                        {displayName}
+                      </span>
                       {isActive && (
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-                          stroke="var(--accent)" strokeWidth="2" strokeLinecap="round">
+                        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
+                          stroke="var(--accent)" strokeWidth="2.2"
+                          strokeLinecap="round" strokeLinejoin="round"
+                          style={{ flexShrink: 0 }}>
                           <polyline points="2,6 5,9 10,3" />
                         </svg>
                       )}
-                    </Link>
+                    </a>
                   )
                 })}
-                <div className="tb-ws-divider" />
-                <Link
-                  href="/onboarding"
+                <div style={{ height: 1, background: "#1e1e2e", margin: "3px 4px" }} />
+                <a href="/onboarding"
                   className="tb-ws-new"
                   onClick={() => setSwitcherOpen(false)}
+                  style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 8px", borderRadius: 7, textDecoration: "none", cursor: "pointer" }}
                 >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-                    stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                    style={{ flexShrink: 0, color: "#8c90a7" }}>
                     <path d="M6 2v8M2 6h8" />
                   </svg>
-                  New workspace
-                </Link>
+                  <span style={{ fontSize: 13, fontFamily: "Inter, 'Inter Fallback'", fontWeight: 500, lineHeight: "19.5px", color: "#8c90a7" }}>
+                    New workspace
+                  </span>
+                </a>
               </div>
             )}
           </div>
@@ -205,36 +210,49 @@ export function Topbar({
         .tb-ws-btn {
           display: flex;
           align-items: center;
-          gap: 5px;
-          background: none;
-          border: none;
+          gap: 6px;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+          border: 1px solid rgba(255, 255, 255, 0.09);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 6px 20px rgba(0, 0, 0, 0.22);
           cursor: pointer;
-          padding: 4px 6px;
-          border-radius: 6px;
-          transition: background 0.12s ease;
-          color: #6f6f86;
+          padding: 6px 10px 6px 9px;
+          border-radius: 10px;
+          transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+          color: #c3c6d7;
         }
         .tb-ws-btn:hover {
-          background: rgba(255,255,255,0.04);
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035));
+          border-color: rgba(124, 110, 247, 0.38);
+          transform: translateY(-0.5px);
+        }
+        .tb-ws-btn:focus-visible {
+          outline: none;
+          border-color: rgba(124, 110, 247, 0.62);
+          box-shadow: 0 0 0 2px rgba(124, 110, 247, 0.25), 0 10px 28px rgba(0, 0, 0, 0.28);
         }
         .tb-ws-name {
           font-size: 12px;
-          color: #6f6f86;
+          color: #d3d5e3;
           font-family: Inter, sans-serif;
           line-height: 1;
-          font-weight: 500;
+          font-weight: 550;
+          letter-spacing: 0.01em;
+          max-width: 180px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .tb-ws-dropdown {
           position: absolute;
-          top: calc(100% + 8px);
+          top: calc(100% + 6px);
           left: 0;
-          min-width: 220px;
+          min-width: 200px;
           background: #13131e;
           border: 1px solid #252538;
-          border-radius: 12px;
-          padding: 6px;
+          border-radius: 10px;
+          padding: 4px;
           z-index: 200;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
         .tb-ws-dropdown-label {
           font-size: 9px;
@@ -248,29 +266,35 @@ export function Topbar({
         .tb-ws-item {
           display: flex;
           align-items: center;
-          gap: 9px;
-          padding: 7px 10px;
-          border-radius: 8px;
+          gap: 10px;
+          padding: 9px 10px;
+          border-radius: 10px;
           text-decoration: none;
-          color: #c3c6d7;
+          color: #d0d3e4;
           font-size: 12px;
           font-family: Inter, sans-serif;
           font-weight: 500;
-          transition: background 0.12s ease;
+          border: 1px solid transparent;
+          transition: background 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
         }
-        .tb-ws-item:hover { background: rgba(255,255,255,0.04); }
-        .tb-ws-item.active { background: var(--accent-subtle); color: #f0f0f8; }
+        .tb-ws-item:hover {
+          background: rgba(255,255,255,0.04);
+        }
+        .tb-ws-item.active {
+          background: var(--accent-subtle);
+        }
         .tb-ws-item-avatar {
-          width: 22px;
-          height: 22px;
-          border-radius: 6px;
-          background: var(--accent);
+          width: 24px;
+          height: 24px;
+          border-radius: 7px;
+          background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 82%, #fff), color-mix(in srgb, var(--accent) 72%, #000));
           color: white;
           display: grid;
           place-items: center;
-          font-size: 10px;
+          font-size: 9px;
           font-weight: 700;
           flex-shrink: 0;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
         }
         .tb-ws-item-name {
           flex: 1;
@@ -278,21 +302,30 @@ export function Topbar({
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          letter-spacing: 0.01em;
         }
-        .tb-ws-divider { height: 1px; background: #252538; margin: 4px 0; }
+        .tb-ws-divider {
+          height: 1px;
+          background: rgba(255, 255, 255, 0.08);
+          margin: 7px 2px 6px;
+        }
         .tb-ws-new {
           display: flex;
           align-items: center;
-          gap: 9px;
-          padding: 7px 10px;
-          border-radius: 8px;
+          gap: 10px;
+          padding: 9px 10px;
+          border-radius: 10px;
           text-decoration: none;
-          color: #8c90a7;
+          color: #9fa3ba;
           font-size: 12px;
           font-family: Inter, sans-serif;
-          transition: background 0.12s ease, color 0.12s ease;
+          font-weight: 500;
+          border: 1px solid transparent;
+          transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
         }
-        .tb-ws-new:hover { background: rgba(255,255,255,0.04); color: var(--accent-text); }
+        .tb-ws-new:hover {
+          background: rgba(255,255,255,0.04);
+        }
         .tb-sep {
           font-size: 12px;
           color: #44445a;
