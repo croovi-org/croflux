@@ -62,11 +62,19 @@ function isProjectIdle(lastActivityAt: string | null) {
 export default async function WorkspacePage({ searchParams }: WorkspacePageProps) {
   const params = searchParams ? await searchParams : {};
   const projectParam = Array.isArray(params.project) ? params.project[0] : params.project;
-  const { user, project, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData(
+  const {
+    user,
+    project,
+    rank,
+    projectCount,
+    workspaceName,
+    allProjects,
+    workspaceProjects,
+  } = await getWorkspaceData(
     projectParam ?? null,
   );
   const supabase = await createClient();
-  const projects = allProjects as Project[];
+  const projects = workspaceProjects as Project[];
 
   let groupedMilestones = new Map<string, MilestoneWithTasks[]>();
 
@@ -167,9 +175,8 @@ export default async function WorkspacePage({ searchParams }: WorkspacePageProps
   );
 
   const projectSummaries = projectSummaryResult.projects;
-  const workspaceProjects = allProjects.filter((p) => p.id === project.id);
   const activeProjects = projectSummaries.filter((p) =>
-    workspaceProjects.some((workspaceProject) => workspaceProject.id === p.id),
+    projects.some((workspaceProject) => workspaceProject.id === p.id),
   );
 
   const summary: WorkspaceSummary = {

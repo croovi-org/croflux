@@ -95,7 +95,7 @@ export function ProjectsClient({
   const [view, setView] = useState<"list" | "grid">("list");
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | "all">("all");
+  const [selectedWorkspaceName, setSelectedWorkspaceName] = useState<string | "all">("all");
   const [wsDropdownOpen, setWsDropdownOpen] = useState(false);
   const wsDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -123,17 +123,46 @@ export function ProjectsClient({
 
   useEffect(() => {
     if (!activeProjectId) return;
-    if (selectedWorkspaceId === "all") return;
-    const exists = (allProjects ?? []).some((item) => item.id === selectedWorkspaceId);
+    if (selectedWorkspaceName === "all") return;
+    const exists = (allProjects ?? []).some((item) => {
+      const rawItem = item as typeof item & { workspace_name?: string | null };
+      return (rawItem.workspace_name ?? item.name) === selectedWorkspaceName;
+    });
     if (!exists) {
-      setSelectedWorkspaceId("all");
+      setSelectedWorkspaceName("all");
     }
-  }, [activeProjectId, allProjects, selectedWorkspaceId]);
+  }, [activeProjectId, allProjects, selectedWorkspaceName]);
+
+  const uniqueWorkspaces = useMemo(() => {
+    return (allProjects ?? []).reduce<
+      Array<{ id: string; name: string; workspace_name?: string | null }>
+    >((acc, p) => {
+      const rawP = p as typeof p & { workspace_name?: string | null };
+      const wsName = rawP.workspace_name ?? p.name;
+      const already = acc.find((item) => {
+        const r = item as typeof item & { workspace_name?: string | null };
+        return (r.workspace_name ?? item.name) === wsName;
+      });
+      if (!already) acc.push(p);
+      return acc;
+    }, []);
+  }, [allProjects]);
+
+  const workspaceNameByProjectId = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const item of allProjects ?? []) {
+      const rawItem = item as typeof item & { workspace_name?: string | null };
+      map.set(item.id, rawItem.workspace_name ?? item.name);
+    }
+    return map;
+  }, [allProjects]);
 
   const filteredProjects = useMemo(() => {
-    if (selectedWorkspaceId === "all") return projects;
-    return projects.filter((project) => project.id === selectedWorkspaceId);
-  }, [projects, selectedWorkspaceId]);
+    if (selectedWorkspaceName === "all") return projects;
+    return projects.filter(
+      (project) => workspaceNameByProjectId.get(project.id) === selectedWorkspaceName,
+    );
+  }, [projects, selectedWorkspaceName, workspaceNameByProjectId]);
 
   const displayedProjects = useMemo(() => {
     const normalizedQuery = searchValue.trim().toLowerCase();
@@ -297,15 +326,15 @@ export function ProjectsClient({
                         padding: "0 12px",
                         borderRadius: 8,
                         background:
-                          selectedWorkspaceId === "all"
+                          selectedWorkspaceName === "all"
                             ? "#13131e"
                             : "var(--accent-subtle)",
                         border:
-                          selectedWorkspaceId === "all"
+                          selectedWorkspaceName === "all"
                             ? "1px solid #252538"
                             : "1px solid var(--accent-muted)",
                         color:
-                          selectedWorkspaceId === "all"
+                          selectedWorkspaceName === "all"
                             ? "#8c90a7"
                             : "var(--accent-text)",
                         fontSize: 12,
@@ -314,12 +343,13 @@ export function ProjectsClient({
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {selectedWorkspaceId === "all"
+                      {selectedWorkspaceName === "all"
                         ? "All workspaces"
                         : (() => {
-                            const selected = (allProjects ?? []).find(
-                              (item) => item.id === selectedWorkspaceId,
-                            );
+                            const selected = uniqueWorkspaces.find((item) => {
+                              const rawItem = item as typeof item & { workspace_name?: string | null };
+                              return (rawItem.workspace_name ?? item.name) === selectedWorkspaceName;
+                            });
                             const rawSelected = selected as
                               | (typeof selected & { workspace_name?: string | null })
                               | undefined;
@@ -357,7 +387,7 @@ export function ProjectsClient({
                         <button
                           type="button"
                           onClick={() => {
-                            setSelectedWorkspaceId("all");
+                            setSelectedWorkspaceName("all");
                             setWsDropdownOpen(false);
                           }}
                           style={{
@@ -368,12 +398,12 @@ export function ProjectsClient({
                             padding: "6px 10px",
                             borderRadius: 7,
                             background:
-                              selectedWorkspaceId === "all"
+                              selectedWorkspaceName === "all"
                                 ? "var(--accent-subtle)"
                                 : "transparent",
                             border: "none",
                             color:
-                              selectedWorkspaceId === "all"
+                              selectedWorkspaceName === "all"
                                 ? "var(--accent-text)"
                                 : "#c3c6d7",
                             fontSize: 12,
@@ -383,7 +413,7 @@ export function ProjectsClient({
                           }}
                         >
                           All workspaces
-                          {selectedWorkspaceId === "all" && (
+                          {selectedWorkspaceName === "all" && (
                             <svg
                               width="11"
                               height="11"
@@ -400,16 +430,16 @@ export function ProjectsClient({
                           )}
                         </button>
                         <div style={{ height: 1, background: "#1e1e2e", margin: "3px 4px" }} />
-                        {(allProjects ?? []).map((item) => {
+                        {uniqueWorkspaces.map((item) => {
                           const rawItem = item as typeof item & { workspace_name?: string | null };
                           const displayName = rawItem.workspace_name ?? item.name;
-                          const isSelected = selectedWorkspaceId === item.id;
+                          const isSelected = selectedWorkspaceName === displayName;
                           return (
                             <button
                               key={item.id}
                               type="button"
                               onClick={() => {
-                                setSelectedWorkspaceId(item.id);
+                                setSelectedWorkspaceName(displayName);
                                 setWsDropdownOpen(false);
                               }}
                               style={{

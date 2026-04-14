@@ -58,6 +58,23 @@ export function Topbar({
   } = useProfile()
   const router = useRouter();
   const hasCurrentPage = Boolean(currentPage);
+  const uniqueWorkspaces = (allProjects ?? []).reduce<
+    Array<{ id: string; name: string; workspace_name?: string | null }>
+  >(
+    (acc, p) => {
+      const rawP = p as typeof p & { workspace_name?: string | null };
+      const wsName = rawP.workspace_name ?? p.name;
+      const already = acc.find((item) => {
+        const r = item as typeof item & { workspace_name?: string | null };
+        return (r.workspace_name ?? item.name) === wsName;
+      });
+      if (!already) acc.push(p);
+      return acc;
+    },
+    [],
+  );
+  const rawActive = (allProjects ?? []).find((p) => p.id === activeProjectId);
+  const rawActiveWs = (rawActive as any)?.workspace_name ?? rawActive?.name;
 
   return (
     <header className="tb">
@@ -86,10 +103,11 @@ export function Topbar({
             {!hideWorkspaceSwitcher && switcherOpen && (
               <div className="tb-ws-dropdown">
                 <div className="tb-ws-dropdown-label">WORKSPACES</div>
-                {(allProjects ?? []).map((p) => {
+                {uniqueWorkspaces.map((p) => {
                   const rawP = p as typeof p & { workspace_name?: string | null }
                   const displayName = rawP.workspace_name ?? p.name
-                  const isActive = p.id === activeProjectId
+                  const wsName = rawP.workspace_name ?? p.name;
+                  const isActive = wsName === rawActiveWs;
                   return (
                     <a key={p.id} href={`?project=${p.id}`}
                       className={`tb-ws-item${isActive ? " active" : ""}`}
