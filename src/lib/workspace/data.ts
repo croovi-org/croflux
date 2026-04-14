@@ -18,6 +18,7 @@ export type WorkspaceData = {
   projectCount: number;
   workspaceName: string;
   allProjects: Project[];
+  workspaceProjects: Project[];
 };
 
 function normalizeMilestones(rows: MilestoneRow[]) {
@@ -185,6 +186,10 @@ export async function getWorkspaceData(selectedProjectId?: string | null) {
   }
 
   const workspaceName = rawProject.workspace_name ?? rawProject.name ?? "My Workspace"
+  const activeWorkspaceName = (project as any).workspace_name ?? project.name ?? null;
+  const workspaceProjects = activeWorkspaceName
+    ? projects.filter((p) => ((p as any).workspace_name ?? p.name) === activeWorkspaceName)
+    : [project];
 
   return {
     user,
@@ -194,5 +199,6 @@ export async function getWorkspaceData(selectedProjectId?: string | null) {
     projectCount: projects.length,
     workspaceName,
     allProjects: projects,
+    workspaceProjects,
   } satisfies WorkspaceData;
 }

@@ -1,14 +1,29 @@
+import { useState } from "react";
+
 interface WorkspaceStepProps {
   workspaceName: string;
   slug: string;
   onChange: (field: "workspaceName" | "slug", value: string) => void;
+  existingWorkspaces?: Array<{
+    id: string;
+    workspace_name: string;
+    workspace_slug: string;
+  }>;
+  onSelectExisting?: (workspace: {
+    workspace_name: string;
+    workspace_slug: string;
+  }) => void;
 }
 
 export function WorkspaceStep({
   workspaceName,
   slug,
   onChange,
+  existingWorkspaces,
+  onSelectExisting,
 }: WorkspaceStepProps) {
+  const [selectedExistingId, setSelectedExistingId] = useState("");
+
   return (
     <div className="space-y-6">
       <div>
@@ -26,6 +41,56 @@ export function WorkspaceStep({
       </div>
 
       <div className="grid gap-5">
+        {existingWorkspaces && existingWorkspaces.length > 0 && (
+          <div>
+            <div className="mb-3 text-[12px] font-medium text-[var(--text2)]">
+              Add to existing workspace
+            </div>
+            <div className="relative">
+              <select
+                value={selectedExistingId}
+                onChange={(e) => {
+                  const ws = existingWorkspaces.find((w) => w.id === e.target.value);
+                  if (ws) {
+                    onSelectExisting?.({
+                      workspace_name: ws.workspace_name,
+                      workspace_slug: ws.workspace_slug,
+                    });
+                  }
+                  setSelectedExistingId(e.target.value);
+                }}
+                className="w-full appearance-none rounded-[12px] border border-[var(--border2)] bg-[var(--bg3)] px-4 py-3 text-[14px] text-[var(--text)] outline-none transition focus:border-[var(--purple)] cursor-pointer"
+                style={{ paddingRight: "2.5rem" }}
+              >
+                <option value="">Select existing workspace...</option>
+                {existingWorkspaces.map((ws) => (
+                  <option key={ws.id} value={ws.id}>
+                    {ws.workspace_name} — croflux.app/{ws.workspace_slug}
+                  </option>
+                ))}
+              </select>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text3)]"
+              >
+                <path d="m4 6 4 4 4-4" />
+              </svg>
+            </div>
+            <div className="my-5 flex items-center gap-3">
+              <div className="h-px flex-1 bg-[var(--border)]" />
+              <span className="text-[11px] text-[var(--text3)]">or create new workspace</span>
+              <div className="h-px flex-1 bg-[var(--border)]" />
+            </div>
+          </div>
+        )}
+
         <label className="block">
           <span className="mb-2 block text-[12px] font-medium text-[var(--text2)]">
             Workspace name

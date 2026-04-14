@@ -50,6 +50,13 @@ export function OnboardingFlow() {
   const [workspaceName, setWorkspaceName] = useState("");
   const [slug, setSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
+  const [existingWorkspaces, setExistingWorkspaces] = useState<
+    Array<{
+      id: string;
+      workspace_name: string;
+      workspace_slug: string;
+    }>
+  >([]);
   const [productStage, setProductStage] = useState<ProductStage>("mvp_stage");
   const [strategyMode, setStrategyMode] = useState<StrategyMode>("paste");
   const [strategyText, setStrategyText] = useState("");
@@ -157,6 +164,28 @@ export function OnboardingFlow() {
   }, []);
 
   useEffect(() => {
+    async function loadExistingWorkspaces() {
+      try {
+        const response = await fetch("/api/profile", { cache: "no-store" });
+        if (!response.ok) return;
+        const projectsResponse = await fetch("/api/onboarding/workspaces", { cache: "no-store" });
+        if (!projectsResponse.ok) return;
+        const data = (await projectsResponse.json()) as {
+          workspaces?: Array<{
+            id: string;
+            workspace_name: string;
+            workspace_slug: string;
+          }>;
+        };
+        setExistingWorkspaces(data.workspaces ?? []);
+      } catch {
+        // silently fail — user just won't see existing workspaces
+      }
+    }
+    void loadExistingWorkspaces();
+  }, []);
+
+  useEffect(() => {
     if (strategyMode !== "notion") return;
     const trimmedUrl = notionUrl.trim();
 
@@ -249,6 +278,15 @@ export function OnboardingFlow() {
 
     setSlugEdited(true);
     setSlug(slugify(value));
+  }
+
+  function handleSelectExistingWorkspace(ws: {
+    workspace_name: string;
+    workspace_slug: string;
+  }) {
+    setWorkspaceName(ws.workspace_name);
+    setSlug(ws.workspace_slug);
+    setSlugEdited(true);
   }
 
   function handleStrategyModeChange(mode: StrategyMode) {
@@ -540,6 +578,8 @@ export function OnboardingFlow() {
           workspaceName={workspaceName}
           slug={slug}
           onChange={handleWorkspaceChange}
+          existingWorkspaces={existingWorkspaces}
+          onSelectExisting={handleSelectExistingWorkspace}
         />
       );
     }
