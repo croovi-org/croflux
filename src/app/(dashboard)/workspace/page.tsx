@@ -182,31 +182,25 @@ export default async function WorkspacePage({ searchParams }: WorkspacePageProps
   const activeWorkspaceMilestones = groupedMilestones.get(project.id) ?? [];
   const nextUp = getNextUpTask(activeWorkspaceMilestones);
 
-  const WorkspaceClientWithWorkspaceProps = WorkspaceClient as unknown as (
-    props: {
-      allProjects?: Project[];
-      activeProjectId?: string | null;
-      [key: string]: unknown;
-    },
-  ) => JSX.Element;
-
   return (
-    <WorkspaceClientWithWorkspaceProps
-      projectName={project.name ?? ""}
-      initials={getInitials(user.name ?? "Builder")}
-      avatarUrl={user.avatar_url ?? null}
-      userName={user.name ?? "Builder"}
-      workspaceName={workspaceName}
-      summary={summary}
-      projects={activeProjects}
-      nextUpTask={nextUp?.task.title ?? null}
-      nextUpContext={nextUp?.context ?? null}
-      incompleteTaskCount={getIncompleteTaskCount(activeWorkspaceMilestones)}
-      rank={rank}
-      milestones={getSidebarMilestones(activeWorkspaceMilestones)}
-      projectCount={projectCount}
-      allProjects={allProjects}
-      activeProjectId={project.id}
+    <WorkspaceClient
+      {...({
+        projectName: project.name ?? "",
+        initials: getInitials(user.name ?? "Builder"),
+        avatarUrl: user.avatar_url ?? null,
+        userName: user.name ?? "Builder",
+        workspaceName,
+        summary,
+        projects: activeProjects,
+        nextUpTask: nextUp?.task.title ?? null,
+        nextUpContext: nextUp?.context ?? null,
+        incompleteTaskCount: getIncompleteTaskCount(activeWorkspaceMilestones),
+        rank,
+        milestones: getSidebarMilestones(activeWorkspaceMilestones),
+        projectCount,
+        allProjects,
+        activeProjectId: project.id,
+      } as any)}
     />
   );
 }
