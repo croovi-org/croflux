@@ -11,6 +11,9 @@ import {
 import { ProfileClient } from "./ProfileClient";
 
 type SavePayload = Record<string, string>;
+type ProfilePageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
 
 async function savePersonalInfo(payload: SavePayload) {
   "use server";
@@ -81,8 +84,12 @@ async function saveProfessionalInfo(payload: SavePayload) {
   revalidatePath("/profile");
 }
 
-export default async function ProfilePage() {
-  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData();
+export default async function ProfilePage({ searchParams }: ProfilePageProps) {
+  const params = searchParams ? await searchParams : {};
+  const projectParam = Array.isArray(params.project) ? params.project[0] : params.project;
+  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData(
+    projectParam ?? null,
+  );
   const rawUser = user as typeof user & {
     first_name?: string | null;
     last_name?: string | null;
