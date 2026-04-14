@@ -39,6 +39,12 @@ type WorkspaceClientProps = {
   avatarUrl: string | null;
   userName: string;
   workspaceName: string;
+  allProjects?: Array<{
+    id: string;
+    name: string;
+    workspace_name?: string | null;
+  }>;
+  activeProjectId?: string | null;
   summary: WorkspaceSummary;
   projects: WorkspaceProjectSummary[];
   nextUpTask: string | null;
@@ -60,6 +66,8 @@ export function WorkspaceClient({
   avatarUrl,
   userName,
   workspaceName,
+  allProjects,
+  activeProjectId,
   summary,
   projects,
   nextUpTask,
@@ -73,7 +81,8 @@ export function WorkspaceClient({
     projects.length > 0 ? "projects" : "empty",
   );
   const [isNewProjectHovered, setIsNewProjectHovered] = useState(false);
-  const activeProjectId =
+  const resolvedActiveProjectId =
+    activeProjectId ??
     projects.find((project) => project.status === "active")?.id ??
     projects[0]?.id ??
     null;
@@ -102,7 +111,8 @@ export function WorkspaceClient({
       hideAddTask
       sidebarMode="workspaceHome"
       sidebarProjects={sidebarProjects}
-      activeProjectId={activeProjectId}
+      allProjects={allProjects}
+      activeProjectId={resolvedActiveProjectId}
       projectCount={projectCount}
     >
       <main className="workspace-main">
@@ -195,7 +205,7 @@ export function WorkspaceClient({
                       <ProjectCard
                         key={project.id}
                         project={project}
-                        active={project.id === activeProjectId}
+                        active={project.id === resolvedActiveProjectId}
                       />
                     ))}
 

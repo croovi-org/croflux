@@ -184,23 +184,21 @@ export default async function WorkspacePage({ searchParams }: WorkspacePageProps
 
   return (
     <WorkspaceClient
-      {...({
-        projectName: project.name ?? "",
-        initials: getInitials(user.name ?? "Builder"),
-        avatarUrl: user.avatar_url ?? null,
-        userName: user.name ?? "Builder",
-        workspaceName,
-        summary,
-        projects: activeProjects,
-        nextUpTask: nextUp?.task.title ?? null,
-        nextUpContext: nextUp?.context ?? null,
-        incompleteTaskCount: getIncompleteTaskCount(activeWorkspaceMilestones),
-        rank,
-        milestones: getSidebarMilestones(activeWorkspaceMilestones),
-        projectCount,
-        allProjects,
-        activeProjectId: project.id,
-      } as any)}
+      projectName={project.name ?? ""}
+      initials={getInitials(user.name ?? "Builder")}
+      avatarUrl={user.avatar_url ?? null}
+      userName={user.name ?? "Builder"}
+      workspaceName={workspaceName}
+      summary={summary}
+      projects={activeProjects}
+      nextUpTask={nextUp?.task.title ?? null}
+      nextUpContext={nextUp?.context ?? null}
+      incompleteTaskCount={getIncompleteTaskCount(activeWorkspaceMilestones)}
+      rank={rank}
+      milestones={getSidebarMilestones(activeWorkspaceMilestones)}
+      projectCount={projectCount}
+      allProjects={allProjects}
+      activeProjectId={project.id}
     />
   );
 }
