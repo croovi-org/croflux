@@ -193,6 +193,8 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
       streak={user.streak}
       stats={stats}
       projects={rows}
+      allProjects={allProjects}
+      activeProjectId={project.id}
     />
   );
 }
