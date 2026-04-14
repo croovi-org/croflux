@@ -2,13 +2,18 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { EmptyProjects } from "@/components/projects/EmptyProjects";
-import {
-  ProjectsToolbar,
-  type ProjectsSortOption,
-} from "@/components/projects/ProjectsToolbar";
 import { WorkspaceShell } from "@/components/workspace/WorkspaceShell";
+
+type ProjectsSortOption = "recent" | "progress" | "name" | "created";
+
+const SORT_LABELS: Record<ProjectsSortOption, string> = {
+  recent: "Recently updated",
+  progress: "Progress",
+  name: "Name (A-Z)",
+  created: "Created date",
+};
 
 type ProjectsPageRow = {
   id: string;
@@ -58,6 +63,12 @@ type ProjectsClientProps = {
     bossesDefeated: number;
   };
   projects: ProjectsPageRow[];
+  allProjects?: Array<{
+    id: string;
+    name: string;
+    workspace_name?: string | null;
+  }>;
+  activeProjectId?: string | null;
 };
 
 export function ProjectsClient({
@@ -75,19 +86,64 @@ export function ProjectsClient({
   streak,
   stats,
   projects,
+  allProjects,
+  activeProjectId,
 }: ProjectsClientProps) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [sort, setSort] = useState<ProjectsSortOption>("recent");
   const [view, setView] = useState<"list" | "grid">("list");
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string | "all">("all");
+  const [wsDropdownOpen, setWsDropdownOpen] = useState(false);
+  const wsDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!wsDropdownOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (wsDropdownRef.current && !wsDropdownRef.current.contains(e.target as Node)) {
+        setWsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [wsDropdownOpen]);
+
+  useEffect(() => {
+    if (!sortOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setSortOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [sortOpen]);
+
+  useEffect(() => {
+    if (!activeProjectId) return;
+    if (selectedWorkspaceId === "all") return;
+    const exists = (allProjects ?? []).some((item) => item.id === selectedWorkspaceId);
+    if (!exists) {
+      setSelectedWorkspaceId("all");
+    }
+  }, [activeProjectId, allProjects, selectedWorkspaceId]);
 
   const filteredProjects = useMemo(() => {
+    if (selectedWorkspaceId === "all") return projects;
+    return projects.filter((project) => project.id === selectedWorkspaceId);
+  }, [projects, selectedWorkspaceId]);
+
+  const displayedProjects = useMemo(() => {
     const normalizedQuery = searchValue.trim().toLowerCase();
     const visible = normalizedQuery
-      ? projects.filter((project) =>
-          project.name.toLowerCase().includes(normalizedQuery),
-        )
-      : projects;
+      ? filteredProjects.filter((project) => {
+          const nameMatch = project.name.toLowerCase().includes(normalizedQuery);
+          const ideaMatch = (project.idea ?? "").toLowerCase().includes(normalizedQuery);
+          return nameMatch || ideaMatch;
+        })
+      : filteredProjects;
 
     const sorted = [...visible];
     sorted.sort((left, right) => {
@@ -108,7 +164,7 @@ export function ProjectsClient({
     });
 
     return sorted;
-  }, [projects, searchValue, sort]);
+  }, [filteredProjects, searchValue, sort]);
 
   return (
     <WorkspaceShell
@@ -205,14 +261,319 @@ export function ProjectsClient({
                 </div>
               </section>
 
-              <ProjectsToolbar
-                searchValue={searchValue}
-                onSearchChange={setSearchValue}
-                sort={sort}
-                onSortChange={setSort}
-                view={view}
-                onViewChange={setView}
-              />
+              <section className="projects-toolbar-row">
+                <div className="projects-toolbar-left">
+                  <label className="projects-search">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="14"
+                      height="14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="11" cy="11" r="6.5" />
+                      <path d="m16 16 4 4" />
+                    </svg>
+                    <input
+                      type="text"
+                      value={searchValue}
+                      onChange={(event) => setSearchValue(event.target.value)}
+                      placeholder="Search projects..."
+                    />
+                  </label>
+
+                  <div ref={wsDropdownRef} style={{ position: "relative" }}>
+                    <button
+                      type="button"
+                      onClick={() => setWsDropdownOpen((o) => !o)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        height: 38,
+                        padding: "0 12px",
+                        borderRadius: 8,
+                        background:
+                          selectedWorkspaceId === "all"
+                            ? "#13131e"
+                            : "var(--accent-subtle)",
+                        border:
+                          selectedWorkspaceId === "all"
+                            ? "1px solid #252538"
+                            : "1px solid var(--accent-muted)",
+                        color:
+                          selectedWorkspaceId === "all"
+                            ? "#8c90a7"
+                            : "var(--accent-text)",
+                        fontSize: 12,
+                        fontFamily: "Inter, sans-serif",
+                        cursor: "pointer",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {selectedWorkspaceId === "all"
+                        ? "All workspaces"
+                        : (() => {
+                            const selected = (allProjects ?? []).find(
+                              (item) => item.id === selectedWorkspaceId,
+                            );
+                            const rawSelected = selected as
+                              | (typeof selected & { workspace_name?: string | null })
+                              | undefined;
+                            return rawSelected?.workspace_name ?? selected?.name ?? "Workspace";
+                          })()}
+                      <svg
+                        width="11"
+                        height="11"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 4.5l3 3 3-3" />
+                      </svg>
+                    </button>
+
+                    {wsDropdownOpen && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "calc(100% + 6px)",
+                          left: 0,
+                          minWidth: 200,
+                          background: "#13131e",
+                          border: "1px solid #252538",
+                          borderRadius: 10,
+                          padding: 4,
+                          zIndex: 100,
+                          boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedWorkspaceId("all");
+                            setWsDropdownOpen(false);
+                          }}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            width: "100%",
+                            padding: "6px 10px",
+                            borderRadius: 7,
+                            background:
+                              selectedWorkspaceId === "all"
+                                ? "var(--accent-subtle)"
+                                : "transparent",
+                            border: "none",
+                            color:
+                              selectedWorkspaceId === "all"
+                                ? "var(--accent-text)"
+                                : "#c3c6d7",
+                            fontSize: 12,
+                            fontFamily: "Inter, sans-serif",
+                            cursor: "pointer",
+                            textAlign: "left",
+                          }}
+                        >
+                          All workspaces
+                          {selectedWorkspaceId === "all" && (
+                            <svg
+                              width="11"
+                              height="11"
+                              viewBox="0 0 12 12"
+                              fill="none"
+                              stroke="var(--accent)"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              style={{ marginLeft: "auto" }}
+                            >
+                              <polyline points="2,6 5,9 10,3" />
+                            </svg>
+                          )}
+                        </button>
+                        <div style={{ height: 1, background: "#1e1e2e", margin: "3px 4px" }} />
+                        {(allProjects ?? []).map((item) => {
+                          const rawItem = item as typeof item & { workspace_name?: string | null };
+                          const displayName = rawItem.workspace_name ?? item.name;
+                          const isSelected = selectedWorkspaceId === item.id;
+                          return (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() => {
+                                setSelectedWorkspaceId(item.id);
+                                setWsDropdownOpen(false);
+                              }}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                width: "100%",
+                                padding: "6px 10px",
+                                borderRadius: 7,
+                                background: isSelected ? "var(--accent-subtle)" : "transparent",
+                                border: "none",
+                                color: isSelected ? "var(--accent-text)" : "#c3c6d7",
+                                fontSize: 12,
+                                fontFamily: "Inter, sans-serif",
+                                cursor: "pointer",
+                                textAlign: "left",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  width: 18,
+                                  height: 18,
+                                  borderRadius: 5,
+                                  background: "var(--accent)",
+                                  color: "white",
+                                  display: "grid",
+                                  placeItems: "center",
+                                  fontSize: 9,
+                                  fontWeight: 700,
+                                  flexShrink: 0,
+                                  fontFamily: '"Geist Mono", monospace',
+                                }}
+                              >
+                                {displayName[0]?.toUpperCase() ?? "W"}
+                              </span>
+                              <span
+                                style={{
+                                  flex: 1,
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {displayName}
+                              </span>
+                              {isSelected && (
+                                <svg
+                                  width="11"
+                                  height="11"
+                                  viewBox="0 0 12 12"
+                                  fill="none"
+                                  stroke="var(--accent)"
+                                  strokeWidth="2.2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  style={{ flexShrink: 0 }}
+                                >
+                                  <polyline points="2,6 5,9 10,3" />
+                                </svg>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="sort-wrap" ref={sortRef}>
+                    <button
+                      type="button"
+                      className="sort-btn"
+                      onClick={() => setSortOpen((open) => !open)}
+                    >
+                      <span>{SORT_LABELS[sort]}</span>
+                      <svg
+                        width="11"
+                        height="11"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 4.5l3 3 3-3" />
+                      </svg>
+                    </button>
+                    {sortOpen ? (
+                      <div className="sort-menu">
+                        {(Object.keys(SORT_LABELS) as ProjectsSortOption[]).map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            className={`sort-option ${sort === option ? "active" : ""}`}
+                            onClick={() => {
+                              setSort(option);
+                              setSortOpen(false);
+                            }}
+                          >
+                            <span>{SORT_LABELS[option]}</span>
+                            {sort === option ? (
+                              <svg
+                                width="11"
+                                height="11"
+                                viewBox="0 0 12 12"
+                                fill="none"
+                                stroke="var(--accent)"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <polyline points="2,6 5,9 10,3" />
+                              </svg>
+                            ) : null}
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="toolbar-spacer" />
+
+                <div className="view-pill">
+                  <button
+                    type="button"
+                    className={`view-btn ${view === "list" ? "active" : ""}`}
+                    onClick={() => setView("list")}
+                    aria-label="List view"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="13"
+                      height="13"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M8 6h12M8 12h12M8 18h12M3 6h.01M3 12h.01M3 18h.01" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className={`view-btn ${view === "grid" ? "active" : ""}`}
+                    onClick={() => setView("grid")}
+                    aria-label="Grid view"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="13"
+                      height="13"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" />
+                    </svg>
+                  </button>
+                </div>
+              </section>
 
               {view === "list" && (
                 <section className="projects-table">
@@ -227,7 +588,7 @@ export function ProjectsClient({
                   </div>
 
                   <div className="table-body">
-                    {filteredProjects.map((project) => {
+                    {displayedProjects.map((project) => {
                       const statusLabel =
                         project.status === "active"
                           ? "Active"
@@ -382,7 +743,7 @@ export function ProjectsClient({
 
               {view === "grid" && (
                 <section className="projects-grid">
-                  {filteredProjects.map((project) => {
+                  {displayedProjects.map((project) => {
                     const statusLabel =
                       project.status === "active"
                         ? "Active"
@@ -508,6 +869,122 @@ export function ProjectsClient({
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
+          }
+          .projects-toolbar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+          .projects-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+          }
+          .projects-search {
+            flex: 1;
+            max-width: 320px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 11px;
+            border-radius: 8px;
+            border: 1px solid var(--border2);
+            background: #12121e;
+            color: var(--text3);
+            transition: border-color 0.3s ease;
+          }
+          .projects-search:focus-within {
+            border-color: var(--accent);
+          }
+          .projects-search input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--text);
+            font-size: 12px;
+          }
+          .projects-search input::placeholder {
+            color: var(--text3);
+          }
+          .sort-wrap {
+            position: relative;
+          }
+          .sort-btn {
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 11px;
+            border-radius: 8px;
+            border: 1px solid var(--border2);
+            background: #12121e;
+            color: var(--text2);
+            font-size: 12px;
+            cursor: pointer;
+          }
+          .sort-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 170px;
+            border-radius: 10px;
+            border: 1px solid var(--border2);
+            background: #171722;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            padding: 6px;
+            z-index: 20;
+          }
+          .sort-option {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 9px;
+            border-radius: 8px;
+            border: 0;
+            background: transparent;
+            color: var(--text2);
+            font-size: 12px;
+            cursor: pointer;
+          }
+          .sort-option:hover,
+          .sort-option.active {
+            background: var(--accent-subtle);
+            color: var(--text);
+          }
+          .toolbar-spacer {
+            flex: 1;
+          }
+          .view-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px;
+            border-radius: 999px;
+            border: 1px solid var(--border2);
+            background: #12121e;
+          }
+          .view-btn {
+            width: 28px;
+            height: 28px;
+            border: 0;
+            border-radius: 999px;
+            background: transparent;
+            color: var(--text3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+          }
+          .view-btn.active {
+            background: var(--accent-subtle);
+            color: var(--accent-text);
           }
           .stat-chip {
             display: inline-flex;

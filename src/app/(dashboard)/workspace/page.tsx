@@ -167,7 +167,10 @@ export default async function WorkspacePage({ searchParams }: WorkspacePageProps
   );
 
   const projectSummaries = projectSummaryResult.projects;
-  const activeProjects = projectSummaries.filter((p) => p.id === project.id);
+  const workspaceProjects = allProjects.filter((p) => p.id === project.id);
+  const activeProjects = projectSummaries.filter((p) =>
+    workspaceProjects.some((workspaceProject) => workspaceProject.id === p.id),
+  );
 
   const summary: WorkspaceSummary = {
     projectCount: projectSummaries.length,
@@ -179,8 +182,16 @@ export default async function WorkspacePage({ searchParams }: WorkspacePageProps
   const activeWorkspaceMilestones = groupedMilestones.get(project.id) ?? [];
   const nextUp = getNextUpTask(activeWorkspaceMilestones);
 
+  const WorkspaceClientWithWorkspaceProps = WorkspaceClient as unknown as (
+    props: {
+      allProjects?: Project[];
+      activeProjectId?: string | null;
+      [key: string]: unknown;
+    },
+  ) => JSX.Element;
+
   return (
-    <WorkspaceClient
+    <WorkspaceClientWithWorkspaceProps
       projectName={project.name ?? ""}
       initials={getInitials(user.name ?? "Builder")}
       avatarUrl={user.avatar_url ?? null}
@@ -194,6 +205,8 @@ export default async function WorkspacePage({ searchParams }: WorkspacePageProps
       rank={rank}
       milestones={getSidebarMilestones(activeWorkspaceMilestones)}
       projectCount={projectCount}
+      allProjects={allProjects}
+      activeProjectId={project.id}
     />
   );
 }
