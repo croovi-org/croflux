@@ -14,6 +14,7 @@ type TopbarProps = {
   hideAddTask?: boolean;
   actionLabel?: string;
   actionHref?: string;
+  hideWorkspaceSwitcher?: boolean;
   workspaceName?: string
   allProjects?: Array<{
     id: string
@@ -32,6 +33,7 @@ export function Topbar({
   hideAddTask = false,
   actionLabel = "Add task",
   actionHref = "/my-tasks",
+  hideWorkspaceSwitcher = false,
   workspaceName,
   allProjects,
   activeProjectId,
@@ -62,22 +64,26 @@ export function Topbar({
       <div className="tb-crumbs">
         {workspaceName ? (
           <div className="tb-ws-wrap" ref={switcherRef}>
-            <button
-              type="button"
-              className="tb-ws-btn"
-              onClick={() => setSwitcherOpen((o) => !o)}
-            >
+            {hideWorkspaceSwitcher ? (
               <span className="tb-ws-name">{workspaceName}</span>
-              <svg
-                width="11" height="11" viewBox="0 0 12 12"
-                fill="none" stroke="currentColor" strokeWidth="1.6"
-                strokeLinecap="round" strokeLinejoin="round"
+            ) : (
+              <button
+                type="button"
+                className="tb-ws-btn"
+                onClick={() => setSwitcherOpen((o) => !o)}
               >
-                <path d="M3 4.5l3 3 3-3" />
-              </svg>
-            </button>
+                <span className="tb-ws-name">{workspaceName}</span>
+                <svg
+                  width="11" height="11" viewBox="0 0 12 12"
+                  fill="none" stroke="currentColor" strokeWidth="1.6"
+                  strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M3 4.5l3 3 3-3" />
+                </svg>
+              </button>
+            )}
 
-            {switcherOpen && (
+            {!hideWorkspaceSwitcher && switcherOpen && (
               <div className="tb-ws-dropdown">
                 <div className="tb-ws-dropdown-label">WORKSPACES</div>
                 {(allProjects ?? []).map((p) => {
@@ -85,9 +91,13 @@ export function Topbar({
                   const displayName = rawP.workspace_name ?? p.name
                   const isActive = p.id === activeProjectId
                   return (
-                    <a key={p.id} href={`/dashboard?project=${p.id}`}
+                    <a key={p.id} href={`?project=${p.id}`}
                       className={`tb-ws-item${isActive ? " active" : ""}`}
-                      onClick={() => setSwitcherOpen(false)}
+                      onClick={() => {
+                        sessionStorage.setItem("activeProjectId", p.id);
+                        document.cookie = `activeProject=${p.id};path=/;max-age=86400`;
+                        setSwitcherOpen(false);
+                      }}
                       style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 8px", borderRadius: 7, textDecoration: "none", cursor: "pointer" }}
                     >
                       <span style={{ width: 20, height: 20, borderRadius: 5, background: "var(--accent)", color: "white", display: "grid", placeItems: "center", fontSize: 9, fontWeight: 700, flexShrink: 0, fontFamily: '"Geist Mono", monospace' }}>

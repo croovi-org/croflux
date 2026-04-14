@@ -2,8 +2,16 @@ import { createClient } from "@/lib/supabase/server"
 import { getWorkspaceData } from "@/lib/workspace/data"
 import { ActivityClient } from "./ActivityClient"
 
-export default async function ActivityPage() {
-  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData()
+type ActivityPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function ActivityPage({ searchParams }: ActivityPageProps) {
+  const params = searchParams ? await searchParams : {}
+  const projectParam = Array.isArray(params.project) ? params.project[0] : params.project
+  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData(
+    projectParam ?? null,
+  )
   const supabase = await createClient()
 
   const now = new Date()

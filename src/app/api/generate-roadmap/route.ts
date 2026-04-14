@@ -10,6 +10,8 @@ type GenerateRoadmapRequest = {
   name: string;
   idea: string;
   strategy?: string;
+  workspace_name?: string;
+  workspace_slug?: string;
 };
 
 export async function POST(request: Request) {
@@ -34,6 +36,12 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
+    const workspaceName = (body.workspace_name?.trim()) || `${name} Workspace`;
+    const workspaceSlug = (body.workspace_slug?.trim()) || name
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
 
     const serverSupabase = await createServerClient();
     const {
@@ -97,12 +105,8 @@ export async function POST(request: Request) {
         idea,
         strategy: strategy || null,
         product_stage: "mvp",
-        workspace_name: `${name} Workspace`,
-        workspace_slug: name
-          .toLowerCase()
-          .replace(/[^a-z0-9]/g, "-")
-          .replace(/-+/g, "-")
-          .replace(/^-|-$/g, ""),
+        workspace_name: workspaceName,
+        workspace_slug: workspaceSlug,
       })
       .select()
       .single();

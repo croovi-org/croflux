@@ -120,9 +120,15 @@ export async function getWorkspaceData(selectedProjectId?: string | null) {
   ]);
 
   const projects = (projectsData ?? []) as Project[];
+  let resolvedProjectId = selectedProjectId ?? null;
+  if (!resolvedProjectId) {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    resolvedProjectId = cookieStore.get("activeProject")?.value ?? null;
+  }
   const project =
-    (selectedProjectId
-      ? projects.find((item) => item.id === selectedProjectId)
+    (resolvedProjectId
+      ? projects.find((item) => item.id === resolvedProjectId)
       : null) ?? projects[0] ?? null;
   const profile = profileData as User | null;
 

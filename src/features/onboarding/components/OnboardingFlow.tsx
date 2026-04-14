@@ -487,6 +487,8 @@ export function OnboardingFlow() {
             name: startupName.trim(),
             idea: oneLiner.trim(),
             strategy: activeStrategyText.trim(),
+            workspace_name: workspaceName.trim(),
+            workspace_slug: slug.trim(),
           }),
         });
 

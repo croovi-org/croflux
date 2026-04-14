@@ -9,8 +9,16 @@ import {
   getWorkspaceData,
 } from "@/lib/workspace/data";
 
-export default async function MyTasksPage() {
-  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData();
+type MyTasksPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function MyTasksPage({ searchParams }: MyTasksPageProps) {
+  const params = searchParams ? await searchParams : {};
+  const projectParam = Array.isArray(params.project) ? params.project[0] : params.project;
+  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData(
+    projectParam ?? null,
+  );
   const initials = getInitials(user.name ?? "Builder");
   const nextUp = getNextUpTask(milestones);
   const tasks = milestones.flatMap((milestone) =>

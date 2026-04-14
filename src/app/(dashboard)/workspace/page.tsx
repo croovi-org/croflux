@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { WorkspaceClient, type WorkspaceProjectSummary, type WorkspaceSummary } from "./WorkspaceClient";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -11,7 +10,7 @@ import {
   getSidebarMilestones,
   type MilestoneWithTasks,
 } from "@/lib/workspace/data";
-import type { Milestone, Project, Task, User } from "@/types";
+import type { Milestone, Project, Task } from "@/types";
 
 type MilestoneRow = Milestone & {
   tasks?: Task[];
@@ -37,11 +36,9 @@ function normalizeMilestones(rows: MilestoneRow[]) {
     .sort((a, b) => a.order_index - b.order_index);
 }
 
-function getWorkspaceName(name: string | null | undefined) {
-  if (!name || typeof name !== "string") return "Builder's Workspace";
-  const firstName = name.trim().split(/\s+/)[0] || "Builder";
-  return `${firstName}'s Workspace`;
-}
+type WorkspacePageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
 
 function formatLastWorked(value: string | null) {
   if (!value) return "Never";
@@ -62,52 +59,14 @@ function isProjectIdle(lastActivityAt: string | null) {
   return diffMs >= 7 * 24 * 60 * 60 * 1000;
 }
 
-export default async function WorkspacePage() {
+export default async function WorkspacePage({ searchParams }: WorkspacePageProps) {
+  const params = searchParams ? await searchParams : {};
+  const projectParam = Array.isArray(params.project) ? params.project[0] : params.project;
+  const { user, project, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData(
+    projectParam ?? null,
+  );
   const supabase = await createClient();
-  const {
-    data: { user: authUser },
-  } = await supabase.auth.getUser();
-
-  if (!authUser) {
-    redirect("/login");
-  }
-
-  const [{ data: projectsData }, { data: profileData }] = await Promise.all([
-    supabase
-      .from("projects")
-      .select("*")
-      .eq("user_id", authUser.id)
-      .order("created_at", { ascending: true }),
-    supabase.from("users").select("*").eq("id", authUser.id).maybeSingle(),
-  ]);
-
-  const projects = (projectsData ?? []) as Project[];
-  const profile = profileData as User | null;
-  const { project, workspaceName } = await getWorkspaceData();
-
-  const user: User = profile ?? {
-    id: authUser.id,
-    email: authUser.email ?? "",
-    name: authUser.user_metadata?.full_name ?? authUser.email?.split("@")[0] ?? "Builder",
-    first_name: null,
-    last_name: null,
-    phone: null,
-    gender: null,
-    date_of_birth: null,
-    location: null,
-    timezone: null,
-    role: null,
-    github: null,
-    twitter: null,
-    instagram: null,
-    bio: null,
-    personal_website: null,
-    linkedin: null,
-    avatar_url: null,
-    weekly_tasks_completed: 0,
-    streak: 0,
-    created_at: new Date().toISOString(),
-  };
+  const projects = allProjects as Project[];
 
   let groupedMilestones = new Map<string, MilestoneWithTasks[]>();
 
@@ -208,6 +167,7 @@ export default async function WorkspacePage() {
   );
 
   const projectSummaries = projectSummaryResult.projects;
+  const activeProjects = projectSummaries.filter((p) => p.id === project.id);
 
   const summary: WorkspaceSummary = {
     projectCount: projectSummaries.length,
@@ -216,22 +176,8 @@ export default async function WorkspacePage() {
     bossesDefeated: projectSummaryResult.totalBossesDefeated,
   };
 
-  const activeWorkspaceProject = projects[0] ?? null;
-  const activeWorkspaceMilestones = activeWorkspaceProject
-    ? groupedMilestones.get(activeWorkspaceProject.id) ?? []
-    : [];
+  const activeWorkspaceMilestones = groupedMilestones.get(project.id) ?? [];
   const nextUp = getNextUpTask(activeWorkspaceMilestones);
-  const { count: rankCount } = await supabase
-    .from("users")
-    .select("id", { count: "exact", head: true })
-    .or(
-      `weekly_tasks_completed.gt.${user.weekly_tasks_completed ?? 0},` +
-      `and(weekly_tasks_completed.eq.${user.weekly_tasks_completed ?? 0},streak.gt.${user.streak ?? 0})`
-    )
-
-  const rank = (user.weekly_tasks_completed ?? 0) > 0
-    ? (rankCount ?? 0) + 1
-    : null;
 
   return (
     <WorkspaceClient
@@ -241,13 +187,13 @@ export default async function WorkspacePage() {
       userName={user.name ?? "Builder"}
       workspaceName={workspaceName}
       summary={summary}
-      projects={projectSummaries}
+      projects={activeProjects}
       nextUpTask={nextUp?.task.title ?? null}
       nextUpContext={nextUp?.context ?? null}
       incompleteTaskCount={getIncompleteTaskCount(activeWorkspaceMilestones)}
       rank={rank}
       milestones={getSidebarMilestones(activeWorkspaceMilestones)}
-      projectCount={projects.length}
+      projectCount={projectCount}
     />
   );
 }

@@ -9,8 +9,16 @@ import {
 } from "@/lib/workspace/data";
 import type { User } from "@/types";
 
-export default async function LeaderboardPage() {
-  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData();
+type LeaderboardPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function LeaderboardPage({ searchParams }: LeaderboardPageProps) {
+  const params = searchParams ? await searchParams : {};
+  const projectParam = Array.isArray(params.project) ? params.project[0] : params.project;
+  const { user, project, milestones, rank, projectCount, workspaceName, allProjects } = await getWorkspaceData(
+    projectParam ?? null,
+  );
   const supabase = await createClient();
   const { data } = await supabase
     .from("users")

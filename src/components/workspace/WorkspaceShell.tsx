@@ -45,6 +45,7 @@ type WorkspaceShellProps = {
   streak: number;
   headerBottom?: ReactNode;
   hideAddTask?: boolean;
+  hideWorkspaceSwitcher?: boolean;
   actionLabel?: string;
   actionHref?: string;
   sidebarMode?: "default" | "workspaceHome";
@@ -79,6 +80,7 @@ export function WorkspaceShell({
   streak,
   headerBottom,
   hideAddTask = false,
+  hideWorkspaceSwitcher = false,
   actionLabel,
   actionHref,
   sidebarMode = "default",
@@ -184,6 +186,7 @@ export function WorkspaceShell({
                   avatarUrl={avatarUrl}
                   userName={userName}
                   hideAddTask={hideAddTask}
+                  hideWorkspaceSwitcher={hideWorkspaceSwitcher || currentSection === "/projects"}
                   actionLabel={actionLabel}
                   actionHref={actionHref}
                   workspaceName={workspaceName}
