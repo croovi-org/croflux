@@ -660,12 +660,16 @@ export function ProjectsClient({
                         <article
                           key={project.id}
                           className="project-row"
-                          onClick={() => router.push(project.href)}
+                          onClick={() => {
+                            document.cookie = `activeProject=${project.id};path=/;max-age=86400`;
+                            router.push(project.href);
+                          }}
                           role="button"
                           tabIndex={0}
                           onKeyDown={(event) => {
                             if (event.key === "Enter" || event.key === " ") {
                               event.preventDefault();
+                              document.cookie = `activeProject=${project.id};path=/;max-age=86400`;
                               router.push(project.href);
                             }
                           }}
@@ -749,7 +753,10 @@ export function ProjectsClient({
                             <Link
                               href={project.href}
                               className="open-btn"
-                              onClick={(event) => event.stopPropagation()}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                document.cookie = `activeProject=${project.id};path=/;max-age=86400`;
+                              }}
                               style={{
                                 display: "inline-flex",
                                 alignItems: "center",
@@ -826,6 +833,9 @@ export function ProjectsClient({
                           <Link
                             href={project.href}
                             className="grid-open-link"
+                            onClick={() => {
+                              document.cookie = `activeProject=${project.id};path=/;max-age=86400`;
+                            }}
                             style={{
                               color: "var(--accent)",
                               fontSize: 14,

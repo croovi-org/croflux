@@ -269,6 +269,9 @@ export function Sidebar({
                   <Link
                     key={project.id}
                     href={`/dashboard?project=${project.id}`}
+                    onClick={() => {
+                      document.cookie = `activeProject=${project.id};path=/;max-age=86400`;
+                    }}
                     className={`project-row ${isActive ? "active" : ""}`}
                     style={{
                       display: "flex",

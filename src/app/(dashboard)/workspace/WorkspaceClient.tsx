@@ -202,11 +202,18 @@ export function WorkspaceClient({
 
                   <div className="project-grid">
                     {projects.map((project) => (
-                      <ProjectCard
+                      <div
                         key={project.id}
-                        project={project}
-                        active={project.id === resolvedActiveProjectId}
-                      />
+                        style={{ display: "contents" }}
+                        onClick={() => {
+                          document.cookie = `activeProject=${project.id};path=/;max-age=86400`;
+                        }}
+                      >
+                        <ProjectCard
+                          project={project}
+                          active={project.id === resolvedActiveProjectId}
+                        />
+                      </div>
                     ))}
 
                     <Link
