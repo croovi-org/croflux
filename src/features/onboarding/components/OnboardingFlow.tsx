@@ -82,6 +82,7 @@ export function OnboardingFlow() {
   const [error, setError] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [genStep, setGenStep] = useState(1);
+  const [targetDate, setTargetDate] = useState<string>("");
 
   const strategyWordCount = useMemo(() => countWords(strategyText), [strategyText]);
   const activeStrategyText = useMemo(() => {
@@ -527,6 +528,7 @@ export function OnboardingFlow() {
             strategy: activeStrategyText.trim(),
             workspace_name: workspaceName.trim(),
             workspace_slug: slug.trim(),
+            target_completion_date: targetDate || null,
           }),
         });
 
@@ -587,6 +589,8 @@ export function OnboardingFlow() {
     if (currentStep === 2) {
       return (
         <StrategyStep
+          targetDate={targetDate}
+          onTargetDateChange={setTargetDate}
           productStage={productStage}
           strategyMode={strategyMode}
           strategyText={strategyText}

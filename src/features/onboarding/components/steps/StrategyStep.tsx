@@ -8,6 +8,8 @@ type StrategyMode = "paste" | "upload" | "notion";
 type ProductStage = "idea_stage" | "mvp_stage" | "early_users" | "growth_stage";
 
 interface StrategyStepProps {
+  targetDate: string;
+  onTargetDateChange: (value: string) => void;
   productStage: ProductStage;
   strategyMode: StrategyMode;
   strategyText: string;
@@ -62,6 +64,8 @@ const productStageOptions: Array<{
 ];
 
 export function StrategyStep({
+  targetDate,
+  onTargetDateChange,
   productStage,
   strategyMode,
   strategyText,
@@ -139,6 +143,25 @@ export function StrategyStep({
       </div>
 
       <div className="grid gap-3">
+        <div className="grid gap-5 md:grid-cols-2">
+          <label className="block">
+            <span className="mb-2 block text-[12px] font-medium text-[var(--text2)]">
+              Target launch date
+            </span>
+            <input
+              type="date"
+              value={targetDate}
+              min={new Date().toISOString().split("T")[0]}
+              onChange={(e) => onTargetDateChange(e.target.value)}
+              className="h-13 w-full rounded-[12px] border border-[var(--border2)] bg-[var(--bg3)] px-4 text-[14px] text-[var(--text)] outline-none transition placeholder:text-[var(--text4)] focus:border-[var(--purple)] focus:bg-[var(--bg2)]"
+              style={{ colorScheme: "dark" }}
+            />
+            <p className="mt-2 text-[12px] leading-6 text-[var(--text3)]">
+              We use this to distribute task deadlines across your roadmap.
+            </p>
+          </label>
+        </div>
+
         <div>
           <div className="text-[12px] font-medium text-[var(--text2)]">
             Product stage

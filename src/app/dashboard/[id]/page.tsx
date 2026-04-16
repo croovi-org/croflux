@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
 import { createClient } from "@/lib/supabase/server"
 import { DashboardClient } from "@/app/(dashboard)/dashboard/DashboardClient"
 import type { User } from "@/types"
@@ -40,8 +39,6 @@ export default async function DashboardByIdPage({ params }: Props) {
   if (!project) {
     redirect("/dashboard")
   }
-  const cookieStore = await cookies()
-  cookieStore.set("activeProject", id, { path: "/", maxAge: 86400 })
 
   const { data: milestones } = await supabase
     .from("milestones")
