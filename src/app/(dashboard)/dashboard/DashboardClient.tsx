@@ -32,6 +32,7 @@ type BoardItem = {
   milestoneTitle: string;
   sequence: number;
   dateLabel: string | null;
+  difficulty?: "easy" | "medium" | "hard";
 };
 type BoardOverrides = Record<string, Exclude<BoardColumnId, "done">>;
 type IntegrationItem = {
@@ -173,6 +174,7 @@ function getBoardColumnsWithOverrides(
           sequence % 3 === 0 || taskIndex === milestone.tasks.length - 1
             ? formatBoardDate(task.created_at)
             : null,
+        difficulty: (task as Task & { difficulty?: "easy" | "medium" | "hard" }).difficulty,
       };
 
       if (task.completed) {
@@ -1099,6 +1101,11 @@ function BoardView({
                   {column.id !== "done" ? (
                     <span className="board-chip subtle">#{item.sequence}</span>
                   ) : null}
+                  {item.difficulty ? (
+                    <span className={`task-diff-badge ${item.difficulty}`}>
+                      {item.difficulty}
+                    </span>
+                  ) : null}
                   {item.dateLabel ? (
                     <span className="board-chip date">{item.dateLabel}</span>
                   ) : null}
@@ -1257,6 +1264,31 @@ function BoardView({
           border: 1px solid rgba(64, 130, 255, 0.42);
           background: rgba(64, 130, 255, 0.08);
           flex-shrink: 0;
+        }
+        .task-diff-badge {
+          font-size: 10px;
+          font-family: "Geist Mono", monospace;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          padding: 2px 7px;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+        .task-diff-badge.easy {
+          background: rgba(34, 197, 94, 0.12);
+          color: #22c55e;
+          border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .task-diff-badge.medium {
+          background: rgba(251, 191, 36, 0.12);
+          color: #fbbf24;
+          border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .task-diff-badge.hard {
+          background: rgba(239, 68, 68, 0.12);
+          color: #ef4444;
+          border: 1px solid rgba(239, 68, 68, 0.2);
         }
         @media (max-width: 1180px) {
           .board-view {
