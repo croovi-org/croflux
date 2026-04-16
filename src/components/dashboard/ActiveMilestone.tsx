@@ -69,6 +69,9 @@ export function ActiveMilestone({
               id={task.id}
               title={task.title}
               completed={task.completed}
+              difficulty={
+                (task as Task & { difficulty?: "easy" | "medium" | "hard" }).difficulty
+              }
               badge={null}
               isLast={index === milestone.tasks.length - 1}
               onComplete={(taskId) => onTaskComplete(milestone.id, taskId)}

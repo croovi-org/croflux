@@ -18,9 +18,13 @@ export type ParsedMilestone = {
 
 export type ParsedTask = {
   id: string
-  milestone_id: string
+  milestoneid: string
   title: string
   completed: boolean
+  orderindex: number
+  estimated_hours?: number
+  due_date?: string
+  difficulty: "easy" | "medium" | "hard"
 }
 
 export type ParsedRoadmapDB = {
@@ -50,11 +54,17 @@ export function parseRoadmapToDB(
   }))
 
   const tasks: ParsedTask[] = roadmap.milestones.flatMap((milestone, milestoneIndex) =>
-    milestone.tasks.map((task) => ({
+    milestone.tasks.map((task, taskIndex) => ({
       id: crypto.randomUUID(),
-      milestone_id: milestones[milestoneIndex].id,
+      milestoneid: milestones[milestoneIndex].id,
       title: task.title,
       completed: false,
+      orderindex: taskIndex + 1,
+      estimated_hours: typeof task.estimated_hours === "number" ? task.estimated_hours : undefined,
+      difficulty:
+        task.difficulty === "easy" || task.difficulty === "hard"
+          ? task.difficulty
+          : "medium",
     })),
   )
 

@@ -12,8 +12,9 @@ export type AIRoadmapResponse = {
     is_boss: boolean;
     tasks: Array<{
       title: string;
-      description: string;
       estimated_hours: number;
+      difficulty: "easy" | "medium" | "hard";
+      description?: string;
     }>;
   }>;
 };
@@ -22,6 +23,20 @@ type GenerateRoadmapParams = {
   systemPrompt: string;
   userPrompt: string;
 };
+
+const TASK_SCHEMA_PROMPT = `
+Each task must have:
+- "title": string (concise action)
+- "estimated_hours": number (realistic hours, 1-8)
+- "difficulty": "easy" | "medium" | "hard" (based on technical complexity — easy = straightforward, medium = requires thought, hard = complex implementation)
+
+Task JSON example:
+{
+  "title": "Set up Supabase auth",
+  "estimated_hours": 2,
+  "difficulty": "easy"
+}
+`;
 
 type GeminiResponse = {
   candidates: {
@@ -76,7 +91,7 @@ async function attemptRequest(
   try {
     const prompt = [
       "System Instructions:",
-      params.systemPrompt,
+      `${params.systemPrompt}\n${TASK_SCHEMA_PROMPT}`,
       "",
       "User Request:",
       params.userPrompt,
@@ -220,11 +235,15 @@ function isAIRoadmapResponse(value: unknown): value is AIRoadmapResponse {
 
     return milestone.tasks.every((task) => {
       if (!isRecord(task)) return false;
+      const hasDifficulty =
+        task.difficulty === "easy" ||
+        task.difficulty === "medium" ||
+        task.difficulty === "hard";
       return (
         typeof task.title === "string" &&
-        typeof task.description === "string" &&
         (typeof task.estimated_hours === "number" ||
-          typeof task.estimated_hours === "string")
+          typeof task.estimated_hours === "string") &&
+        hasDifficulty
       );
     });
   });

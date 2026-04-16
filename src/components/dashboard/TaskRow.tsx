@@ -9,6 +9,7 @@ type TaskRowProps = {
   id: string;
   title: string;
   completed: boolean;
+  difficulty?: "easy" | "medium" | "hard";
   isLast?: boolean;
   badge?: Badge;
   onComplete: (taskId: string) => void;
@@ -43,6 +44,7 @@ export function TaskRow({
   id,
   title,
   completed,
+  difficulty,
   isLast = false,
   badge = null,
   onComplete,
@@ -57,6 +59,11 @@ export function TaskRow({
         {completed ? <CheckIcon /> : null}
       </span>
       <span className="task-name">{title}</span>
+      {difficulty ? (
+        <span className={`task-difficulty-badge ${difficulty}`}>
+          {difficulty}
+        </span>
+      ) : null}
       {badge ? (
         <span className={`task-badge ${badge.type}`}>
           {badge.type === "github" ? <GithubMark /> : <CalendarIcon />}
@@ -156,6 +163,31 @@ export function TaskRow({
           fill: none;
           stroke-linecap: round;
           stroke-linejoin: round;
+        }
+        .task-difficulty-badge {
+          font-size: 10px;
+          font-family: "Geist Mono", monospace;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          padding: 2px 7px;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+        .task-difficulty-badge.easy {
+          background: rgba(34, 197, 94, 0.12);
+          color: #22c55e;
+          border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .task-difficulty-badge.medium {
+          background: rgba(251, 191, 36, 0.12);
+          color: #fbbf24;
+          border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .task-difficulty-badge.hard {
+          background: rgba(239, 68, 68, 0.12);
+          color: #ef4444;
+          border: 1px solid rgba(239, 68, 68, 0.2);
         }
       `}</style>
     </button>

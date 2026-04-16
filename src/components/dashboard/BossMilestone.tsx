@@ -80,6 +80,9 @@ export function BossMilestone({
               id={task.id}
               title={task.title}
               completed={task.completed}
+              difficulty={
+                (task as Task & { difficulty?: "easy" | "medium" | "hard" }).difficulty
+              }
               badge={getTaskBadge(index)}
               isLast={index === milestone.tasks.length - 1}
               onComplete={(taskId) => onTaskComplete(milestone.id, taskId)}
