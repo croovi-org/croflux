@@ -48,6 +48,8 @@ export interface Task {
   completed: boolean;
   created_at: string;
   updated_at?: string | null;
+  due_date?: string | null;
+  difficulty?: "easy" | "medium" | "hard" | null;
 }
 
 export interface ActivityLog {
