@@ -7,6 +7,7 @@ export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
+  const pathname = request.nextUrl.pathname;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -30,17 +31,24 @@ export async function middleware(request: NextRequest) {
   );
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session?.user ?? null;
+
+  const isCalendarOAuthBridgeRoute =
+    pathname.startsWith("/auth/calendar-success") ||
+    pathname.startsWith("/auth/calendar-error") ||
+    pathname.startsWith("/api/auth/google-calendar/callback");
 
   if (
     !user &&
-    (request.nextUrl.pathname.startsWith("/dashboard") ||
-      request.nextUrl.pathname.startsWith("/my-tasks") ||
-      request.nextUrl.pathname.startsWith("/onboarding") ||
-      request.nextUrl.pathname.startsWith("/leaderboard") ||
-      request.nextUrl.pathname.startsWith("/profile") ||
-      request.nextUrl.pathname.startsWith("/pricing"))
+    !isCalendarOAuthBridgeRoute &&
+    (pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/my-tasks") ||
+      pathname.startsWith("/onboarding") ||
+      pathname.startsWith("/leaderboard") ||
+      pathname.startsWith("/profile") ||
+      pathname.startsWith("/pricing"))
   ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
