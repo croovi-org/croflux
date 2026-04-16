@@ -247,7 +247,6 @@ Rules:
       },
     });
   } catch (error) {
-    console.error("❌ ROADMAP ERROR:", error);
     return Response.json(
       {
         success: false,
