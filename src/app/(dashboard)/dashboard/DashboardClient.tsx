@@ -170,10 +170,9 @@ function getBoardColumnsWithOverrides(
         title: task.title,
         milestoneTitle: milestone.title,
         sequence,
-        dateLabel:
-          sequence % 3 === 0 || taskIndex === milestone.tasks.length - 1
-            ? formatBoardDate(task.created_at)
-            : null,
+        dateLabel: (task as Task & { due_date?: string | null }).due_date
+          ? formatBoardDate((task as Task & { due_date?: string | null }).due_date!)
+          : null,
         difficulty: (task as Task & { difficulty?: "easy" | "medium" | "hard" }).difficulty,
       };
 
