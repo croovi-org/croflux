@@ -1,8 +1,12 @@
 import { getSupabaseAdmin } from "@/lib/calendar/google";
 
+type CompleteTaskSource = "manual" | "board" | "calendar";
+
 type CompleteTaskParams = {
   userId: string;
   taskId: string;
+  source?: CompleteTaskSource;
+  supabaseAdmin?: ReturnType<typeof getSupabaseAdmin>;
 };
 
 type CompleteTaskResult = {
@@ -20,7 +24,7 @@ type CompleteTaskResult = {
 export async function completeTask(
   params: CompleteTaskParams,
 ): Promise<CompleteTaskResult> {
-  const supabaseAdmin = getSupabaseAdmin();
+  const supabaseAdmin = params.supabaseAdmin ?? getSupabaseAdmin();
 
   const { data: taskRow, error: taskError } = await supabaseAdmin
     .from("tasks")
@@ -85,6 +89,7 @@ export async function completeTask(
           metadata: {
             taskId: taskRow.id,
             title: taskRow.title,
+            source: params.source ?? "manual",
           },
           timestamp: new Date().toISOString(),
         });
