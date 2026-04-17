@@ -26,6 +26,11 @@ type DashboardClientProps = {
 };
 
 type ToastState = { title: string; body: string };
+type DeleteCandidate = {
+  id: string;
+  title: string;
+  googleEventId: string | null;
+};
 type TabId = "list" | "board" | "calendar" | "integrations";
 type BoardColumnId = "todo" | "inprogress" | "done";
 type BoardItem = {
@@ -34,6 +39,7 @@ type BoardItem = {
   milestoneTitle: string;
   sequence: number;
   dateLabel: string | null;
+  googleEventId: string | null;
   difficulty?: "easy" | "medium" | "hard";
 };
 type BoardOverrides = Record<string, Exclude<BoardColumnId, "done">>;
@@ -127,6 +133,7 @@ function getBoardColumnsWithOverrides(
         dateLabel: (task as Task & { due_date?: string | null }).due_date
           ? formatBoardDate((task as Task & { due_date?: string | null }).due_date!)
           : null,
+        googleEventId: (task as Task & { google_event_id?: string | null }).google_event_id ?? null,
         difficulty: (task as Task & { difficulty?: "easy" | "medium" | "hard" }).difficulty,
       };
 
@@ -591,10 +598,16 @@ function BoardView({
   milestones,
   projectId,
   onMoveTask,
+  onDeleteTask,
 }: {
   milestones: MilestoneWithTasks[];
   projectId: string;
   onMoveTask: (taskId: string, destination: BoardColumnId) => Promise<void>;
+  onDeleteTask: (task: {
+    id: string;
+    title: string;
+    googleEventId: string | null;
+  }) => void;
 }) {
   const storageKey = `croflux-board:${projectId}`;
   const [boardOverrides, setBoardOverrides] = useState<BoardOverrides>(() => {
@@ -704,7 +717,28 @@ function BoardView({
                   setActiveDropColumn(null);
                 }}
               >
-                <h3>{item.title}</h3>
+                <div className="board-card-head">
+                  <h3>{item.title}</h3>
+                  <button
+                    type="button"
+                    className="board-delete-btn"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      onDeleteTask({
+                        id: item.id,
+                        title: item.title,
+                        googleEventId: item.googleEventId,
+                      });
+                    }}
+                    draggable={false}
+                    aria-label={`Delete ${item.title}`}
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M4 7h16M10 11v6m4-6v6M8 7l1-2h6l1 2m-9 0 1 12h8l1-12" />
+                    </svg>
+                  </button>
+                </div>
                 <div className="board-meta">
                   <span className="board-chip milestone">{item.milestoneTitle}</span>
                   {column.id !== "done" ? (
@@ -829,6 +863,44 @@ function BoardView({
           color: #e3e6f2;
           letter-spacing: -0.01em;
         }
+        .board-card-head {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          justify-content: space-between;
+        }
+        .board-card-head h3 {
+          margin-bottom: 18px;
+          flex: 1;
+        }
+        .board-delete-btn {
+          width: 24px;
+          height: 24px;
+          border-radius: 7px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.03);
+          color: #6f738a;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          cursor: pointer;
+          transition: border-color 0.14s ease, color 0.14s ease, background 0.14s ease;
+        }
+        .board-delete-btn:hover {
+          border-color: rgba(239, 68, 68, 0.4);
+          color: #ef4444;
+          background: rgba(239, 68, 68, 0.1);
+        }
+        .board-delete-btn :global(svg) {
+          width: 12px;
+          height: 12px;
+          stroke: currentColor;
+          stroke-width: 1.8;
+          fill: none;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
         .board-meta {
           display: flex;
           align-items: center;
@@ -924,6 +996,8 @@ export function DashboardClient({
   const [milestones, setMilestones] = useState(initialMilestones);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>("list");
+  const [deleteCandidate, setDeleteCandidate] = useState<DeleteCandidate | null>(null);
+  const [deletingTask, setDeletingTask] = useState(false);
   const toastTimer = useRef<number | null>(null);
 
   useEffect(() => () => { if (toastTimer.current) window.clearTimeout(toastTimer.current); }, []);
@@ -957,6 +1031,9 @@ export function DashboardClient({
   const greeting = `${getGreeting()}, ${getFirstName(user.name)}`;
   const rank = initialRank;
   const topPercent = rank ? Math.max(4, rank * 4) : null;
+  const googleCalendarConnected = Boolean(
+    (user as User & { google_calendar_connected?: boolean | null }).google_calendar_connected,
+  );
 
   const showToast = (next: ToastState) => {
     if (toastTimer.current) window.clearTimeout(toastTimer.current);
@@ -1009,12 +1086,33 @@ export function DashboardClient({
     }
     showToast(nextToast);
 
-    const response = await fetch("/api/tasks/complete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ taskId }),
-    });
-    await response.json();
+    try {
+      const response = await fetch("/api/tasks/complete", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskId }),
+      });
+      const result = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to persist task completion");
+      }
+    } catch (error) {
+      setMilestones((current) =>
+        current.map((milestone) => ({
+          ...milestone,
+          tasks: milestone.tasks.map((task) =>
+            task.id === taskId ? { ...task, completed: false } : task,
+          ),
+        })),
+      );
+
+      showToast({
+        title: "Update failed",
+        body: error instanceof Error ? error.message : "Could not save task completion.",
+      });
+      return;
+    }
 
     if (defeatedName && unlockedName) {
       showToast({ title: "Boss defeated", body: `${defeatedName} cleared. ${unlockedName} unlocked.` });
@@ -1023,6 +1121,8 @@ export function DashboardClient({
 
   const handleBoardMove = async (taskId: string, destination: BoardColumnId) => {
     const shouldComplete = destination === "done";
+
+    const previousMilestones = milestones;
 
     setMilestones((current) =>
       current.map((milestone) => ({
@@ -1033,12 +1133,65 @@ export function DashboardClient({
       })),
     );
 
-    const response = await fetch('/api/tasks/move', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ taskId, completed: shouldComplete })
-    })
-    await response.json()
+    try {
+      const response = await fetch('/api/tasks/move', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId, completed: shouldComplete })
+      })
+      const result = (await response.json()) as { error?: string }
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to move task")
+      }
+    } catch (error) {
+      setMilestones(previousMilestones);
+      showToast({
+        title: "Update failed",
+        body: error instanceof Error ? error.message : "Could not move task.",
+      });
+    }
+  };
+
+  const openDeleteTaskModal = (task: DeleteCandidate) => {
+    setDeleteCandidate(task);
+  };
+
+  const handleDeleteTask = async () => {
+    if (!deleteCandidate || deletingTask) return;
+
+    setDeletingTask(true);
+    try {
+      const response = await fetch("/api/tasks/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskId: deleteCandidate.id }),
+      });
+      const result = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to delete task");
+      }
+
+      setMilestones((current) =>
+        current.map((milestone) => ({
+          ...milestone,
+          tasks: milestone.tasks.filter((task) => task.id !== deleteCandidate.id),
+        })),
+      );
+
+      showToast({
+        title: "Task deleted",
+        body: `${deleteCandidate.title} was removed.`,
+      });
+      setDeleteCandidate(null);
+    } catch (error) {
+      showToast({
+        title: "Delete failed",
+        body: error instanceof Error ? error.message : "Could not delete task.",
+      });
+    } finally {
+      setDeletingTask(false);
+    }
   };
 
   return (
@@ -1103,6 +1256,18 @@ export function DashboardClient({
                     milestone={activeMilestone}
                     progress={100 - getBossHp(activeMilestone)}
                     onTaskComplete={handleTaskComplete}
+                    onTaskDelete={(milestoneId, taskId) => {
+                      const milestone = milestones.find((item) => item.id === milestoneId);
+                      const task = milestone?.tasks.find((item) => item.id === taskId);
+                      if (!task) return;
+                      openDeleteTaskModal({
+                        id: task.id,
+                        title: task.title,
+                        googleEventId:
+                          (task as Task & { google_event_id?: string | null }).google_event_id ??
+                          null,
+                      });
+                    }}
                     getTaskBadge={() => null}
                   />
                 ) : (
@@ -1110,6 +1275,18 @@ export function DashboardClient({
                     milestone={activeMilestone}
                     progress={getMilestoneProgress(activeMilestone)}
                     onTaskComplete={handleTaskComplete}
+                    onTaskDelete={(milestoneId, taskId) => {
+                      const milestone = milestones.find((item) => item.id === milestoneId);
+                      const task = milestone?.tasks.find((item) => item.id === taskId);
+                      if (!task) return;
+                      openDeleteTaskModal({
+                        id: task.id,
+                        title: task.title,
+                        googleEventId:
+                          (task as Task & { google_event_id?: string | null }).google_event_id ??
+                          null,
+                      });
+                    }}
                   />
                 )
               )}
@@ -1123,6 +1300,7 @@ export function DashboardClient({
               milestones={milestones}
               projectId={project.id}
               onMoveTask={handleBoardMove}
+              onDeleteTask={openDeleteTaskModal}
             />
           ) : activeTab === "calendar" ? (
             <CalendarView
@@ -1143,6 +1321,44 @@ export function DashboardClient({
           <div className="toast-title">{toast?.title}</div>
           <div className="toast-body">{toast?.body}</div>
         </div>
+
+        {deleteCandidate ? (
+          <div className="delete-modal-wrap" role="presentation">
+            <div
+              className="delete-modal-backdrop"
+              onClick={() => !deletingTask && setDeleteCandidate(null)}
+            />
+            <div className="delete-modal" role="dialog" aria-modal="true">
+              <h3>Delete task</h3>
+              <p>
+                Are you sure you want to delete "{deleteCandidate.title}"? This cannot be undone.
+              </p>
+              {googleCalendarConnected && deleteCandidate.googleEventId ? (
+                <p className="delete-warning">
+                  ⚠️ This task is also synced with Google Calendar — deleting it here will remove the calendar event too.
+                </p>
+              ) : null}
+              <div className="delete-actions">
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => setDeleteCandidate(null)}
+                  disabled={deletingTask}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="delete-btn"
+                  onClick={handleDeleteTask}
+                  disabled={deletingTask}
+                >
+                  {deletingTask ? "Deleting..." : "Delete Task"}
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </WorkspaceShell>
       <style jsx>{`
         .navbar-tabs {
@@ -1233,6 +1449,73 @@ export function DashboardClient({
           font-size: 11px;
           line-height: 1.5;
           color: #9898b8;
+        }
+        .delete-modal-wrap {
+          position: fixed;
+          inset: 0;
+          z-index: 120;
+          display: grid;
+          place-items: center;
+        }
+        .delete-modal-backdrop {
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.48);
+        }
+        .delete-modal {
+          position: relative;
+          width: min(480px, calc(100vw - 32px));
+          border-radius: 14px;
+          border: 1px solid #252538;
+          background: #13131e;
+          padding: 20px;
+          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+        }
+        .delete-modal h3 {
+          margin: 0 0 10px;
+          font-size: 16px;
+          color: #f0f0f8;
+        }
+        .delete-modal p {
+          margin: 0 0 12px;
+          color: #9a9eb8;
+          font-size: 13px;
+          line-height: 1.5;
+        }
+        .delete-warning {
+          color: #f7bf63 !important;
+          font-family: var(--mono);
+          font-size: 11px !important;
+          margin-bottom: 16px !important;
+        }
+        .delete-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 10px;
+        }
+        .cancel-btn,
+        .delete-btn {
+          height: 34px;
+          padding: 0 14px;
+          border-radius: 8px;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .cancel-btn {
+          border: 1px solid #2c2c40;
+          background: transparent;
+          color: #9a9eb8;
+        }
+        .delete-btn {
+          border: 1px solid rgba(239, 68, 68, 0.4);
+          background: rgba(239, 68, 68, 0.16);
+          color: #ff8f8f;
+        }
+        .cancel-btn:disabled,
+        .delete-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
       `}</style>
     </>

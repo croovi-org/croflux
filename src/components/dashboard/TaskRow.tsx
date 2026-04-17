@@ -13,6 +13,7 @@ type TaskRowProps = {
   isLast?: boolean;
   badge?: Badge;
   onComplete: (taskId: string) => void;
+  onDelete?: (taskId: string) => void;
 };
 
 function CheckIcon() {
@@ -48,58 +49,85 @@ export function TaskRow({
   isLast = false,
   badge = null,
   onComplete,
+  onDelete,
 }: TaskRowProps) {
   return (
-    <button
-      type="button"
-      className={`task-row ${completed ? "done" : ""} ${isLast ? "last" : ""}`}
-      onClick={() => !completed && onComplete(id)}
-    >
-      <span className={`task-checkbox ${completed ? "done" : ""}`}>
-        {completed ? <CheckIcon /> : null}
-      </span>
-      <span className="task-name">{title}</span>
-      {difficulty ? (
-        <span className={`task-difficulty-badge ${difficulty}`}>
-          {difficulty}
+    <div className={`task-row ${completed ? "done" : ""} ${isLast ? "last" : ""}`}>
+      <button
+        type="button"
+        className="task-main"
+        onClick={() => !completed && onComplete(id)}
+        disabled={completed}
+      >
+        <span className={`task-checkbox ${completed ? "done" : ""}`}>
+          {completed ? <CheckIcon /> : null}
         </span>
-      ) : null}
-      {badge ? (
-        <span className={`task-badge ${badge.type}`}>
-          {badge.type === "github" ? <GithubMark /> : <CalendarIcon />}
-          {badge.label}
-        </span>
+        <span className="task-name">{title}</span>
+        {difficulty ? (
+          <span className={`task-difficulty-badge ${difficulty}`}>
+            {difficulty}
+          </span>
+        ) : null}
+        {badge ? (
+          <span className={`task-badge ${badge.type}`}>
+            {badge.type === "github" ? <GithubMark /> : <CalendarIcon />}
+            {badge.label}
+          </span>
+        ) : null}
+      </button>
+      {onDelete ? (
+        <button
+          type="button"
+          className="task-delete"
+          aria-label={`Delete ${title}`}
+          onClick={() => onDelete(id)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M10 11v6m4-6v6M8 7l1-2h6l1 2m-9 0 1 12h8l1-12" />
+          </svg>
+        </button>
       ) : null}
 
       <style jsx>{`
         .task-row {
-          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 7px 8px;
+          border-bottom: 1px solid var(--border);
+          border-radius: 8px;
+        }
+        .task-main {
+          flex: 1;
+          min-width: 0;
           display: flex;
           align-items: center;
           gap: 9px;
-          padding: 7px 8px;
-          border-bottom: 1px solid var(--border);
+          padding: 0;
+          border: 0;
+          background: transparent;
           color: inherit;
           text-align: left;
           cursor: pointer;
-          border-radius: 8px;
           transform: translateX(0) translateY(0);
           transition:
             transform 0.18s ease,
             background 0.18s ease,
-            box-shadow 0.18s ease,
-            border-color 0.18s ease;
+            box-shadow 0.18s ease;
         }
-        .task-row:not(.done):hover {
+        .task-main:disabled {
+          cursor: default;
+        }
+        .task-row:not(.done) .task-main:hover {
           background: rgba(255, 255, 255, 0.028);
           transform: translateX(6px) translateY(-2px);
           box-shadow: 0 10px 18px rgba(8, 8, 14, 0.18);
+          border-radius: 8px;
+          padding: 4px 6px;
+          margin: -4px -6px;
         }
         .task-row.last {
           border-bottom: none;
-        }
-        .task-row.done {
-          cursor: default;
         }
         .task-checkbox {
           width: 14px;
@@ -189,7 +217,35 @@ export function TaskRow({
           color: #ef4444;
           border: 1px solid rgba(239, 68, 68, 0.2);
         }
+        .task-delete {
+          width: 26px;
+          height: 26px;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.02);
+          color: #6f738a;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          cursor: pointer;
+          transition: border-color 0.14s ease, color 0.14s ease, background 0.14s ease;
+        }
+        .task-delete:hover {
+          border-color: rgba(239, 68, 68, 0.4);
+          color: #ef4444;
+          background: rgba(239, 68, 68, 0.1);
+        }
+        .task-delete :global(svg) {
+          width: 12px;
+          height: 12px;
+          stroke: currentColor;
+          stroke-width: 1.8;
+          fill: none;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
       `}</style>
-    </button>
+    </div>
   );
 }

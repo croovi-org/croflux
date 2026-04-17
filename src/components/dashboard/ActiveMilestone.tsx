@@ -8,6 +8,7 @@ type ActiveMilestoneProps = {
   milestone: Milestone & { tasks: Task[] };
   progress: number;
   onTaskComplete: (milestoneId: string, taskId: string) => void;
+  onTaskDelete?: (milestoneId: string, taskId: string) => void;
 };
 
 function MilestoneIcon() {
@@ -30,6 +31,7 @@ export function ActiveMilestone({
   milestone,
   progress,
   onTaskComplete,
+  onTaskDelete,
 }: ActiveMilestoneProps) {
   const [expanded, setExpanded] = useState(true);
 
@@ -75,6 +77,11 @@ export function ActiveMilestone({
               badge={null}
               isLast={index === milestone.tasks.length - 1}
               onComplete={(taskId) => onTaskComplete(milestone.id, taskId)}
+              onDelete={
+                onTaskDelete
+                  ? (taskId) => onTaskDelete(milestone.id, taskId)
+                  : undefined
+              }
             />
           ))}
         </div>

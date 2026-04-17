@@ -13,6 +13,7 @@ type BossMilestoneProps = {
   milestone: Milestone & { tasks: Task[] };
   progress: number;
   onTaskComplete: (milestoneId: string, taskId: string) => void;
+  onTaskDelete?: (milestoneId: string, taskId: string) => void;
   getTaskBadge: (taskIndex: number) => Badge;
 };
 
@@ -36,6 +37,7 @@ export function BossMilestone({
   milestone,
   progress,
   onTaskComplete,
+  onTaskDelete,
   getTaskBadge,
 }: BossMilestoneProps) {
   const [expanded, setExpanded] = useState(true);
@@ -86,6 +88,11 @@ export function BossMilestone({
               badge={getTaskBadge(index)}
               isLast={index === milestone.tasks.length - 1}
               onComplete={(taskId) => onTaskComplete(milestone.id, taskId)}
+              onDelete={
+                onTaskDelete
+                  ? (taskId) => onTaskDelete(milestone.id, taskId)
+                  : undefined
+              }
             />
           ))}
         </div>

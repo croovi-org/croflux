@@ -1,62 +1,26 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { ensureValidGoogleAccessToken, getSupabaseAdmin } from "@/lib/calendar/google";
+import { getOrCreateCroFluxTasklist, getTasksClient } from "@/lib/googleTasks";
 
 type SyncBody = {
   userId: string;
-  projectId: string;
 };
 
 type SyncResult = {
+  success: true;
   synced: number;
   skipped?: string;
 };
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-);
-
-async function refreshGoogleAccessToken(params: {
-  refreshToken: string;
-}): Promise<{ accessToken: string; expiresIn: number }> {
-  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      client_id: process.env.GOOGLE_CLIENT_ID!,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-      refresh_token: params.refreshToken,
-      grant_type: "refresh_token",
-    }),
-  });
-
-  if (!tokenRes.ok) {
-    throw new Error(`Google token refresh failed: ${tokenRes.status}`);
-  }
-
-  const refreshed = (await tokenRes.json()) as {
-    access_token?: string;
-    expires_in?: number;
-  };
-
-  if (!refreshed.access_token || !refreshed.expires_in) {
-    throw new Error("Google token refresh response missing fields");
-  }
-
-  return {
-    accessToken: refreshed.access_token,
-    expiresIn: refreshed.expires_in,
-  };
-}
-
-export async function syncCalendarForProject({
+export async function syncGoogleTasksForUser({
   userId,
-  projectId,
 }: SyncBody): Promise<SyncResult> {
+  const supabaseAdmin = getSupabaseAdmin();
+
   const { data: userRow, error: userError } = await supabaseAdmin
     .from("users")
     .select(
-      "google_calendar_token, google_calendar_refresh_token, google_calendar_token_expiry, google_calendar_connected",
+      "google_calendar_token, google_calendar_refresh_token, google_calendar_token_expiry, google_tasklist_id, google_calendar_connected",
     )
     .eq("id", userId)
     .single();
@@ -66,49 +30,24 @@ export async function syncCalendarForProject({
   }
 
   if (!userRow?.google_calendar_connected) {
-    return { synced: 0, skipped: "not connected" };
+    return { success: true, synced: 0, skipped: "not connected" };
   }
 
-  let accessToken = userRow.google_calendar_token as string | null;
-  const refreshToken = userRow.google_calendar_refresh_token as string | null;
-  const expiry = userRow.google_calendar_token_expiry as string | null;
-
-  const expired = !expiry || new Date(expiry).getTime() <= Date.now();
-
-  if (expired) {
-    if (!refreshToken) {
-      return { synced: 0, skipped: "missing refresh token" };
-    }
-
-    const refreshed = await refreshGoogleAccessToken({ refreshToken });
-    accessToken = refreshed.accessToken;
-
-    const { error: updateTokenError } = await supabaseAdmin
-      .from("users")
-      .update({
-        google_calendar_token: refreshed.accessToken,
-        google_calendar_token_expiry: new Date(
-          Date.now() + refreshed.expiresIn * 1000,
-        ).toISOString(),
-      })
-      .eq("id", userId);
-
-    if (updateTokenError) {
-      throw updateTokenError;
-    }
+  const auth = await ensureValidGoogleAccessToken(userId, supabaseAdmin);
+  if (!auth.connected || !auth.accessToken) {
+    return { success: true, synced: 0, skipped: "missing access token" };
   }
 
-  if (!accessToken) {
-    return { synced: 0, skipped: "missing access token" };
-  }
+  const tasksClient = getTasksClient(auth.accessToken);
+  const tasklistId = await getOrCreateCroFluxTasklist(auth.accessToken, userId);
 
   const { data: tasks, error: tasksError } = await supabaseAdmin
     .from("tasks")
     .select(
-      "id, title, due_date, milestone_id, milestones!inner(title, project_id)",
+      "id, title, due_date, google_task_id, milestones!inner(title, projects!inner(user_id))",
     )
-    .eq("milestones.project_id", projectId)
-    .not("due_date", "is", null);
+    .eq("milestones.projects.user_id", userId)
+    .is("google_task_id", null);
 
   if (tasksError) {
     throw tasksError;
@@ -123,59 +62,59 @@ export async function syncCalendarForProject({
     const milestoneTitle =
       (milestone as { title?: string | null } | null)?.title ?? "Milestone";
 
-    const eventRes = await fetch(
-      "https://www.googleapis.com/calendar/v3/calendars/primary/events",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          summary: task.title,
-          description: `Milestone: ${milestoneTitle} | CroFlux task`,
-          start: { date: task.due_date },
-          end: { date: task.due_date },
-        }),
-      },
-    );
+    try {
+      const requestBody: { title: string; notes: string; due?: string } = {
+        title: String(task.title ?? "Untitled task"),
+        notes: `Milestone: ${milestoneTitle} | CroFlux task`,
+      };
 
-    if (!eventRes.ok) {
-      continue;
+      if (task.due_date) {
+        requestBody.due = new Date(String(task.due_date)).toISOString();
+      }
+
+      const createResponse = await tasksClient.tasks.insert({
+        tasklist: tasklistId,
+        requestBody,
+      });
+
+      const googleTaskId = createResponse.data.id;
+      if (!googleTaskId) {
+        continue;
+      }
+
+      const { error: updateTaskError } = await supabaseAdmin
+        .from("tasks")
+        .update({
+          google_task_id: googleTaskId,
+          google_tasklist_id: tasklistId,
+        })
+        .eq("id", task.id);
+
+      if (updateTaskError) {
+        continue;
+      }
+
+      synced += 1;
+    } catch (error) {
+      console.error("Google Tasks sync item failed:", error);
     }
-
-    const event = (await eventRes.json()) as { id?: string };
-    if (!event.id) {
-      continue;
-    }
-
-    const { error: updateTaskError } = await supabaseAdmin
-      .from("tasks")
-      .update({ google_event_id: event.id })
-      .eq("id", task.id);
-
-    if (updateTaskError) {
-      continue;
-    }
-
-    synced += 1;
   }
 
-  return { synced };
+  return { success: true, synced };
 }
 
 export async function POST(request: Request) {
   try {
-    const { userId, projectId } = (await request.json()) as Partial<SyncBody>;
+    const { userId } = (await request.json()) as Partial<SyncBody>;
 
-    if (!userId || !projectId) {
+    if (!userId) {
       return NextResponse.json(
-        { error: "userId and projectId are required" },
+        { error: "userId is required" },
         { status: 400 },
       );
     }
 
-    const result = await syncCalendarForProject({ userId, projectId });
+    const result = await syncGoogleTasksForUser({ userId });
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
