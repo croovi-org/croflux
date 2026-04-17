@@ -107,6 +107,9 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
     linkedin?: string | null;
     bio?: string | null;
     notion_connected?: boolean | null;
+    google_calendar_connected?: boolean | null;
+    google_calendar_token_expiry?: string | null;
+    google_tasklist_id?: string | null;
   };
   const rawProject = project as typeof project & {
     workspace_name?: string | null;
@@ -197,6 +200,9 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
           rawProject.workspace_slug ??
           project.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
         notionConnected: Boolean(rawUser.notion_connected),
+        googleCalendarConnected: Boolean(rawUser.google_calendar_connected),
+        googleCalendarTokenExpiry: rawUser.google_calendar_token_expiry ?? null,
+        googleTasklistId: rawUser.google_tasklist_id ?? null,
         createdAt: user.created_at,
         streak: user.streak,
         weeklyTasksCompleted: user.weekly_tasks_completed,

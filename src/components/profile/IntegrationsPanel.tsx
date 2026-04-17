@@ -19,6 +19,13 @@ type IntegrationService = {
   icon: LucideIcon;
 };
 
+type IntegrationsPanelProps = {
+  userId: string;
+  googleCalendarConnected: boolean;
+  googleCalendarTokenExpiry: string | null;
+  googleTasklistId: string | null;
+};
+
 const services: IntegrationService[] = [
   {
     name: "GitHub",
@@ -57,7 +64,22 @@ const services: IntegrationService[] = [
   },
 ];
 
-export function IntegrationsPanel() {
+export function IntegrationsPanel({
+  userId,
+  googleCalendarConnected,
+  googleTasklistId,
+}: IntegrationsPanelProps) {
+  const renderedServices = services.map((service) => {
+    if (service.name !== "Google Calendar") {
+      return service;
+    }
+
+    return {
+      ...service,
+      status: googleCalendarConnected ? ("connected" as const) : ("connect" as const),
+    };
+  });
+
   return (
     <section className="section-card">
       <div className="section-head">
@@ -68,7 +90,7 @@ export function IntegrationsPanel() {
       </div>
 
       <div className="integration-list">
-        {services.map(({ name, description, features, status, icon: Icon }) => (
+        {renderedServices.map(({ name, description, features, status, icon: Icon }) => (
           <div key={name} className={`integration-row ${status === "soon" ? "muted" : ""}`}>
             <div className="logo-box">
               <Icon size={18} />
@@ -86,23 +108,35 @@ export function IntegrationsPanel() {
                 </span>
               </div>
               <p>{description}</p>
+              {name === "Google Calendar" && googleCalendarConnected && googleTasklistId ? (
+                <p className="helper-text">Your Google Tasks are synced</p>
+              ) : null}
               <div className="chips">
                 {features.map((feature) => (
                   <span key={feature}>{feature}</span>
                 ))}
               </div>
             </div>
-            <button
-              type="button"
-              className={`action ${status}`}
-              disabled={status === "soon"}
-            >
-              {status === "connected"
-                ? "Connected"
-                : status === "connect"
-                  ? "Connect"
-                  : "Coming soon"}
-            </button>
+            {name === "Google Calendar" && status === "connect" ? (
+              <a
+                href={`/api/auth/google-calendar?userId=${userId}`}
+                className={`action ${status}`}
+              >
+                Connect
+              </a>
+            ) : (
+              <button
+                type="button"
+                className={`action ${status}`}
+                disabled={status === "soon" || status === "connected"}
+              >
+                {status === "connected"
+                  ? "Connected"
+                  : status === "connect"
+                    ? "Connect"
+                    : "Coming soon"}
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -192,6 +226,11 @@ export function IntegrationsPanel() {
           gap: 8px;
           margin-top: 10px;
         }
+        .helper-text {
+          margin-top: 7px;
+          font-size: 11px;
+          color: #22c55e;
+        }
         .chips span {
           height: 26px;
           padding: 0 10px;
@@ -214,6 +253,10 @@ export function IntegrationsPanel() {
           color: #f0f0f8;
           font-size: 12px;
           font-weight: 600;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
         }
         .action.connected {
           color: #22c55e;
