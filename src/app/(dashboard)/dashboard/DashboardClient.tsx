@@ -1002,6 +1002,16 @@ export function DashboardClient({
 
   useEffect(() => () => { if (toastTimer.current) window.clearTimeout(toastTimer.current); }, []);
 
+  const syncCalendar = () => {
+    fetch('/api/calendar/poll').catch(() => {})
+  }
+
+  useEffect(() => {
+    syncCalendar()
+    const interval = setInterval(syncCalendar, 30000)
+    return () => clearInterval(interval)
+  }, [])
+
   const activeMilestoneIndex = useMemo(() => getActiveMilestoneIndex(milestones), [milestones]);
   const activeMilestone = milestones[activeMilestoneIndex];
   const completedMilestones = milestones.slice(0, activeMilestoneIndex);
