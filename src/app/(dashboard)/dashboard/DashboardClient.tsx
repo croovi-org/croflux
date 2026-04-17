@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ActiveMilestone } from "@/components/dashboard/ActiveMilestone";
 import { BossMilestone } from "@/components/dashboard/BossMilestone";
 import { CalendarView } from "@/components/dashboard/CalendarView";
@@ -993,11 +993,20 @@ export function DashboardClient({
   workspaceName,
   allProjects,
 }: DashboardClientProps) {
+  const router = useRouter();
   const [milestones, setMilestones] = useState(initialMilestones);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>("list");
   const [deleteCandidate, setDeleteCandidate] = useState<DeleteCandidate | null>(null);
   const [deletingTask, setDeletingTask] = useState(false);
+  const [isRescheduling, setIsRescheduling] = useState(false);
+  const [rescheduleError, setRescheduleError] = useState<string | null>(null);
+  const rawProject = project as Project & {
+    target_completion_date?: string | null;
+  };
+  const [targetCompletionDate, setTargetCompletionDate] = useState(
+    rawProject.target_completion_date ?? "",
+  );
   const toastTimer = useRef<number | null>(null);
 
   useEffect(() => () => { if (toastTimer.current) window.clearTimeout(toastTimer.current); }, []);
@@ -1049,6 +1058,44 @@ export function DashboardClient({
     if (toastTimer.current) window.clearTimeout(toastTimer.current);
     setToast(next);
     toastTimer.current = window.setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleReschedule = async () => {
+    if (!targetCompletionDate) {
+      setRescheduleError("Please select a target completion date.");
+      return;
+    }
+
+    setIsRescheduling(true);
+    setRescheduleError(null);
+
+    try {
+      const response = await fetch("/api/projects/reschedule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectId: project.id,
+          newTargetDate: targetCompletionDate,
+        }),
+      });
+      const result = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to reschedule project");
+      }
+
+      showToast({
+        title: "Project rescheduled successfully",
+        body: "Due dates have been recalculated.",
+      });
+      router.refresh();
+    } catch (error) {
+      setRescheduleError(
+        error instanceof Error ? error.message : "Could not reschedule project.",
+      );
+    } finally {
+      setIsRescheduling(false);
+    }
   };
 
   const handleTaskComplete = async (milestoneId: string, taskId: string) => {
@@ -1250,6 +1297,29 @@ export function DashboardClient({
               />
 
               <ProgressBar progress={overallProgress} completedTasks={completedTasks} totalTasks={totalTasks} />
+
+              <section className="reschedule-section">
+                <div className="reschedule-label">Target Completion Date</div>
+                <div className="reschedule-controls">
+                  <input
+                    type="date"
+                    className="reschedule-input"
+                    value={targetCompletionDate}
+                    onChange={(event) => setTargetCompletionDate(event.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="reschedule-btn"
+                    onClick={handleReschedule}
+                    disabled={isRescheduling}
+                  >
+                    {isRescheduling ? "Rescheduling..." : "Reschedule"}
+                  </button>
+                </div>
+                {rescheduleError ? (
+                  <p className="reschedule-error">{rescheduleError}</p>
+                ) : null}
+              </section>
 
               <div className="section-head">
                 <span>Active milestone</span>
@@ -1459,6 +1529,56 @@ export function DashboardClient({
           font-size: 11px;
           line-height: 1.5;
           color: #9898b8;
+        }
+        .reschedule-section {
+          margin: 14px 0 18px;
+          padding: 14px;
+          border-radius: 10px;
+          border: 1px solid #252538;
+          background: #13131e;
+        }
+        .reschedule-label {
+          margin-bottom: 10px;
+          font-size: 11px;
+          color: #8f93ad;
+          font-family: var(--mono);
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+        .reschedule-controls {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .reschedule-input {
+          height: 36px;
+          min-width: 220px;
+          border-radius: 8px;
+          border: 1px solid #2b2b40;
+          background: #0f0f17;
+          color: #d2d4e2;
+          padding: 0 10px;
+          font-size: 12px;
+        }
+        .reschedule-btn {
+          height: 36px;
+          padding: 0 14px;
+          border-radius: 8px;
+          border: 1px solid var(--accent-muted);
+          background: var(--accent-subtle);
+          color: var(--accent-text);
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .reschedule-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+        .reschedule-error {
+          margin: 8px 0 0;
+          font-size: 11px;
+          color: #f48f8f;
         }
         .delete-modal-wrap {
           position: fixed;
