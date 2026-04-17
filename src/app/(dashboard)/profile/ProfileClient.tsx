@@ -73,6 +73,9 @@ type ProfileData = {
   workspaceName: string;
   workspaceSlug: string;
   notionConnected: boolean;
+  googleCalendarConnected: boolean;
+  googleCalendarTokenExpiry: string | null;
+  googleTasklistId: string | null;
   createdAt: string;
   streak: number;
   weeklyTasksCompleted: number;
@@ -630,7 +633,12 @@ function ProfileClientContent({
               onSave={handleProfessionalSave}
             />
 
-            <IntegrationsPanel />
+            <IntegrationsPanel
+              userId={profile.userId}
+              googleCalendarConnected={profile.googleCalendarConnected}
+              googleCalendarTokenExpiry={profile.googleCalendarTokenExpiry}
+              googleTasklistId={profile.googleTasklistId}
+            />
             <SecurityPanel />
             <CurrentPlanCard />
             <DangerZone />
