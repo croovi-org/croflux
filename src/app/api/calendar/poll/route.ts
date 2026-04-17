@@ -5,6 +5,7 @@ import {
   getSupabaseAdmin,
 } from "@/lib/calendar/google";
 import { getCompletedGoogleTasks } from "@/lib/googleTasks";
+import { completeTask } from "@/lib/tasks/completeTask";
 
 export async function GET() {
   try {
@@ -66,19 +67,16 @@ export async function GET() {
         continue;
       }
 
-      const { error: updateError } = await supabaseAdmin
-        .from("tasks")
-        .update({
-          completed: true,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", taskRow.id);
+      const result = await completeTask({
+        userId: user.id,
+        taskId: taskRow.id,
+        source: "calendar",
+        supabaseAdmin,
+      });
 
-      if (updateError) {
-        throw updateError;
+      if (!result.alreadyCompleted) {
+        synced += 1;
       }
-
-      synced += 1;
     }
 
     return NextResponse.json({ synced }, { status: 200 });

@@ -22,6 +22,7 @@ async function handleComplete(request: Request) {
     const result = await completeTask({
       userId: user.id,
       taskId,
+      source: "manual",
     })
 
     try {
