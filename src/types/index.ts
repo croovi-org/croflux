@@ -47,9 +47,11 @@ export interface Task {
   title: string;
   completed: boolean;
   created_at: string;
+  order_index?: number | null;
   updated_at?: string | null;
   due_date?: string | null;
   difficulty?: "easy" | "medium" | "hard" | null;
+  google_event_id?: string | null;
 }
 
 export interface ActivityLog {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { registerCalendarWatch } from '@/app/api/calendar/watch/route'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -50,6 +51,12 @@ export async function GET(request: NextRequest) {
         google_calendar_connected: true,
       })
       .eq('id', userId)
+
+    try {
+      await registerCalendarWatch({ userId })
+    } catch (watchError) {
+      console.error('Google Calendar watch registration failed:', watchError)
+    }
 
     return NextResponse.redirect(`${origin}/auth/calendar-success?userId=${userId}`)
   } catch (err) {

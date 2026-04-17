@@ -3,7 +3,7 @@ import { createClient as createServerClient } from "@/lib/supabase/server";
 import { generateRoadmapFromAI } from "@/lib/ai/aiClient";
 import { parseRoadmapToDB } from "@/lib/ai/roadmapParser";
 import { distributeDueDates } from "@/lib/scheduling/distributor";
-import { syncCalendarForProject } from "@/app/api/calendar/sync/route";
+import { syncGoogleTasksForUser } from "@/app/api/calendar/sync/route";
 import { validateInputLimits } from "@/lib/validation/inputLimits";
 import { checkUsage } from "@/lib/usage/checkUsage";
 import { updateUsage } from "@/lib/usage/updateUsage";
@@ -234,21 +234,12 @@ Rules:
     }
 
     try {
-      const { data: userRow, error: userRowError } = await supabase
-        .from("users")
-        .select("google_calendar_connected")
-        .eq("id", userId)
-        .single();
-
-      if (userRowError) {
-        throw userRowError;
-      }
-
-      if (userRow?.google_calendar_connected) {
-        await syncCalendarForProject({ userId, projectId: project.id });
-      }
+      await syncGoogleTasksForUser({ userId });
     } catch (calendarSyncError) {
-      console.error("Calendar sync failed after roadmap generation:", calendarSyncError);
+      console.error(
+        "Google Tasks sync failed after roadmap generation:",
+        calendarSyncError,
+      );
     }
 
     await updateUsage({

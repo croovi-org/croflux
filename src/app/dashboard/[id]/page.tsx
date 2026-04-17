@@ -53,7 +53,7 @@ export default async function DashboardByIdPage({ params }: Props) {
       ? (
           await supabase
             .from("tasks")
-            .select("id, milestone_id, title, completed, created_at, due_date, difficulty, order_index")
+            .select("id, milestone_id, title, completed, created_at, due_date, difficulty, order_index, google_event_id")
             .in("milestone_id", milestoneIds)
             .order("order_index", { ascending: true })
         ).data
