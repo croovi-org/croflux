@@ -58,6 +58,16 @@ export async function GET(request: NextRequest) {
       console.error('Google Calendar watch registration failed:', watchError)
     }
 
+    try {
+      await fetch(`${origin}/api/calendar/sync`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      })
+    } catch (syncError) {
+      console.error('Initial calendar sync failed:', syncError)
+    }
+
     return NextResponse.redirect(`${origin}/auth/calendar-success?userId=${userId}`)
   } catch (err) {
     console.error('Google Calendar OAuth error:', err)
