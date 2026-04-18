@@ -2,6 +2,11 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -147,11 +152,6 @@ html[data-theme] {
   --accent-text: color-mix(in srgb, var(--accent) 74%, white 26%);
   --accent-line-start: color-mix(in srgb, var(--accent) 56%, white 44%);
   --accent-glow: color-mix(in srgb, var(--accent) 46%, transparent);
-}
-
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
 html[data-appearance="light"] {

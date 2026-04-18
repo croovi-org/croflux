@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={{ visibility: 'hidden' }}>
       <body
         suppressHydrationWarning
         className={`${inter.className} ${geistMono.variable} antialiased`}
@@ -51,6 +51,7 @@ export default function RootLayout({
           {`
             (function () {
               try {
+                document.documentElement.style.visibility = 'visible';
                 var accentTheme = localStorage.getItem("croflux-theme") || "purple";
                 var appearance = localStorage.getItem("croflux-appearance")
                   || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
