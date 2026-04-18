@@ -20,8 +20,17 @@ export function Logo({
       className={`logo-lockup ${className}`}
     >
       <span
-        className={`relative flex h-10 w-[84px] items-center justify-center ${markClassName}`}
+        className={markClassName}
         aria-hidden="true"
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "40px",
+          width: "84px",
+          flexShrink: 0,
+        }}
       >
         <Image
           src="/croflux-mark.png"

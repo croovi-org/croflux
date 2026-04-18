@@ -37,13 +37,26 @@ export function IconRail() {
           aria-label="Workspace home"
           title="Workspace home"
         >
-          <span className="rail-logo-mark" aria-hidden="true">
+          <span
+            aria-hidden="true"
+            style={{
+              position: "relative",
+              display: "block",
+              width: "26px",
+              height: "26px",
+              flexShrink: 0,
+            }}
+          >
             <Image
               src="/croflux-mark.png"
               alt=""
               fill
               sizes="40px"
-              className="object-contain rail-logo-image"
+              style={{
+                objectFit: "contain",
+                mixBlendMode: "screen",
+                filter: "brightness(1.06) contrast(1.08)",
+              }}
             />
           </span>
           <span className="rail-tooltip rail-logo-tooltip">Workspace home</span>
@@ -300,17 +313,6 @@ export function IconRail() {
         .rail-logo:hover {
           filter: drop-shadow(0 0 10px var(--accent-muted));
           transform: scale(1.06);
-        }
-        .rail-logo-mark {
-          position: relative;
-          width: 26px;
-          height: 26px;
-          display: block;
-          flex-shrink: 0;
-        }
-        .rail-logo-image {
-          mix-blend-mode: screen;
-          filter: brightness(1.06) contrast(1.08);
         }
         .rail-bottom {
           margin-top: auto;
